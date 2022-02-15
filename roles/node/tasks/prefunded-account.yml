@@ -1,0 +1,88 @@
+# Copyright 2022 Gauthier Leonard
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+---
+- name: Check if pre-funded account user already exists
+  uri:
+    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/keystore"
+    method: POST
+    body_format: json
+    body:
+      jsonrpc: "2.0"
+      method: keystore.listUsers
+      id: 1
+  register: users_list_res
+
+- name: Create pre-funded account user
+  uri:
+    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/keystore"
+    method: POST
+    body_format: json
+    body:
+      jsonrpc: "2.0"
+      method: keystore.createUser
+      params:
+        username: "{{ avalanche_prefunded_username }}"
+        password: "{{ avalanche_prefunded_password }}"
+      id: 1
+  when: avalanche_prefunded_username not in users_list_res.json.result.users
+  register: users_create_res
+  failed_when: users_create_res.json.error is defined
+
+- name: Give pre-funded account control over X-Chain address
+  uri:
+    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/bc/X"
+    method: POST
+    body_format: json
+    body:
+      jsonrpc: "2.0"
+      method: avm.importKey
+      params:
+        username: "{{ avalanche_prefunded_username }}"
+        password: "{{ avalanche_prefunded_password }}"
+        privateKey: "{{ avalanche_prefunded_private_key }}"
+      id: 1
+  register: import_key_res
+  failed_when: import_key_res.json.error is defined
+
+- name: Give pre-funded account control over P-Chain address
+  uri:
+    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/bc/P"
+    method: POST
+    body_format: json
+    body:
+      jsonrpc: "2.0"
+      method: platform.importKey
+      params:
+        username: "{{ avalanche_prefunded_username }}"
+        password: "{{ avalanche_prefunded_password }}"
+        privateKey: "{{ avalanche_prefunded_private_key }}"
+      id: 1
+  register: import_key_res
+  failed_when: import_key_res.json.error is defined
+
+- name: Give pre-funded account control over C-Chain address
+  uri:
+    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/bc/C"
+    method: POST
+    body_format: json
+    body:
+      jsonrpc: "2.0"
+      method: avax.importKey
+      params:
+        username: "{{ avalanche_prefunded_username }}"
+        password: "{{ avalanche_prefunded_password }}"
+        privateKey: "{{ avalanche_prefunded_private_key }}"
+      id: 1
+  register: import_key_res
+  failed_when: import_key_res.json.error is defined

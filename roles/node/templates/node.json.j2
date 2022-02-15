@@ -1,0 +1,42 @@
+{# Copyright 2022 Gauthier Leonard
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License. #}
+{
+  {% if avalanchego_use_static_ip %}
+  "public-ip": "{{ ansible_host }}",
+  {% endif %}
+  "http-host": "{{ avalanchego_http_host }}",
+  "http-port": {{ avalanchego_http_port }},
+  "staking-port": {{ avalanchego_staking_port }},
+  "api-admin-enabled": true,
+  "snow-sample-size": {{ avalanchego_snow_sample_size }},
+  "snow-quorum-size": {{ avalanchego_snow_quorum_size }},
+  "db-dir": "{{ avalanchego_db_dir }}",
+  "staking-enabled": true,
+  "network-id": "{{ avalanchego_network_id }}",
+  {% if avalanchego_network_id == 'local' %}
+  {% if inventory_hostname == groups['bootstrap_node'][0] %}
+  "bootstrap-ips": "",
+  "bootstrap-ids": "",
+  {% else %}
+  "bootstrap-ips": "{{ bootstrap_ip }}:{{ avalanchego_staking_port }}",
+  "bootstrap-ids": "{{ avalanchego_bootstrap_node_id }}",
+  {% endif %}
+  {% endif %}
+  "log-level": "{{ avalanchego_log_level }}",
+  "log-dir": "{{ avalanchego_log_dir }}",
+  "staking-tls-cert-file": "{{ avalanchego_certs_dir }}/staker.crt",
+  "staking-tls-key-file": "{{ avalanchego_certs_dir }}/staker.key",
+  "whitelisted-subnets": "{{ avalanche_whitelisted_subnets }}",
+  "vm-aliases-file": "{{ avalanchego_conf_dir }}/vms/aliases.json"
+}

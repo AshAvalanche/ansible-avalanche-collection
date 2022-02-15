@@ -1,0 +1,111 @@
+# Copyright 2022 Gauthier Leonard
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+---
+- name: "Create {{ avalanchego_user }} user"
+  user:
+    name: "{{ avalanchego_user }}"
+
+- name: Download avalanchego binary
+  get_url:
+    url: "{{ avalanchego_binary_url }}"
+    dest: /tmp
+
+- name: Create avalanchego dirs
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - "{{ avalanchego_install_dir }}/current/plugins"
+    - "{{ avalanchego_db_dir }}"
+    - "{{ avalanchego_conf_dir }}/vms"
+    - "{{ avalanchego_certs_dir }}"
+    - "{{ avalanchego_log_dir }}"
+
+- name: Unpack avalanchego binary
+  unarchive:
+    src: "/tmp/{{ avalanchego_binary_name }}"
+    dest: "{{ avalanchego_install_dir }}"
+    remote_src: yes
+    creates: "{{ avalanchego_install_dir }}/avalanchego-v{{ avalanchego_version }}"
+
+- name: Create a symlink to current avalanchego binary
+  file:
+    src: "{{ avalanchego_install_dir }}/avalanchego-v{{ avalanchego_version }}/avalanchego"
+    dest: "{{ avalanchego_install_dir }}/current/avalanchego"
+    state: link
+  notify: Restart avalanchego
+
+- name: Create a symlink to current evm binary
+  file:
+    src: "{{ avalanchego_install_dir }}/avalanchego-v{{ avalanchego_version }}/plugins/evm"
+    dest: "{{ avalanchego_install_dir }}/current/plugins/evm"
+    state: link
+  notify: Restart avalanchego
+
+- name: Upload nodes certificates
+  copy:
+    src: "{{ avalanchego_local_certs_dir }}/{{ inventory_hostname }}.{{ item }}"
+    dest: "{{ avalanchego_certs_dir }}/staker.{{ item }}"
+  loop:
+    - crt
+    - key
+  when: avalanchego_use_existing_certs
+
+- name: Set bootstrap_ip
+  set_fact:
+    bootstrap_ip: "{{ hostvars[groups['bootstrap_node'][0]]['ansible_host'] }}"
+  when: avalanchego_network_id == 'local'
+
+- name: Template node.json
+  template:
+    src: node.json.j2
+    dest: "{{ avalanchego_conf_dir }}/node.json"
+    lstrip_blocks: yes
+  notify: Restart avalanchego
+
+- name: Template avalanchego.service file
+  template:
+    src: avalanchego.service.j2
+    dest: /etc/systemd/system/avalanchego.service
+  notify: Restart avalanchego
+
+- name: Generate VMs aliases.json
+  copy:
+    dest: "{{ avalanchego_conf_dir }}/vms/aliases.json"
+    content: "{{ avalanche_vm_aliases | to_nice_json }}"
+  notify: Restart avalanchego
+
+- name: Make avalanche user owner of avalanche directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    recurse: yes
+    owner: "{{ avalanchego_user }}"
+    group: "{{ avalanchego_user }}"
+  loop:
+    - "{{ avalanchego_install_dir }}"
+    - "{{ avalanchego_db_dir }}"
+    - "{{ avalanchego_conf_dir }}"
+    - "{{ avalanchego_certs_dir }}"
+    - "{{ avalanchego_log_dir }}"
+
+- name: Reload systemctl daemons
+  systemd:
+    daemon_reload: yes
+
+- name: Start and enable avalanchego.service
+  service:
+    name: avalanchego
+    state: started
+    enabled: yes

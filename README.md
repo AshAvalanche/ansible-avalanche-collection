@@ -1,3 +1,3 @@
-# Ansible Collection - nuttymoon.avalanche
+# Ansible Avalanche Collection
 
-Documentation for the collection.
+Collection providing Ansible roles to manage [Avalanche](https://docs.avax.network/) nodes, subnets and blockchains.

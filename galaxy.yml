@@ -1,3 +1,6 @@
+# Copyright (C) 2022, Gauthier Leonard
+# See the file LICENSE for licensing terms.
+
 ### REQUIRED
 # The namespace of the collection. This can be a company/brand/organization or product namespace under which all
 # content lives. May only contain alphanumeric lowercase characters and underscores. Namespaces cannot start with

@@ -1,18 +1,73 @@
 # nuttymoon.avalanche.node
 
-This Ansible role allows to bootstrap Avalanche nodes. It installs and configures [avalanchego](https://github.com/ava-labs/avalanchego).
+This Ansible role allows to bootstrap Avalanche nodes:
+
+- Install and configure [AvalancheGo](https://github.com/ava-labs/avalanchego) following Linux best practices
+- (On local networks) Create an account with access to pre-funded addresses as described [here](https://docs.avax.network/build/tutorials/platform/fund-a-local-test-network)
+
+## Role variables
+
+| Variable                          | Comment                                                                                                                                                                             | Default value                                                  |
+| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| `avalanchego_version`             | See [AvalancheGo releases](https://github.com/ava-labs/avalanchego/releases)                                                                                                        | `1.7.3`                                                        |
+| `avalanchego_binary_name`         | Don't change                                                                                                                                                                        | `"avalanchego-linux-amd64-v{{ avalanchego_version }}.tar.gz"`  |
+| `avalanchego_binary_url`          | Don't change                                                                                                                                                                        | `"https://github.com/ava-labs/avalanchego/releases/download/`  |
+|                                   |                                                                                                                                                                                     | `v{{ avalanchego_version }}/{{ avalanchego_binary_name }}"`    |
+| `avalanchego_install_dir`         | Where to unpack AvalancheGo archive                                                                                                                                                 | `/opt/avalanche/avalanchego`                                   |
+| `avalanchego_db_dir`              | [--db-dir](https://docs.avax.network/build/references/avalanchego-config-flags#--db-dir-string-file-path) argument                                                                  | `/var/lib/avalanchego/db`                                      |
+| `avalanchego_conf_dir`            | Where to store AvalancheGo config files                                                                                                                                             | `/etc/avalanche/avalanchego/conf`                              |
+| `avalanchego_certs_dir`           | Where to store the node's TLS certs                                                                                                                                                 | `/etc/avalanche/avalanchego/staking`                           |
+| `avalanchego_log_dir`             | Where to write logs                                                                                                                                                                 | `/var/log/avalanche/avalanchego`                               |
+| `avalanchego_user`                | The user that will run the AvalancheGo Linux service                                                                                                                                | `avalanche`                                                    |
+| `avalanchego_use_static_ip`       | Wether to explicitly set the node's [public IP](https://docs.avax.network/build/references/avalanchego-config-flags#public-ip). If `yes` will use the IP provided in the inventory. | `yes`                                                          |
+| `avalanchego_http_host`           | [--http-host](https://docs.avax.network/build/references/avalanchego-config-flags#--http-host-string) argument                                                                      | `127.0.0.1`                                                    |
+| `avalanchego_http_port`           | [--http-port](https://docs.avax.network/build/references/avalanchego-config-flags#--http-port-int) argument                                                                         | `9650`                                                         |
+| `avalanchego_staking_port`        | [--staking-port](https://docs.avax.network/build/references/avalanchego-config-flags#--staking-port-int) argument                                                                   | `9651`                                                         |
+| `avalanchego_log_level`           | [--log-level](https://docs.avax.network/build/references/avalanchego-config-flags/#--log-level-string-off-fatal-error-warn-info-debug-verbo) argument                               | `info`                                                         |
+| `avalanchego_network_id`          | See [Network ID](https://docs.avax.network/build/references/avalanchego-config-flags/#network-id)                                                                                   | `local`                                                        |
+| `avalanchego_use_existing_certs`  | If `yes` will upload TLS certs from `avalanchego_local_certs_dir`. If `no` AvalancheGo will automatically create new certs.                                                         | `yes`                                                          |
+| `avalanchego_local_certs_dir`     | Where to find the existing certs on the Ansible host                                                                                                                                | `"{{ playbook_dir }}/files/certs"`                             |
+| `avalanchego_snow_sample_size`    | [--snow-sample-size-int](https://docs.avax.network/build/references/avalanchego-config-flags/#--snow-sample-size-int) argument                                                      | `2`                                                            |
+| `avalanchego_snow_quorum_size`    | [--snow-quorum-size-int](https://docs.avax.network/build/references/avalanchego-config-flags/#--snow-quorum-size-int) argument                                                      | `2`                                                            |
+| `avalanchego_bootstrap_node_id`   | The node ID of the bootstrap node                                                                                                                                                   | `NodeID-7Xhw2mDxuDS44j42TCB6U5579esbSt3Lg`                     |
+| `avalanche_prefunded_username`    | The username to create and link to pre-funded addresses                                                                                                                             | `ewoq`                                                         |
+| `avalanche_prefunded_password`    | The password for `avalanche_prefunded_username`                                                                                                                                     | `I_l1ve_@_Endor`                                               |
+| `avalanche_prefunded_private_key` | The private key used to access pre-funded addresses                                                                                                                                 | `PrivateKey-ewoqjP7PxY4yr3iLTpLisriqt94hdyDFNgchSxGGztUrTXtNN` |
+| `avalanche_whitelisted_subnets`   | [--whitelisted-subnets-string](https://docs.avax.network/build/references/avalanchego-config-flags/#--whitelisted-subnets-string) argument                                          | `""`                                                           |
+| `avalanche_vm_aliases`            | Object containing a list of aliases for each VM ID. See [VM Configs](https://docs.avax.network/build/references/avalanchego-config-flags/#vm-configs)                               | `tGas3T58KzdjLHhBDMnH2TvrddhqTji5iZAMZ3RXs2NLpSnhH:`           |
+|                                   |                                                                                                                                                                                     | ` - timestampvm`                                               |
+|                                   |                                                                                                                                                                                     | ` - timestamp`                                                 |
+|                                   |                                                                                                                                                                                     | `spePNvBxaWSYL2tB5e2xMmMNBQkXMN8z2XEbz1ML2Aahatwoc:`           |
+|                                   |                                                                                                                                                                                     | ` - subnetevm`                                                 |
+
+**Note:** All config arguments are passed to AvalancheGo through a JSON config file stored at `avalanchego_config_dir`
+
+## Inventory requirements
+
+- **All the nodes** on which to install avalanchego have to be in the `avalanche_nodes` group.
+- For local networks, **one of the nodes** has to be in the `bootstrap_node` group. This node has to **be started first to serve as bootstrap node** for the others. For an example of how to do that, see the [bootstrap_local_network.yml](../../playbooks/bootstrap_local_network.yml) playbook.
 
 ## Installation folders
 
 The default installation follows [Linux Filesystem Hierarchy Standard](https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html) by creating 3 main directories:
 
-- `/opt/avalanche` to store Avalanche softwares
-  - `/opt/avalanche/avalanchego` contains the different versions of avalanchego
+- `/opt/avalanche` to store **Avalanche softwares**
+  - `/opt/avalanche/avalanchego` contains the different versions of AvalancheGo
     - `/opt/avalanche/avalanchego/current` contains symlinks to the currently used `avalanchego` binary and plugins
-- `/etc/avalanche` to store Avalanche related configuration files
-  - `/etc/avalanche/avalanchego/conf` contains avalanchego configs
+- `/etc/avalanche` to store **Avalanche related configuration files**
+  - `/etc/avalanche/avalanchego/conf` contains AvalancheGo configs
   - `/etc/avalanche/avalanchego/staking` contains the Avalanche node's TLS certificates
-- `/var/lib/avalanchego` to store avalanchego data
-  - `/var/lib/avalanchego/db` contains avalanchego's database
+- `/var/lib/avalanchego` to store **AvalancheGo data**
+  - `/var/lib/avalanchego/db` contains AvalancheGo's database
 
-**Note:** This differs from avalanchego defaults that store the database and configuration files under `$HOME/.avalanchego`.
+**Note:** This differs from AvalancheGo default setup that stores the database and configuration files under `$HOME/.avalanchego`.
+
+## How to
+
+### Local test network
+
+The [bootstrap_local_network.yml](../../playbooks/bootstrap_local_network.yml) playbook shows how to use this role to bootstrap a local test network.
+
+See [ansible-avalanche-getting-started](https://github.com/Nuttymoon/ansible-avalanche-getting-started) for how to run the playbook and customize the installation.
+
+### Fuji/Mainnet validators

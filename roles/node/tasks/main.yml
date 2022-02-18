@@ -5,25 +5,26 @@
   user:
     name: "{{ avalanchego_user }}"
 
-- name: Download avalanchego binary
-  get_url:
-    url: "{{ avalanchego_binary_url }}"
-    dest: /tmp
-
 - name: Create avalanchego dirs
   file:
     path: "{{ item }}"
     state: directory
   loop:
     - "{{ avalanchego_install_dir }}/current/plugins"
+    - "{{ avalanchego_install_dir }}/releases"
     - "{{ avalanchego_db_dir }}"
     - "{{ avalanchego_conf_dir }}/vms"
     - "{{ avalanchego_certs_dir }}"
     - "{{ avalanchego_log_dir }}"
 
+- name: Download avalanchego binary
+  get_url:
+    url: "{{ avalanchego_binary_url }}"
+    dest: "{{ avalanchego_install_dir }}/releases/"
+
 - name: Unpack avalanchego binary
   unarchive:
-    src: "/tmp/{{ avalanchego_binary_name }}"
+    src: "{{ avalanchego_install_dir }}/releases/{{ avalanchego_binary_name }}"
     dest: "{{ avalanchego_install_dir }}"
     remote_src: yes
     creates: "{{ avalanchego_install_dir }}/avalanchego-v{{ avalanchego_version }}"

@@ -7,10 +7,10 @@ avalanchego_binary_name: "avalanchego-linux-amd64-v{{ avalanchego_version }}.tar
 avalanchego_binary_url: "https://github.com/ava-labs/avalanchego/releases/download/v{{ avalanchego_version }}/{{ avalanchego_binary_name }}"
 
 # Install directories
-avalanchego_install_dir: "/opt/avalanche/avalanchego"
-avalanchego_db_dir: "/var/lib/avalanchego/db"
-avalanchego_conf_dir: "/etc/avalanche/avalanchego/conf"
-avalanchego_certs_dir: "/etc/avalanche/avalanchego/staking"
+avalanchego_install_dir: /opt/avalanche/avalanchego
+avalanchego_db_dir: /var/lib/avalanchego/db
+avalanchego_conf_dir: /etc/avalanche/avalanchego/conf
+avalanchego_certs_dir: /etc/avalanche/avalanchego/staking
 avalanchego_log_dir: /var/log/avalanche/avalanchego
 
 # User & network

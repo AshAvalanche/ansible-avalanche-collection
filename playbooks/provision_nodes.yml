@@ -1,0 +1,8 @@
+# Copyright (C) 2022, Gauthier Leonard
+# See the file LICENSE for licensing terms.
+---
+- name: Provision nodes
+  hosts: avalanche_nodes
+  become: yes
+  roles:
+    - role: nuttymoon.avalanche.node

@@ -62,7 +62,7 @@ The default installation follows [Linux Filesystem Hierarchy Standard](https://r
 
 **Note:** This differs from AvalancheGo default setup that stores the database and configuration files under `$HOME/.avalanchego`.
 
-## How to
+## How to?
 
 ### Local test network
 
@@ -70,4 +70,6 @@ The [bootstrap_local_network.yml](../../playbooks/bootstrap_local_network.yml) p
 
 See [ansible-avalanche-getting-started](https://github.com/Nuttymoon/ansible-avalanche-getting-started) for how to run the playbook and customize the installation.
 
-### Fuji/Mainnet validators
+### Fuji/Mainnet nodes
+
+See [ansible-avalanche-getting-started](https://github.com/Nuttymoon/ansible-avalanche-getting-started) for how to provision Fuji/Mainnet nodes.

@@ -50,6 +50,7 @@ The repository [ansible-avalanche-getting-started](https://github.com/Nuttymoon/
 ### Playbooks
 
 - [nuttymoon.avalanche.bootstrap_local_network](./playbooks/bootstrap_local_network.yml): bootstrap a local test network (`--network-id=local`)
+- [nuttymoon.avalanche.provision_nodes](./playbooks/provision_nodes.yml): provision nodes for Fuji or Mainnet (`--network-id=fuji|mainnet`)
 
 ## Inventory requirements
 

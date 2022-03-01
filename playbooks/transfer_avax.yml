@@ -1,0 +1,38 @@
+# Copyright (C) 2022, Gauthier Leonard
+# See the file LICENSE for licensing terms.
+---
+- name: Transfer AVAX from the X-Chain to the C-Chain
+  hosts: api_node
+  tasks:
+    - name: Export AVAX from the X-Chain
+      nuttymoon.avalanche.tx:
+        http_host: "{{ avalanchego_http_host }}"
+        blockchain: X
+        method: avm.export
+        username: "{{ avax_transfer_from_username }}"
+        password: "{{ avax_transfer_from_password }}"
+        params:
+          to: "{{ avax_transfer_to_address_bech32 }}"
+          assetID: AVAX
+          amount: "{{ avax_transfer_amount_navax }}"
+        wait_validation: yes
+      register: xchain_transac_res
+
+    - debug:
+        var: xchain_transac_res
+
+    - name: Import AVAX to the C-Chain
+      nuttymoon.avalanche.tx:
+        http_host: "{{ avalanchego_http_host }}"
+        blockchain: C/avax
+        method: avax.import
+        username: "{{ avax_transfer_to_username }}"
+        password: "{{ avax_transfer_to_password }}"
+        params:
+          to: "{{ avax_transfer_to_address_hex }}"
+          sourceChain: X
+        wait_validation: yes
+      register: cchain_transac_res
+
+    - debug:
+        var: cchain_transac_res

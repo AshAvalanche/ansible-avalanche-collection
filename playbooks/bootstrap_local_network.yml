@@ -7,6 +7,12 @@
   roles:
     - role: nuttymoon.avalanche.node
 
+- name: Provision other network nodes
+  hosts: avalanche_nodes:!bootstrap_node
+  become: yes
+  roles:
+    - role: nuttymoon.avalanche.node
+
 - name: Provision prefunded account on bootstrap node
   hosts: bootstrap_node
   tasks:
@@ -14,9 +20,3 @@
       include_role:
         name: nuttymoon.avalanche.node
         tasks_from: prefunded-account.yml
-
-- name: Provision the other network nodes
-  hosts: avalanche_nodes:!bootstrap_node
-  become: yes
-  roles:
-    - role: nuttymoon.avalanche.node

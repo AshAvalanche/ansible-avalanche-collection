@@ -11,7 +11,7 @@ namespace: nuttymoon
 name: avalanche
 
 # The version of the collection. Must be compatible with semantic versioning
-version: 0.1.0
+version: 0.1.1
 
 # The path to the Markdown (.md) readme file. This path is relative to the root of the collection
 readme: README.md
@@ -45,7 +45,7 @@ dependencies: {}
 repository: https://github.com/Nuttymoon/ansible-avalanche-collection
 
 # The URL to any online docs
-documentation: http://docs.example.com
+documentation: https://github.com/Nuttymoon/ansible-avalanche-getting-started
 
 # The URL to the homepage of the collection/project
 homepage: http://example.com

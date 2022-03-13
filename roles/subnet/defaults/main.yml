@@ -1,0 +1,18 @@
+# Copyright (C) 2022, Gauthier Leonard
+# See the file LICENSE for licensing terms.
+---
+# Avalanchego version
+avalanchego_version: 1.7.3
+
+# Network
+avalanchego_http_host: 127.0.0.1
+avalanchego_http_port: 9650
+
+# Subnet
+subnet_control_username: ewoq
+subnet_control_password: I_l1ve_@_Endor
+subnet_control_keys_threshold: 2
+subnet_control_keys: []
+subnet_validators_weight: 1
+subnet_validators_starttime: '{{ lookup(''pipe'', ''date -d "5 minutes" +%s'') }}'
+subnet_validators_endtime: '{{ lookup(''pipe'', ''date -d "1 month" +%s'') }}'

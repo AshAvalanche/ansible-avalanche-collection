@@ -1,6 +1,26 @@
 # Copyright (C) 2022, Gauthier Leonard
 # See the file LICENSE for licensing terms.
 ---
+- name: Wait for blockchains to be bootstrapped
+  uri:
+    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/info"
+    method: POST
+    body_format: json
+    body:
+      jsonrpc: "2.0"
+      method: info.isBootstrapped
+      params:
+        chain: "{{ item }}"
+      id: 1
+  register: bootstrapped_res
+  failed_when: bootstrapped_res.json.error is defined
+  loop:
+    - P
+    - X
+    - C
+  until: bootstrapped_res.json.result.isBootstrapped
+  retries: 10
+
 - name: Check if pre-funded account user already exists
   uri:
     url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/keystore"
@@ -44,6 +64,10 @@
   register: import_key_res
   failed_when: import_key_res.json.error is defined
 
+- name: Display created X-Chain address
+  debug:
+    msg: "X-Chain address = {{ import_key_res.json.result.address }}"
+
 - name: Give pre-funded account control over P-Chain address
   uri:
     url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/bc/P"
@@ -60,9 +84,13 @@
   register: import_key_res
   failed_when: import_key_res.json.error is defined
 
+- name: Display created P-Chain address
+  debug:
+    msg: "P-Chain address = {{ import_key_res.json.result.address }}"
+
 - name: Give pre-funded account control over C-Chain address
   uri:
-    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/bc/C"
+    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/bc/C/avax"
     method: POST
     body_format: json
     body:
@@ -75,3 +103,7 @@
       id: 1
   register: import_key_res
   failed_when: import_key_res.json.error is defined
+
+- name: Display created C-Chain address
+  debug:
+    msg: "C-Chain address = {{ import_key_res.json.result.address }}"

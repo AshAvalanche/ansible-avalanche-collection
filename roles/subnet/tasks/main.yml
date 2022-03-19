@@ -45,7 +45,7 @@
 
 - name: Get existing subnets with the same control keys
   set_fact:
-    subnets_w_same_keys_ids: '{{ subnets_list_res.json.result | json_query("subnets[?sort(controlKeys)==sort([''" + (subnet_control_keys | join("'',''")) + "''])].id") }}'
+    subnets_w_same_keys_ids: '{{ subnets_list_res.json.result | to_json | from_json | json_query("subnets[?sort(controlKeys)==sort([''" + (subnet_control_keys | join("'',''")) + "''])].id") }}'
 
 - name: Confirm subnet creation
   pause:
@@ -85,7 +85,7 @@
 
 - name: Get subnets with the same control keys
   set_fact:
-    subnets_w_same_keys_after: '{{ subnets_list_res.json.result | json_query("subnets[?sort(controlKeys)==sort([''" + (subnet_control_keys | join("'',''")) + "''])]") }}'
+    subnets_w_same_keys_after: '{{ subnets_list_res.json.result | to_json | from_json |  json_query("subnets[?sort(controlKeys)==sort([''" + (subnet_control_keys | join("'',''")) + "''])]") }}'
 
 - name: Get created subnet info
   set_fact:

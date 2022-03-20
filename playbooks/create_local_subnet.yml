@@ -1,0 +1,9 @@
+# Copyright (C) 2022, Gauthier Leonard
+# See the file LICENSE for licensing terms.
+---
+- name: Create the subnet
+  hosts: subnet_control_node
+  become: yes
+  vars_prompt:
+  roles:
+    - role: nuttymoon.avalanche.subnet

@@ -1,6 +1,22 @@
 # Copyright (C) 2022, Gauthier Leonard
 # See the file LICENSE for licensing terms.
 ---
+- name: Wait for P-Chain to be bootstrapped
+  uri:
+    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/info"
+    method: POST
+    body_format: json
+    body:
+      jsonrpc: "2.0"
+      method: info.isBootstrapped
+      params:
+        chain: P
+      id: 1
+  register: bootstrapped_res
+  failed_when: bootstrapped_res.json.error is defined
+  until: bootstrapped_res.json.result.isBootstrapped
+  retries: 10
+
 - name: Check that subnet control user exists
   uri:
     url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/keystore"

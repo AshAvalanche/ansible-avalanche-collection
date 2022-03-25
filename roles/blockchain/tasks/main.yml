@@ -1,0 +1,150 @@
+# Copyright (C) 2022, Gauthier Leonard
+# See the file LICENSE for licensing terms.
+---
+- name: Include AvalancheGo VMs list
+  include_vars: ../../node/vars/main.yml
+
+- name: Wait for P-Chain to be bootstrapped
+  uri:
+    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/info"
+    method: POST
+    body_format: json
+    body:
+      jsonrpc: "2.0"
+      method: info.isBootstrapped
+      params:
+        chain: P
+      id: 1
+  register: bootstrapped_res
+  failed_when: bootstrapped_res.json.error is defined
+  until: bootstrapped_res.json.result.isBootstrapped
+  retries: 10
+
+- name: Check that the subnet exists
+  uri:
+    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/P"
+    method: POST
+    body_format: json
+    body:
+      jsonrpc: "2.0"
+      method: platform.getSubnets
+      params: {}
+      id: 1
+  register: subnets_list_res
+  failed_when: not (subnets_list_res.json.result | json_query('subnets[?id==`' + subnet_id + '`]') | length)
+
+- name: Get existing blockchains list
+  uri:
+    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/P"
+    method: POST
+    body_format: json
+    body:
+      jsonrpc: "2.0"
+      method: platform.getBlockchains
+      params: {}
+      id: 1
+  register: blockchains_list_res
+  failed_when: blockchains_list_res.json.error is defined
+
+- name: Get existing blockchains with the same name
+  set_fact:
+    blockchains_w_same_name_ids: '{{ blockchains_list_res.json.result | to_json | from_json | json_query("blockchains[?name==''" + blockchain_name + "'']") | json_query("[?subnetID==''" + subnet_id + "''].id") }}'
+
+- name: Confirm blockchain creation
+  pause:
+    prompt: >-
+      A blockchain with the same name already exists in the subnet.
+      Are you sure you want to create another one? [yes/no]
+  register: confirm_prompt
+  when: blockchains_w_same_name_ids | length
+
+- name: Abort blockchain creation
+  meta: end_play
+  when: not (confirm_prompt.user_input | default('yes') | bool)
+
+- name: Build blockchain genesis data
+  uri:
+    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/vm/{{ blockchain_vm }}{{ avalanchego_vms_list[blockchain_vm].genesis_rpc_extra_path }}"
+    method: POST
+    body_format: json
+    body:
+      jsonrpc: "2.0"
+      method: "{{ avalanchego_vms_list[blockchain_vm].genesis_build_method }}"
+      params: "{{ blockchain_genesis_params }}"
+      id: 1
+  register: encode_data_res
+  failed_when: encode_data_res.json.error is defined
+
+- name: Get genesis data from API response
+  set_fact:
+    genesis_data: "{{ encode_data_res.json.result[avalanchego_vms_list[blockchain_vm].genesis_json_key] }}"
+
+- name: Create the blockchain
+  nuttymoon.avalanche.tx:
+    http_host: "{{ avalanchego_http_host }}"
+    blockchain: P
+    method: platform.createBlockchain
+    username: "{{ subnet_control_username }}"
+    password: "{{ subnet_control_password }}"
+    params:
+      subnetID: "{{ subnet_id }}"
+      vmID: "{{ avalanchego_vms_list[blockchain_vm].id }}"
+      name: "{{ blockchain_name }}"
+      genesisData: "{{ genesis_data }}"
+    wait_validation: yes
+
+- name: Get blockchains list
+  uri:
+    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/P"
+    method: POST
+    body_format: json
+    body:
+      jsonrpc: "2.0"
+      method: platform.getBlockchains
+      params: {}
+      id: 1
+  register: blockchains_list_res
+  failed_when: blockchains_list_res.json.error is defined
+
+- name: Get blockchains with the same name
+  set_fact:
+    blockchains_w_same_name_after: '{{ blockchains_list_res.json.result | to_json | from_json | json_query("blockchains[?name==''" + blockchain_name + "'']") | json_query("[?subnetID==''" + subnet_id + "'']") }}'
+
+- name: Get created blockchain info
+  set_fact:
+    blockchain_info: '{{ blockchains_w_same_name_after | json_query("[?!contains([''" + (blockchains_w_same_name_ids | default([]) | join("'',''")) + "''], id)]") | first }}'
+
+- name: Wait for blockchain to be validated
+  uri:
+    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/P"
+    method: POST
+    body_format: json
+    body:
+      jsonrpc: "2.0"
+      method: platform.getBlockchainStatus
+      params:
+        blockchainID: "{{ blockchain_info.id }}"
+      id: 1
+  register: blockchain_status_res
+  until: blockchain_status_res.json.result.status == "Validating"
+  retries: 12
+  delay: 10
+
+- name: Create blockchain aliases
+  uri:
+    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/admin"
+    method: POST
+    body_format: json
+    body:
+      jsonrpc: "2.0"
+      method: admin.aliasChain
+      params:
+        chain: "{{ blockchain_info.id }}"
+        alias: "{{ item[1] }}"
+      id: 1
+  delegate_to: "{{ item[0] }}"
+  loop: "{{ groups['subnet_validators'] | product(blockchain_aliases) | list }}"
+
+- name: Display blockchain information
+  debug:
+    var: blockchain_info

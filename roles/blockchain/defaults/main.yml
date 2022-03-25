@@ -1,0 +1,19 @@
+# Copyright (C) 2022, Gauthier Leonard
+# See the file LICENSE for licensing terms.
+---
+# Network
+avalanchego_http_host: 127.0.0.1
+avalanchego_http_port: 9650
+
+# Subnet
+subnet_id: aUC7SX8QGVwsbwS4YNuavVTbinjJLrPjNNjdpZbbcFZZFSxFd
+subnet_control_username: ewoq
+subnet_control_password: I_l1ve_@_Endor
+
+# Blockchain
+blockchain_vm: timestampvm
+blockchain_name: Timestamp Chain
+blockchain_aliases:
+  - timestamp
+blockchain_genesis_params:
+  data: Hello world

@@ -1,3 +1,5 @@
+# Copyright (C) 2022, Gauthier Leonard
+# See the file LICENSE for licensing terms.
 ---
 avalanchego_vms_list:
   timestampvm:
@@ -16,6 +18,9 @@ avalanchego_vms_list:
       1.2.2:
         ge: 1.7.5
         lt: 1.7.7
+    genesis_rpc_extra_path: ""
+    genesis_build_method: timestampvm.encode
+    genesis_json_key: bytes
 
   subnetevm:
     id: spePNvBxaWSYL2tB5e2xMmMNBQkXMN8z2XEbz1ML2Aahatwoc
@@ -35,6 +40,9 @@ avalanchego_vms_list:
         lt: 1.7.7
       0.2.0:
         ge: 1.7.7
+    genesis_rpc_extra_path: "/rpc"
+    genesis_build_method: subnetevm.buildGenesis
+    genesis_json_key: genesisBytes
 
   spacesvm:
     id: sqja3uK17MJxfC7AN8nGadBw9JK5BcrsNwNynsqP5Gih8M5Bm

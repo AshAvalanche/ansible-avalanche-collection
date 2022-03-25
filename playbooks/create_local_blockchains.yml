@@ -8,8 +8,10 @@
       include_role:
         name: nuttymoon.avalanche.blockchain
       vars:
-        blockchain_vm: "{{ item.blockchain_vm }}"
-        blockchain_name: "{{ item.blockchain_name }}"
-        blockchain_aliases: "{{ item.blockchain_aliases }}"
-        blockchain_genesis_params: "{{ item.blockchain_genesis_params }}"
+        blockchain_vm: "{{ blockchain.vm }}"
+        blockchain_name: "{{ blockchain.name }}"
+        blockchain_aliases: "{{ blockchain.aliases }}"
+        blockchain_genesis_params: "{{ blockchain.genesis_params }}"
       loop: "{{ create_blockchains }}"
+      loop_control:
+        loop_var: blockchain

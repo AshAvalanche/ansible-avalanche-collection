@@ -137,6 +137,7 @@
       startTime: "{{ subnet_validators_starttime }}"
       endTime: "{{ subnet_validators_endtime }}"
       weight: "{{ subnet_validators_weight }}"
+    wait_validation: yes
   loop: "{{ validators_ids }}"
 
 - name: Display created subnet info

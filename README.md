@@ -51,6 +51,7 @@ The repository [ansible-avalanche-getting-started](https://github.com/Nuttymoon/
 
 - [nuttymoon.avalanche.node](./roles/node): install, configure and upgrade Avalanche nodes
 - [nuttymoon.avalanche.subnet](./roles/subnet): create Avalanche subnets
+- [nuttymoon.avalanche.blockchain](./roles/blockchain): create Avalanche blockchains
 
 ### Playbooks
 
@@ -65,6 +66,9 @@ The repository [ansible-avalanche-getting-started](https://github.com/Nuttymoon/
 - `nuttymoon.avalanche.subnet`:
   - **The node used to make API calls** have to be in the `subnet_control_node` group.
   - **The nodes to be added as validators** to the subnet have to be in the `subnet_validators` group. The Ansible host has to be able to connect to those nodes via SSH.
+- `nuttymoon.avalanche.blockchain`:
+  - **The node used to make API calls** have to be in the `subnet_control_node` group.
+  - **The validators** of the subnet have to be in the `subnet_validators` group. The Ansible host has to be able to connect to those nodes via SSH.
 
 ## Roadmap
 

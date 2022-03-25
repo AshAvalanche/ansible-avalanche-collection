@@ -12,6 +12,7 @@ avalanchego_db_dir: /var/lib/avalanchego/db
 avalanchego_conf_dir: /etc/avalanche/avalanchego/conf
 avalanchego_certs_dir: /etc/avalanche/avalanchego/staking
 avalanchego_log_dir: /var/log/avalanche/avalanchego
+avalanchego_vms_dir: /opt/avalanche/vms
 
 # User & network
 avalanchego_user: avalanche
@@ -36,11 +37,9 @@ avalanche_prefunded_username: ewoq
 avalanche_prefunded_password: I_l1ve_@_Endor
 avalanche_prefunded_private_key: PrivateKey-ewoqjP7PxY4yr3iLTpLisriqt94hdyDFNgchSxGGztUrTXtNN
 
-# Subnets whitelist & VMs aliases
+# Subnets whitelist
 avalanche_whitelisted_subnets: ""
-avalanche_vm_aliases:
-  tGas3T58KzdjLHhBDMnH2TvrddhqTji5iZAMZ3RXs2NLpSnhH:
-    - timestampvm
-    - timestamp
-  spePNvBxaWSYL2tB5e2xMmMNBQkXMN8z2XEbz1ML2Aahatwoc:
-    - subnetevm
+
+# VMs
+avalanchego_vms_install:
+  - timestampvm=1.2.0

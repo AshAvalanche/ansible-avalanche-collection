@@ -1,0 +1,8 @@
+{# Copyright (C) 2022, Gauthier Leonard
+See the file LICENSE for licensing terms. #}
+{
+  {% for vm in avalanchego_vms_install %}
+  {% set vm_name = vm.split('=')[0] %}
+  "{{ avalanchego_vms_list[vm_name].id }}": {{ avalanchego_vms_list[vm_name].aliases | to_json }}{{ ',' if not loop.last else '' }}
+  {% endfor %}
+}

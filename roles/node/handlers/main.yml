@@ -5,3 +5,27 @@
   service:
     name: avalanchego
     state: restarted
+
+- name: Restart avalanchego
+  service:
+    name: avalanchego
+    state: restarted
+  listen: New VM
+# Cannot use admin.loadVMs yet as it does not detect version changes
+# See https://github.com/ava-labs/avalanchego/issues/1030
+# when: avalanchego_version is version('1.7.6', '<')
+
+# - name: Reload VMs
+#   uri:
+#     url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/admin"
+#     method: POST
+#     body_format: json
+#     body:
+#       jsonrpc: "2.0"
+#       method: admin.loadVMs
+#       params: {}
+#       id: 1
+#   register: load_vms_res
+#   failed_when: load_vms_res.json.error is defined
+#   listen: New VM
+#   when: avalanchego_version is version('1.7.6', '>=')

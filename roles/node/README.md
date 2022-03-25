@@ -3,6 +3,7 @@
 This Ansible role allows to bootstrap Avalanche nodes:
 
 - Install and configure [AvalancheGo](https://github.com/ava-labs/avalanchego) following Linux best practices
+- Install Virtual Machines that can later be used to create blockchains
 - (On local networks) Create an account with access to pre-funded addresses as described [here](https://docs.avax.network/build/tutorials/platform/fund-a-local-test-network)
 
 ## Role variables
@@ -18,6 +19,7 @@ This Ansible role allows to bootstrap Avalanche nodes:
 | `avalanchego_conf_dir`            | Where to store AvalancheGo config files                                                                                                                                             | `/etc/avalanche/avalanchego/conf`                              |
 | `avalanchego_certs_dir`           | Where to store the node's TLS certs                                                                                                                                                 | `/etc/avalanche/avalanchego/staking`                           |
 | `avalanchego_log_dir`             | Where to write logs                                                                                                                                                                 | `/var/log/avalanche/avalanchego`                               |
+| `avalanchego_vms_dir`             | Where to unpack VMs logs                                                                                                                                                            | `/opt/avalanche/vms`                                           |
 | `avalanchego_user`                | The user that will run the AvalancheGo Linux service                                                                                                                                | `avalanche`                                                    |
 | `avalanchego_use_static_ip`       | Wether to explicitly set the node's [public IP](https://docs.avax.network/build/references/avalanchego-config-flags#public-ip). If `yes` will use the IP provided in the inventory. | `yes`                                                          |
 | `avalanchego_http_host`           | [--http-host](https://docs.avax.network/build/references/avalanchego-config-flags#--http-host-string) argument                                                                      | `127.0.0.1`                                                    |
@@ -34,11 +36,7 @@ This Ansible role allows to bootstrap Avalanche nodes:
 | `avalanche_prefunded_password`    | The password for `avalanche_prefunded_username`                                                                                                                                     | `I_l1ve_@_Endor`                                               |
 | `avalanche_prefunded_private_key` | The private key used to access pre-funded addresses                                                                                                                                 | `PrivateKey-ewoqjP7PxY4yr3iLTpLisriqt94hdyDFNgchSxGGztUrTXtNN` |
 | `avalanche_whitelisted_subnets`   | [--whitelisted-subnets-string](https://docs.avax.network/build/references/avalanchego-config-flags/#--whitelisted-subnets-string) argument                                          | `""`                                                           |
-| `avalanche_vm_aliases`            | Object containing a list of aliases for each VM ID. See [VM Configs](https://docs.avax.network/build/references/avalanchego-config-flags/#vm-configs)                               | `tGas3T58KzdjLHhBDMnH2TvrddhqTji5iZAMZ3RXs2NLpSnhH:`           |
-|                                   |                                                                                                                                                                                     | ` - timestampvm`                                               |
-|                                   |                                                                                                                                                                                     | ` - timestamp`                                                 |
-|                                   |                                                                                                                                                                                     | `spePNvBxaWSYL2tB5e2xMmMNBQkXMN8z2XEbz1ML2Aahatwoc:`           |
-|                                   |                                                                                                                                                                                     | ` - subnetevm`                                                 |
+| `avalanchego_vms_install`         | The list of VMs to install on the node with their versions. VM names and versions are separated by `=`. See [VMs install](#vms-installation).                                       | `['timestampvm=1.2.0']`                                        |
 
 **Note:** All config arguments are passed to AvalancheGo through a JSON config file stored at `avalanchego_config_dir`
 
@@ -61,6 +59,31 @@ The default installation follows [Linux Filesystem Hierarchy Standard](https://r
   - `/var/lib/avalanchego/db` contains AvalancheGo's database
 
 **Note:** This differs from AvalancheGo default setup that stores the database and configuration files under `$HOME/.avalanchego`.
+
+## VMs installation
+
+To install a VM on the node, add it to `avalanchego_vms_install` following `VM_NAME=VM_VERSION` format (e.g. `timestampvm=1.2.0`).
+
+**Note:** If `avalanchego_vms_install` is specified in your inventory, you have to list **all the VMs** to be installed (there isn't any merge with the default list).
+
+### Available VMs and AvalancheGo compatibility
+
+List of VMs currently available for install:
+
+- The [Timestamp Virtual Machine](https://github.com/ava-labs/timestampvm): versions `1.2.0` and later
+- The [Subnet EVM](https://github.com/ava-labs/subnet-evm): all versions
+- The [Spaces Virtual Machine](https://github.com/ava-labs/spacesvm): all versions
+
+Here is the compatibility matrix with AvalancheGo versions:
+
+| AvalancheGo     | `timestampvm` | `subnetevm` | `spacesvm` |
+| --------------- | ------------- | ----------- | ---------- |
+| `1.7.[0,1,2,3]` | `1.2.0`       | `0.1.0`     | `0.0.1`    |
+| `1.7.4`         | `1.2.[0,1]`   | `0.1.0`     | `0.0.1`    |
+| `1.7.[5,6]`     | `1.2.2`       | `0.1.[1,2]` | `0.0.2`    |
+| `1.7.7`         | -             | `0.2.0`     | -          |
+
+**Note:** If an versions incompatibility is detected, an error message will be prompted and the role execution will stop.
 
 ## How to?
 

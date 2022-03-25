@@ -1,0 +1,39 @@
+# Copyright (C) 2022, Gauthier Leonard
+# See the file LICENSE for licensing terms.
+---
+- name: Check that {{ vm_name }}={{ vm_version }} is compatible with avalanchego={{ avalanchego_version }}
+  debug:
+    msg: "AvalancheGo version {{ item.key }} {{ item.value }}: {{ avalanchego_version is version(item.value, item.key) }}"
+  run_once: yes
+  loop: "{{ vm_info.versions_comp[vm_version] | dict2items }}"
+  failed_when: not avalanchego_version is version(item.value, item.key)
+
+- name: Template {{ vm_name }} binary filename
+  set_fact:
+    vm_binary_name: "{{ vm_info.binary_prefix }}-v{{ vm_version }}.tar.gz"
+
+- name: Create {{ vm_name }} dir
+  file:
+    path: "{{ avalanchego_vms_dir }}/{{ vm_name }}/releases"
+    state: directory
+
+- name: Download {{ vm_name }} binary
+  get_url:
+    url: "{{ vm_info.download_url }}/v{{ vm_version }}/{{ vm_binary_name }}"
+    dest: "{{ avalanchego_vms_dir }}/{{ vm_name }}/releases/{{ vm_binary_name }}"
+
+- name: Unpack {{ vm_name }} binary
+  unarchive:
+    src: "{{ avalanchego_vms_dir }}/{{ vm_name }}/releases/{{ vm_binary_name }}"
+    dest: "{{ avalanchego_vms_dir }}/{{ vm_name }}"
+    remote_src: yes
+    creates: "{{ avalanchego_vms_dir }}/{{ vm_name}}/{{ vm_name }}-v{{ vm_version }}"
+
+- name: Create the symlink to {{ vm_name }} binary in plugins dir
+  file:
+    src: "{{ avalanchego_vms_dir }}/{{ vm_name }}/{{ vm_name }}-v{{ vm_version }}/{{ vm_name }}"
+    dest: "{{ avalanchego_install_dir }}/current/plugins/{{ vm_name }}"
+    state: link
+    owner: "{{ avalanchego_user }}"
+    group: "{{ avalanchego_user }}"
+  notify: New VM

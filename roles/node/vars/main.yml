@@ -1,0 +1,51 @@
+---
+avalanchego_vms_list:
+  timestampvm:
+    id: tGas3T58KzdjLHhBDMnH2TvrddhqTji5iZAMZ3RXs2NLpSnhH
+    aliases:
+      - timestampvm
+    download_url: https://github.com/Nuttymoon/timestampvm/releases/download
+    binary_prefix: timestampvm-linux-amd64
+    versions_comp:
+      1.2.0:
+        ge: 1.7.0
+        lt: 1.7.5
+      1.2.1:
+        ge: 1.7.4
+        lt: 1.7.5
+      1.2.2:
+        ge: 1.7.5
+        lt: 1.7.7
+
+  subnetevm:
+    id: spePNvBxaWSYL2tB5e2xMmMNBQkXMN8z2XEbz1ML2Aahatwoc
+    aliases:
+      - subnetevm
+    download_url: https://github.com/Nuttymoon/subnet-evm/releases/download
+    binary_prefix: subnetevm-linux-amd64
+    versions_comp:
+      0.1.0:
+        ge: 1.7.0
+        lt: 1.7.5
+      0.1.1:
+        ge: 1.7.5
+        lt: 1.7.7
+      0.1.2:
+        ge: 1.7.5
+        lt: 1.7.7
+      0.2.0:
+        ge: 1.7.7
+
+  spacesvm:
+    id: sqja3uK17MJxfC7AN8nGadBw9JK5BcrsNwNynsqP5Gih8M5Bm
+    aliases:
+      - spacesvm
+    download_url: https://github.com/Nuttymoon/spacesvm/releases/download
+    binary_prefix: spacesvm-linux-amd64
+    versions_comp:
+      0.0.1:
+        ge: 1.7.0
+        lt: 1.7.5
+      0.0.2:
+        ge: 1.7.5
+        lt: 1.7.7

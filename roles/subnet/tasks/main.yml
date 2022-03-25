@@ -86,7 +86,6 @@
       controlKeys: "{{ subnet_control_keys }}"
       threshold: "{{ subnet_control_keys_threshold }}"
     wait_validation: yes
-  register: create_subnet_res
 
 - name: Get subnets list
   uri:

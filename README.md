@@ -71,5 +71,5 @@ The repository [ansible-avalanche-getting-started](https://github.com/Nuttymoon/
 - [x] Avalanche transaction module
 - [x] Subnet role
 - [x] VMs management
-- [ ] Blockchain role
+- [x] Blockchain role
 - [ ] TLS support

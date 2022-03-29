@@ -70,9 +70,9 @@ To install a VM on the node, add it to `avalanchego_vms_install` following `VM_N
 
 List of VMs currently available for install:
 
-- The [Timestamp Virtual Machine](https://github.com/ava-labs/timestampvm): versions `1.2.0` and later
-- The [Subnet EVM](https://github.com/ava-labs/subnet-evm): all versions
-- The [Spaces Virtual Machine](https://github.com/ava-labs/spacesvm): all versions
+- `timestampvm`: The [Timestamp Virtual Machine](https://github.com/ava-labs/timestampvm) in versions `1.2.0` and later
+- `subnetevm`: The [Subnet EVM](https://github.com/ava-labs/subnet-evm) in all versions
+- `spacesvm`: The [Spaces Virtual Machine](https://github.com/ava-labs/spacesvm) in all versions
 
 Here is the compatibility matrix with AvalancheGo versions:
 

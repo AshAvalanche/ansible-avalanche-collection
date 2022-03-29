@@ -3,6 +3,5 @@
 ---
 - name: Create the subnet
   hosts: subnet_control_node
-  vars_prompt:
   roles:
     - role: nuttymoon.avalanche.subnet

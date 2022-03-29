@@ -1,6 +1,6 @@
 # nuttymoon.avalanche.subnet
 
-This Ansible role allows to create Avalanche subnets.
+This Ansible role allows to create an Avalanche subnet.
 
 ## Role variables
 

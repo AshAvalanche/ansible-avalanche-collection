@@ -19,6 +19,10 @@
     - "{{ avalanchego_certs_dir }}"
     - "{{ avalanchego_log_dir }}"
 
+- name: Bootstrap database
+  include_tasks: bootstrap-db.yml
+  when: (avalanchego_bootstrap_db is defined) and (avalanchego_bootstrap_db|length > 0)
+
 - name: Download avalanchego binary
   get_url:
     url: "{{ avalanchego_binary_url }}"

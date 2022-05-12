@@ -2,7 +2,7 @@
 
 # Copyright (C) 2022, Gauthier Leonard
 # See the file LICENSE for licensing terms.
-from __future__ import (absolute_import, division, print_function)
+from __future__ import absolute_import, division, print_function
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.common.text.converters import jsonify
 from ansible.module_utils._text import to_native
@@ -11,51 +11,49 @@ from ansible.module_utils.urls import Request
 import json
 import time
 
-from importlib_metadata import requires
 __metaclass__ = type
 
 
 BLOCKCHAINS_TX_STATUS = {
     'P': {
         'method': 'platform.getTxStatus',
-        'status': ['Committed', 'Dropped', 'Processing', 'Unknown']
+        'status': ['Committed', 'Dropped', 'Processing', 'Unknown'],
     },
     'X': {
         'method': 'avm.getTxStatus',
-        'status': ['Accepted', 'Rejected', 'Processing', 'Unknown']
+        'status': ['Accepted', 'Rejected', 'Processing', 'Unknown'],
     },
     'C/avax': {
         'method': 'avax.getAtomicTxStatus',
-        'status': ['Accepted', 'Dropped', 'Processing', 'Unknown']
-    }
+        'status': ['Accepted', 'Dropped', 'Processing', 'Unknown'],
+    },
 }
 
 
 def call_avalanche_api(endpoint, data):
     r = Request()
-    return json.loads(r.open(
-        'POST',
-        endpoint,
-        headers={'Content-Type': 'application/json'},
-        data=data
-    ).read())
+    return json.loads(
+        r.open(
+            'POST', endpoint, headers={'Content-Type': 'application/json'}, data=data
+        ).read()
+    )
 
 
 def submit_tx(result, retry_if_unknown, max_retries, num_retries=0):
-    submit_resp = call_avalanche_api(
-        result['endpoint'],
-        jsonify(result['tx_data'])
-    )
+    submit_resp = call_avalanche_api(result['endpoint'], jsonify(result['tx_data']))
 
     if submit_resp.get('error', False):
         result['failed'] = True
-        result['msg'] = ('The API call returned an error. '
-                         'See response.result.error for details.')
+        result['msg'] = (
+            'The API call returned an error. ' 'See response.result.error for details.'
+        )
         return submit_resp
     elif not submit_resp['result'].get('txID', False):
         result['failed'] = True
-        result['msg'] = (f'The method called ({result["tx_data"]["method"]}) '
-                         'does not create a transaction.')
+        result['msg'] = (
+            f'The method called ({result["tx_data"]["method"]}) '
+            'does not create a transaction.'
+        )
         return submit_resp
 
     # Get tx status
@@ -64,12 +62,9 @@ def submit_tx(result, retry_if_unknown, max_retries, num_retries=0):
         'jsonrpc': '2.0',
         'id': 1,
         'method': BLOCKCHAINS_TX_STATUS[result['blockchain']]['method'],
-        'params': {'txID': result['tx_id']}
+        'params': {'txID': result['tx_id']},
     }
-    status_resp = call_avalanche_api(
-        result['endpoint'],
-        jsonify(tx_status_data)
-    )
+    status_resp = call_avalanche_api(result['endpoint'], jsonify(tx_status_data))
 
     unknown_status = BLOCKCHAINS_TX_STATUS[result['blockchain']]['status'][3]
 
@@ -88,13 +83,14 @@ def submit_tx(result, retry_if_unknown, max_retries, num_retries=0):
 
 def wait_tx_validation(result, timeout):
     tx_status = result['response']['result']['status']
-    accepted_status, rejected_status = BLOCKCHAINS_TX_STATUS[
-        result['blockchain']]['status'][0:2]
+    accepted_status, rejected_status = BLOCKCHAINS_TX_STATUS[result['blockchain']][
+        'status'
+    ][0:2]
     tx_status_data = {
         'jsonrpc': '2.0',
         'id': 1,
         'method': BLOCKCHAINS_TX_STATUS[result['blockchain']]['method'],
-        'params': {'txID': result['tx_id']}
+        'params': {'txID': result['tx_id']},
     }
 
     start_time = time.time()
@@ -102,10 +98,7 @@ def wait_tx_validation(result, timeout):
 
     while tx_status not in [accepted_status, rejected_status]:
         time.sleep(5)
-        status_resp = call_avalanche_api(
-            result['endpoint'],
-            jsonify(tx_status_data)
-        )
+        status_resp = call_avalanche_api(result['endpoint'], jsonify(tx_status_data))
         tx_status = status_resp['result']['status']
 
         if elapsed_time >= timeout:
@@ -136,18 +129,12 @@ def main():
         retry_if_unknown=dict(type='bool', default=True),
         max_retries=dict(type='int', default=5),
         wait_validation=dict(type='bool', default=False),
-        wait_timeout=dict(type='int', default=300)
+        wait_timeout=dict(type='int', default=300),
     )
 
-    result = {
-        'changed': False,
-        'failed': False
-    }
+    result = {'changed': False, 'failed': False}
 
-    module = AnsibleModule(
-        argument_spec=module_args,
-        supports_check_mode=True
-    )
+    module = AnsibleModule(argument_spec=module_args, supports_check_mode=True)
 
     blockchain = module.params['blockchain']
     method = module.params['method']
@@ -170,13 +157,13 @@ def main():
             'jsonrpc': '2.0',
             'id': 1,
             'method': method,
-            'params': params
+            'params': params,
         }
 
         if result['blockchain'] not in BLOCKCHAINS_TX_STATUS.keys():
-            result['msg'] = (
-                f'The blockchain "{result["blockchain"]}" is not supported by this module.'
-            )
+            result[
+                'msg'
+            ] = f'The blockchain "{result["blockchain"]}" is not supported by this module.'
             result['failed'] = True
             module.exit_json(**result)
 
@@ -198,6 +185,7 @@ def main():
 
     except Exception:
         import traceback
+
         module.fail_json(msg=to_native(traceback.format_exc()))
 
 

@@ -24,8 +24,10 @@ See the file LICENSE for licensing terms. #}
   {% endif %}
   "log-level": "{{ avalanchego_log_level }}",
   "log-dir": "{{ avalanchego_log_dir }}",
+  {% if avalanchego_use_existing_certs %}
   "staking-tls-cert-file": "{{ avalanchego_certs_dir }}/staker.crt",
   "staking-tls-key-file": "{{ avalanchego_certs_dir }}/staker.key",
+  {% endif %}
   "whitelisted-subnets": "{{ avalanche_whitelisted_subnets }}",
   "vm-aliases-file": "{{ avalanchego_conf_dir }}/vms/aliases.json"
 }

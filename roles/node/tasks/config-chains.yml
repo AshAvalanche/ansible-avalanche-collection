@@ -1,0 +1,19 @@
+# Copyright (C) 2022, Gauthier Leonard
+# See the file LICENSE for licensing terms.
+---
+- name: Create chains conf dirs
+  file:
+    path: "{{ avalanchego_chains_conf_dir }}/{{ item }}"
+    state: directory
+    owner: "{{ avalanchego_user }}"
+    group: "{{ avalanchego_user }}"
+  loop: "{{ avalanchego_chains_configs.keys() }}"
+
+- name: Generate chains config.json
+  copy:
+    content: "{{ item.value | to_nice_json }}\n"
+    dest: "{{ avalanchego_chains_conf_dir }}/{{ item.key }}/config.json"
+    owner: "{{ avalanchego_user }}"
+    group: "{{ avalanchego_user }}"
+  loop: "{{ avalanchego_chains_configs | dict2items }}"
+  notify: Restart avalanchego

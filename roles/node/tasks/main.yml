@@ -1,87 +1,11 @@
 # Copyright (C) 2022, Gauthier Leonard
 # See the file LICENSE for licensing terms.
 ---
-- name: "Create {{ avalanchego_user }} user"
-  user:
-    name: "{{ avalanchego_user }}"
-
-- name: Create avalanchego dirs
-  file:
-    path: "{{ item }}"
-    state: directory
-    owner: "{{ avalanchego_user }}"
-    group: "{{ avalanchego_user }}"
-  loop:
-    - "{{ avalanchego_install_dir }}/current/plugins"
-    - "{{ avalanchego_install_dir }}/releases"
-    - "{{ avalanchego_db_dir }}"
-    - "{{ avalanchego_conf_dir }}/vms"
-    - "{{ avalanchego_certs_dir }}"
-    - "{{ avalanchego_log_dir }}"
-
-- name: Bootstrap database
-  include_tasks: bootstrap-db.yml
-  when: (avalanchego_bootstrap_db is defined) and (avalanchego_bootstrap_db|length > 0)
-
-- name: Download avalanchego binary
-  get_url:
-    url: "{{ avalanchego_binary_url }}"
-    dest: "{{ avalanchego_install_dir }}/releases/{{ avalanchego_binary_name }}"
-
-- name: Unpack avalanchego binary
-  unarchive:
-    src: "{{ avalanchego_install_dir }}/releases/{{ avalanchego_binary_name }}"
-    dest: "{{ avalanchego_install_dir }}"
-    remote_src: yes
-    creates: "{{ avalanchego_install_dir }}/avalanchego-v{{ avalanchego_version }}"
-
-- name: Create the symlink to current avalanchego binary
-  file:
-    src: "{{ avalanchego_install_dir }}/avalanchego-v{{ avalanchego_version }}/avalanchego"
-    dest: "{{ avalanchego_install_dir }}/current/avalanchego"
-    state: link
-    owner: "{{ avalanchego_user }}"
-    group: "{{ avalanchego_user }}"
-  notify: Restart avalanchego
-
-- name: Create the symlink to current evm binary in plugins dir
-  file:
-    src: "{{ avalanchego_install_dir }}/avalanchego-v{{ avalanchego_version }}/plugins/evm"
-    dest: "{{ avalanchego_install_dir }}/current/plugins/evm"
-    state: link
-    owner: "{{ avalanchego_user }}"
-    group: "{{ avalanchego_user }}"
-  notify: Restart avalanchego
-
-- name: Upload nodes certificates
-  copy:
-    src: "{{ avalanchego_local_certs_dir }}/{{ inventory_hostname }}.{{ item }}"
-    dest: "{{ avalanchego_certs_dir }}/staker.{{ item }}"
-  loop:
-    - crt
-    - key
-  when: avalanchego_use_existing_certs
-
-- name: Set bootstrap_ip
-  set_fact:
-    bootstrap_ip: "{{ hostvars[groups['bootstrap_node'][0]]['ansible_host'] }}"
-  when: avalanchego_network_id == 'local'
-
-- name: Template node.json
-  template:
-    src: node.json.j2
-    dest: "{{ avalanchego_conf_dir }}/node.json"
-    lstrip_blocks: yes
-  notify: Restart avalanchego
-
-- name: Template avalanchego.service file
-  template:
-    src: avalanchego.service.j2
-    dest: /etc/systemd/system/avalanchego.service
-  notify: Restart avalanchego
+- name: Install AvalancheGo
+  include_tasks: install-avalanchego.yml
 
 - name: Install VMs
-  include_tasks: vm-install.yml
+  include_tasks: install-vm.yml
   vars:
     vm_name: "{{ vm.split('=')[0] }}"
     vm_version: "{{ vm.split('=')[1] }}"
@@ -90,35 +14,11 @@
   loop_control:
     loop_var: vm
 
-- name: Template aliases.json file
-  template:
-    src: aliases.json.j2
-    dest: "{{ avalanchego_conf_dir }}/vms/aliases.json"
-    lstrip_blocks: yes
-  notify: New VM
+- name: Configure AvalancheGo node
+  include_tasks: config-node.yml
 
-- name: Make AvalancheGo user owner of avalanche directories
-  file:
-    path: "{{ item }}"
-    state: directory
-    recurse: yes
-    owner: "{{ avalanchego_user }}"
-    group: "{{ avalanchego_user }}"
-  loop:
-    - "{{ avalanchego_install_dir }}"
-    - "{{ avalanchego_conf_dir }}"
-    - "{{ avalanchego_certs_dir }}"
-    - "{{ avalanchego_vms_dir }}"
+- name: Configure chains
+  include_tasks: config-chains.yml
 
-- name: Reload systemctl daemons
-  systemd:
-    daemon_reload: yes
-
-- name: Restart AvalancheGo and reload VMs if needed
-  meta: flush_handlers
-
-- name: Start and enable avalanchego.service
-  service:
-    name: avalanchego
-    state: started
-    enabled: yes
+- name: Start AvalancheGo node
+  include_tasks: start.yml

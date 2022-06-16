@@ -1,0 +1,69 @@
+# Copyright (C) 2022, Gauthier Leonard
+# See the file LICENSE for licensing terms.
+---
+- name: Set bootstrap_ip
+  set_fact:
+    bootstrap_ip: "{{ hostvars[groups['bootstrap_node'][0]]['ansible_host'] }}"
+  when: avalanchego_network_id == 'local'
+
+- name: Construct public-ip conf
+  set_fact:
+    node_conf_public_ip: |
+      {{ {'public-ip': ansible_host} if avalanchego_use_static_ip else {} }}
+
+- name: Construct bootstrap-* conf
+  set_fact:
+    node_conf_bootstrap: |
+      {{ {
+           'bootstrap-ips': '' if inventory_hostname == groups['bootstrap_node'][0]
+             else (bootstrap_ip + ':' + (avalanchego_staking_port | string)),
+           'bootstrap-ids': '' if inventory_hostname == groups['bootstrap_node'][0]
+             else (avalanchego_bootstrap_node_id) 
+         } if avalanchego_network_id == 'local' else {} }}
+
+- name: Construct staking-tls-*-file conf
+  set_fact:
+    node_conf_staking_tls_files: |
+      {{ {
+           'staking-tls-cert-file': avalanchego_certs_dir + '/staker.crt',
+           'staking-tls-key-file': avalanchego_certs_dir + '/staker.key'
+         } if avalanchego_use_existing_certs else {} }}
+
+- name: Construct node.json conf
+  set_fact:
+    node_conf_json: |
+      {{ avalanchego_node_json |
+         combine(
+           node_conf_public_ip,
+           node_conf_bootstrap,
+           node_conf_staking_tls_files
+         ) }}
+
+- name: Generate node.json
+  copy:
+    content: "{{ node_conf_json | to_nice_json(indent=2) }}\n"
+    dest: "{{ avalanchego_conf_dir }}/node.json"
+    owner: "{{ avalanchego_user }}"
+    group: "{{ avalanchego_user }}"
+  notify: Restart avalanchego
+
+- name: Upload nodes certificates
+  copy:
+    src: "{{ avalanchego_local_certs_dir }}/{{ inventory_hostname }}.{{ item }}"
+    dest: "{{ avalanchego_certs_dir }}/staker.{{ item }}"
+    owner: "{{ avalanchego_user }}"
+    group: "{{ avalanchego_user }}"
+  loop:
+    - crt
+    - key
+  when: avalanchego_use_existing_certs
+  notify: Restart avalanchego
+
+- name: Template aliases.json file
+  template:
+    src: aliases.json.j2
+    dest: "{{ avalanchego_vms_conf_dir }}/aliases.json"
+    lstrip_blocks: yes
+    owner: "{{ avalanchego_user }}"
+    group: "{{ avalanchego_user }}"
+  notify: New VM

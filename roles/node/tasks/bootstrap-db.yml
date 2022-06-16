@@ -1,9 +1,10 @@
 # Copyright (C) 2022, Gauthier Leonard
 # See the file LICENSE for licensing terms.
 ---
-
 - name: Unpack bootstrap database
   unarchive:
     src: "{{ avalanchego_bootstrap_db }}"
     dest: "{{ avalanchego_db_dir }}"
+    owner: "{{ avalanchego_user }}"
+    group: "{{ avalanchego_user }}"
     creates: "{{ avalanchego_db_dir }}/{{ avalanchego_network_id }}"

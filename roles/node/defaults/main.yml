@@ -60,6 +60,7 @@ avalanchego_node_json:
   network-id: "{{ avalanchego_network_id }}"
   snow-sample-size: 2
   snow-quorum-size: 2
+  snow-mixed-query-num-push-vdr: 2
   staking-enabled: true
   # Paths
   db-dir: "{{ avalanchego_db_dir }}"

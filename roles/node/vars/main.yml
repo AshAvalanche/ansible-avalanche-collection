@@ -2,35 +2,40 @@
 # See the file LICENSE for licensing terms.
 ---
 avalanchego_vms_list:
-  timestampvm:
-    id: tGas3T58KzdjLHhBDMnH2TvrddhqTji5iZAMZ3RXs2NLpSnhH
+  spacesvm:
     aliases:
-      - timestampvm
-    download_url: https://github.com/Nuttymoon/timestampvm/releases/download
-    binary_prefix: timestampvm-linux-amd64
+    - spacesvm
+    binary_prefix: spacesvm-linux-amd64
+    download_url: https://github.com/Nuttymoon/spacesvm/releases/download
+    id: sqja3uK17MJxfC7AN8nGadBw9JK5BcrsNwNynsqP5Gih8M5Bm
     versions_comp:
-      1.2.0:
+      0.0.1:
         ge: 1.7.0
         le: 1.7.4
-      1.2.1:
-        ge: 1.7.4
-        le: 1.7.4
-      1.2.2:
+      0.0.2:
         ge: 1.7.5
         le: 1.7.6
-      1.2.3:
+      0.0.3:
         ge: 1.7.7
-        le: 1.7.7
-    genesis_rpc_extra_path: ""
-    genesis_build_method: timestampvm.encode
-    genesis_json_key: bytes
-
+        le: 1.7.9
+      0.0.4:
+        ge: 1.7.10
+        le: 1.7.10
+      0.0.5:
+        ge: 1.7.11
+        le: 1.7.12
+      0.0.6:
+        ge: 1.7.13
+        le: 1.7.13
   subnetevm:
-    id: spePNvBxaWSYL2tB5e2xMmMNBQkXMN8z2XEbz1ML2Aahatwoc
     aliases:
-      - subnetevm
-    download_url: https://github.com/Nuttymoon/subnet-evm/releases/download
+    - subnetevm
     binary_prefix: subnetevm-linux-amd64
+    download_url: https://github.com/Nuttymoon/subnet-evm/releases/download
+    genesis_build_method: subnetevm.buildGenesis
+    genesis_json_key: genesisBytes
+    genesis_rpc_extra_path: /rpc
+    id: spePNvBxaWSYL2tB5e2xMmMNBQkXMN8z2XEbz1ML2Aahatwoc
     versions_comp:
       0.1.0:
         ge: 1.7.0
@@ -47,26 +52,40 @@ avalanchego_vms_list:
       0.2.1:
         ge: 1.7.10
         le: 1.7.10
-    genesis_rpc_extra_path: "/rpc"
-    genesis_build_method: subnetevm.buildGenesis
-    genesis_json_key: genesisBytes
-
-  spacesvm:
-    id: sqja3uK17MJxfC7AN8nGadBw9JK5BcrsNwNynsqP5Gih8M5Bm
+      0.2.2:
+        ge: 1.7.11
+        le: 1.7.12
+      0.2.3:
+        ge: 1.7.13
+        le: 1.7.13
+      0.2.4:
+        ge: 1.7.13
+        le: 1.7.13
+  timestampvm:
     aliases:
-      - spacesvm
-    download_url: https://github.com/Nuttymoon/spacesvm/releases/download
-    binary_prefix: spacesvm-linux-amd64
+    - timestampvm
+    binary_prefix: timestampvm-linux-amd64
+    download_url: https://github.com/Nuttymoon/timestampvm/releases/download
+    genesis_build_method: timestampvm.encode
+    genesis_json_key: bytes
+    genesis_rpc_extra_path: ''
+    id: tGas3T58KzdjLHhBDMnH2TvrddhqTji5iZAMZ3RXs2NLpSnhH
     versions_comp:
-      0.0.1:
+      1.2.0:
         ge: 1.7.0
         le: 1.7.4
-      0.0.2:
+      1.2.1:
+        ge: 1.7.0
+        le: 1.7.4
+      1.2.2:
         ge: 1.7.5
         le: 1.7.6
-      0.0.3:
+      1.2.3:
         ge: 1.7.7
         le: 1.7.9
-      0.0.4:
+      1.2.4:
         ge: 1.7.10
         le: 1.7.10
+      1.2.5:
+        ge: 1.7.11
+        le: 1.7.12

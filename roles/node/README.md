@@ -70,18 +70,21 @@ To install a VM on the node, add it to `avalanchego_vms_install` following `VM_N
 
 List of VMs currently available for install:
 
-- `timestampvm`: The [Timestamp Virtual Machine](https://github.com/ava-labs/timestampvm) in versions `1.2.0` and later
-- `subnetevm`: The [Subnet EVM](https://github.com/ava-labs/subnet-evm) in all versions
+- `blobvm`: The [Blob Virtual Machine](https://github.com/ava-labs/blobvm) in all versions
 - `spacesvm`: The [Spaces Virtual Machine](https://github.com/ava-labs/spacesvm) in all versions
+- `subnetevm`: The [Subnet EVM](https://github.com/ava-labs/subnet-evm) in all versions
+- `timestampvm`: The [Timestamp Virtual Machine](https://github.com/ava-labs/timestampvm) in versions `1.2.0` and later
 
 Here is the compatibility matrix with AvalancheGo versions:
 
-| AvalancheGo     | `timestampvm` | `subnetevm` | `spacesvm` |
-| --------------- | ------------- | ----------- | ---------- |
-| `1.7.[0,1,2,3]` | `1.2.0`       | `0.1.0`     | `0.0.1`    |
-| `1.7.4`         | `1.2.[0,1]`   | `0.1.0`     | `0.0.1`    |
-| `1.7.[5,6]`     | `1.2.2`       | `0.1.[1,2]` | `0.0.2`    |
-| `1.7.7`         | -             | `0.2.0`     | -          |
+| AvalancheGo     | `blobvm`      | `spacesvm` | `subnetevm`   | `timestampvm` |
+| --------------- | ------------- | ---------- | ------------- | ------------- |
+| `1.7.0-1.7.4`   | -             | `0.0.1`    | `0.1.0`       | `1.2.0`       |
+| `1.7.5-1.7.6`   | -             | `0.0.2`    | `0.1.1-0.1.2` | `1.2.2`       |
+| `1.7.7-1.7.9`   | `0.0.1-0.0.2` | `0.0.3`    | `0.2.0`       | `1.2.3`       |
+| `1.7.10`        | `0.0.3`       | `0.0.4`    | `0.2.1`       | `1.2.4`       |
+| `1.7.11-1.7.12` | `0.0.4`       | `0.0.5`    | `0.2.2`       | `1.2.5`       |
+| `1.7.13-1.7.14` | `0.0.5-0.0.6` | `0.0.6`    | `0.2.3-0.2.5` | -             |
 
 **Note:** If an versions incompatibility is detected, an error message will be prompted and the role execution will stop.
 

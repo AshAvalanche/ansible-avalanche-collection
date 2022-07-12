@@ -23,6 +23,7 @@
   get_url:
     url: "{{ vm_info.download_url }}/v{{ vm_version }}/{{ vm_binary_name }}"
     dest: "{{ avalanchego_vms_dir }}/{{ vm_name }}/releases/{{ vm_binary_name }}"
+    checksum: "sha512:{{ vm_info.download_url }}/v{{ vm_version }}/{{ vm_binary_name }}.sha512"
     owner: "{{ avalanchego_user }}"
     group: "{{ avalanchego_user }}"
 

@@ -2,6 +2,31 @@
 # See the file LICENSE for licensing terms.
 ---
 avalanchego_vms_list:
+  blobvm:
+    aliases:
+    - blobvm
+    binary_prefix: blobvm-linux-amd64
+    download_url: https://github.com/Nuttymoon/blobvm/releases/download
+    id: kM6h4LYe3AcEU1MB2UNg6ubzAiDAALZzpVrbX8zn3hXF6Avd8
+    versions_comp:
+      0.0.1:
+        ge: 1.7.7
+        le: 1.7.9
+      0.0.2:
+        ge: 1.7.7
+        le: 1.7.9
+      0.0.3:
+        ge: 1.7.10
+        le: 1.7.10
+      0.0.4:
+        ge: 1.7.11
+        le: 1.7.12
+      0.0.5:
+        ge: 1.7.13
+        le: 1.7.14
+      0.0.6:
+        ge: 1.7.13
+        le: 1.7.14
   spacesvm:
     aliases:
     - spacesvm
@@ -57,10 +82,13 @@ avalanchego_vms_list:
         le: 1.7.12
       0.2.3:
         ge: 1.7.13
-        le: 1.7.13
+        le: 1.7.14
       0.2.4:
         ge: 1.7.13
-        le: 1.7.13
+        le: 1.7.14
+      0.2.5:
+        ge: 1.7.13
+        le: 1.7.14
   timestampvm:
     aliases:
     - timestampvm

@@ -76,7 +76,7 @@
   when: not (confirm_prompt.user_input | default('yes') | bool)
 
 - name: Create the subnet
-  nuttymoon.avalanche.tx:
+  ash.avalanche.tx:
     http_host: "{{ avalanchego_http_host }}"
     blockchain: P
     method: platform.createSubnet
@@ -125,7 +125,7 @@
     validators_ids: "{{ node_ids_res | json_query('results[*].json.result.nodeID') }}"
 
 - name: Add validators to the subnet
-  nuttymoon.avalanche.tx:
+  ash.avalanche.tx:
     http_host: "{{ avalanchego_http_host }}"
     blockchain: P
     method: platform.addSubnetValidator

@@ -1,4 +1,4 @@
-# nuttymoon.avalanche.blockchain
+# ash.avalanche.blockchain
 
 This Ansible role allows to create an Avalanche blockchain.
 
@@ -23,4 +23,4 @@ This Ansible role allows to create an Avalanche blockchain.
 
 ## How to?
 
-See [ansible-avalanche-getting-started](https://github.com/Nuttymoon/ansible-avalanche-getting-started) for how to create a blockchain.
+See [ansible-avalanche-getting-started](https://github.com/AshAvalanche/ansible-avalanche-getting-started) for how to create a blockchain.

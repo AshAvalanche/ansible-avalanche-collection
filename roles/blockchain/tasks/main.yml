@@ -80,7 +80,7 @@
     genesis_data: "{{ encode_data_res.json.result[avalanchego_vms_list[blockchain_vm].genesis_json_key] }}"
 
 - name: Create the blockchain
-  nuttymoon.avalanche.tx:
+  ash.avalanche.tx:
     http_host: "{{ avalanchego_http_host }}"
     blockchain: P
     method: platform.createBlockchain

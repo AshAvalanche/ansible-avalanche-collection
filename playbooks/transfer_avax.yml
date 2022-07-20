@@ -5,7 +5,7 @@
   hosts: api_node
   tasks:
     - name: Export AVAX from the X-Chain
-      nuttymoon.avalanche.tx:
+      ash.avalanche.tx:
         http_host: "{{ avalanchego_http_host }}"
         blockchain: X
         method: avm.export
@@ -22,7 +22,7 @@
         var: xchain_transac_res
 
     - name: Import AVAX to the C-Chain
-      nuttymoon.avalanche.tx:
+      ash.avalanche.tx:
         http_host: "{{ avalanchego_http_host }}"
         blockchain: C/avax
         method: avax.import

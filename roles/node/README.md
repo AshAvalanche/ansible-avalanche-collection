@@ -1,4 +1,4 @@
-# nuttymoon.avalanche.node
+# ash.avalanche.node
 
 This Ansible role allows to bootstrap Avalanche nodes:
 
@@ -94,8 +94,8 @@ Here is the compatibility matrix with AvalancheGo versions:
 
 The [bootstrap_local_network.yml](../../playbooks/bootstrap_local_network.yml) playbook shows how to use this role to bootstrap a local test network.
 
-See [ansible-avalanche-getting-started](https://github.com/Nuttymoon/ansible-avalanche-getting-started) for how to run the playbook and customize the installation.
+See [ansible-avalanche-getting-started](https://github.com/AshAvalanche/ansible-avalanche-getting-started) for how to run the playbook and customize the installation.
 
 ### Fuji/Mainnet nodes
 
-See [ansible-avalanche-getting-started](https://github.com/Nuttymoon/ansible-avalanche-getting-started) for how to provision Fuji/Mainnet nodes.
+See [ansible-avalanche-getting-started](https://github.com/AshAvalanche/ansible-avalanche-getting-started) for how to provision Fuji/Mainnet nodes.

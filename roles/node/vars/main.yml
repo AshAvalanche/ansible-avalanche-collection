@@ -4,9 +4,9 @@
 avalanchego_vms_list:
   blobvm:
     aliases:
-    - blobvm
+      - blobvm
     binary_prefix: blobvm-linux-amd64
-    download_url: https://github.com/Nuttymoon/blobvm/releases/download
+    download_url: https://github.com/AshAvalanche/blobvm/releases/download
     id: kM6h4LYe3AcEU1MB2UNg6ubzAiDAALZzpVrbX8zn3hXF6Avd8
     versions_comp:
       0.0.1:
@@ -29,9 +29,9 @@ avalanchego_vms_list:
         le: 1.7.14
   spacesvm:
     aliases:
-    - spacesvm
+      - spacesvm
     binary_prefix: spacesvm-linux-amd64
-    download_url: https://github.com/Nuttymoon/spacesvm/releases/download
+    download_url: https://github.com/AshAvalanche/spacesvm/releases/download
     id: sqja3uK17MJxfC7AN8nGadBw9JK5BcrsNwNynsqP5Gih8M5Bm
     versions_comp:
       0.0.1:
@@ -54,9 +54,9 @@ avalanchego_vms_list:
         le: 1.7.13
   subnetevm:
     aliases:
-    - subnetevm
+      - subnetevm
     binary_prefix: subnetevm-linux-amd64
-    download_url: https://github.com/Nuttymoon/subnet-evm/releases/download
+    download_url: https://github.com/AshAvalanche/subnet-evm/releases/download
     genesis_build_method: subnetevm.buildGenesis
     genesis_json_key: genesisBytes
     genesis_rpc_extra_path: /rpc
@@ -91,12 +91,12 @@ avalanchego_vms_list:
         le: 1.7.14
   timestampvm:
     aliases:
-    - timestampvm
+      - timestampvm
     binary_prefix: timestampvm-linux-amd64
-    download_url: https://github.com/Nuttymoon/timestampvm/releases/download
+    download_url: https://github.com/AshAvalanche/timestampvm/releases/download
     genesis_build_method: timestampvm.encode
     genesis_json_key: bytes
-    genesis_rpc_extra_path: ''
+    genesis_rpc_extra_path: ""
     id: tGas3T58KzdjLHhBDMnH2TvrddhqTji5iZAMZ3RXs2NLpSnhH
     versions_comp:
       1.2.0:

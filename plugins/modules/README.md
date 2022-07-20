@@ -1,10 +1,10 @@
-# nuttymoon.avalanche modules
+# ash.avalanche modules
 
 The collection provides the following modules:
 
-- `nuttymoon.avalanche.tx` (alias: `nuttymoon.avalanche.transaction`): submit a transaction to an Avalanche network
+- `ash.avalanche.tx` (alias: `ash.avalanche.transaction`): submit a transaction to an Avalanche network
 
-## nuttymoon.avalanche.tx
+## ash.avalanche.tx
 
 ### Supported API methods
 
@@ -60,4 +60,4 @@ blockchain: C/avax
 
 ### Example playbook
 
-The playbook [nuttymoon.avalanche.transfer_avax](../../playbooks/transfer_avax.yml) is provided as an example of how to use the `nuttymoon.avalanche.tx` module. See [ansible-avalanche-getting-started](https://github.com/Nuttymoon/ansible-avalanche-getting-started) for more.
+The playbook [ash.avalanche.transfer_avax](../../playbooks/transfer_avax.yml) is provided as an example of how to use the `ash.avalanche.tx` module. See [ansible-avalanche-getting-started](https://github.com/AshAvalanche/ansible-avalanche-getting-started) for more.

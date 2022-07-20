@@ -6,7 +6,7 @@
   tasks:
     - name: Create the blockchains
       include_role:
-        name: nuttymoon.avalanche.blockchain
+        name: ash.avalanche.blockchain
       vars:
         blockchain_vm: "{{ blockchain.vm }}"
         blockchain_name: "{{ blockchain.name }}"

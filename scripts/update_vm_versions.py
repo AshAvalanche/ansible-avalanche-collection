@@ -15,11 +15,11 @@ GITHUB_API_URL = 'https://api.github.com'
 VARS_YAML_PATH = '../roles/node/vars/main.yml'
 VARS_YAML_HEADER_SIZE = 3
 VMS_REPOS = {
-    'blobvm': 'Nuttymoon/blobvm',
-    'spacesvm': 'Nuttymoon/spacesvm',
-    'subnetevm': 'Nuttymoon/subnet-evm',
+    'blobvm': 'AshAvalanche/blobvm',
+    'spacesvm': 'AshAvalanche/spacesvm',
+    'subnetevm': 'AshAvalanche/subnet-evm',
     # Versions not available in timestampvm's README
-    # 'timestampvm': 'Nuttymoon/timestampvm',
+    # 'timestampvm': 'AshAvalanche/timestampvm',
 }
 
 vms_versions_comp = {}

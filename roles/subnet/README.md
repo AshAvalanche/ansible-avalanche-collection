@@ -1,4 +1,4 @@
-# nuttymoon.avalanche.subnet
+# ash.avalanche.subnet
 
 This Ansible role allows to create an Avalanche subnet.
 
@@ -24,4 +24,4 @@ This Ansible role allows to create an Avalanche subnet.
 
 ## How to?
 
-See [ansible-avalanche-getting-started](https://github.com/Nuttymoon/ansible-avalanche-getting-started) for how to create a subnet.
+See [ansible-avalanche-getting-started](https://github.com/AshAvalanche/ansible-avalanche-getting-started) for how to create a subnet.

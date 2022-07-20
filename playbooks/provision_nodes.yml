@@ -5,4 +5,4 @@
   hosts: avalanche_nodes
   become: yes
   roles:
-    - role: nuttymoon.avalanche.node
+    - role: ash.avalanche.node

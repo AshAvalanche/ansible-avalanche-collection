@@ -4,4 +4,4 @@
 - name: Create the subnet
   hosts: subnet_control_node
   roles:
-    - role: nuttymoon.avalanche.subnet
+    - role: ash.avalanche.subnet

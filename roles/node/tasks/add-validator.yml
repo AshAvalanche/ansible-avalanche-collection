@@ -41,23 +41,21 @@
   failed_when: get_current_validators_res.json.error is defined
 
 - name: Add validator if not already validating
-  uri:
-    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/bc/P"
-    method: POST
-    body_format: json
-    body:
-      jsonrpc: "2.0"
-      method: platform.addValidator
-      params:
-        nodeID: "{{ get_node_id_res.json.result.nodeID }}"
-        startTime: "{{ avalanchego_validation_start_time }}"
-        endTime: "{{ avalanchego_validation_end_time }}"
-        stakeAmount: "{{ avalanchego_validation_stake_amount }}"
-        rewardAddress: "{{ list_addresses_res.json.result.addresses[0] }}"
-        delegationFeeRate: 10
-        username: "{{ avalanche_node_username }}"
-        password: "{{ avalanche_node_password }}"
-      id: 1
+  ash.avalanche.tx:
+    http_host: "{{ avalanchego_http_host }}"
+    http_port: "{{ avalanchego_http_port }}"
+    blockchain: P
+    method: platform.addValidator
+    username: "{{ avalanche_node_username }}"
+    password: "{{ avalanche_node_password }}"
+    params:
+      nodeID: "{{ get_node_id_res.json.result.nodeID }}"
+      startTime: "{{ avalanchego_validation_start_time }}"
+      endTime: "{{ avalanchego_validation_end_time }}"
+      stakeAmount: "{{ avalanchego_validation_stake_amount }}"
+      rewardAddress: "{{ list_addresses_res.json.result.addresses[0] }}"
+      delegationFeeRate: 10
+      username: "{{ avalanche_node_username }}"
+      password: "{{ avalanche_node_password }}"
+    wait_validation: yes
   when: get_current_validators_res.json.result.validators | length  < 1
-  register: add_validator_res
-  failed_when: add_validator_res.json.error is defined

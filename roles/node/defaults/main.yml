@@ -77,7 +77,12 @@ avalanchego_chains_configs:
   C:
     state-sync-enabled: true
 
-# Pre-funded account (only on local network)
+# Node keystore
+## "admin user" (used by admin-user and validate tasks)
+avalanche_node_username: admin
+avalanche_node_password: password
+
+## Pre-funded account (only on local network)
 avalanche_prefunded_username: ewoq
 avalanche_prefunded_password: I_l1ve_@_Endor
 avalanche_prefunded_private_key: PrivateKey-ewoqjP7PxY4yr3iLTpLisriqt94hdyDFNgchSxGGztUrTXtNN

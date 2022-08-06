@@ -14,33 +14,6 @@
   register: list_addresses_res
   failed_when: list_addresses_res.json.error is defined or list_addresses_res.json.result.addresses | length < 1
 
-- name: Get current P chain height
-  uri:
-    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/bc/P"
-    method: POST
-    body_format: json
-    body:
-      jsonrpc: "2.0"
-      method: platform.getHeight
-      id: 1
-  register: get_height_res
-  failed_when: get_height_res.json.error is defined
-
-- name: Get current P chain validators
-  uri:
-    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/bc/P"
-    method: POST
-    body_format: json
-    body:
-      jsonrpc: "2.0"
-      method: platform.getValidatorsAt
-      params:
-        height: "{{ get_height_res.json.result.height }}"
-        subnetID: "11111111111111111111111111111111LpoYY"
-      id: 1
-  register: get_validators_res
-  failed_when: get_validators_res.json.error is defined
-
 - name: Get NodeID
   uri:
     url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/info"
@@ -52,6 +25,20 @@
       id: 1
   register: get_node_id_res
   failed_when: get_node_id_res.json.error is defined
+
+- name: Check if node is already a P chain validator
+  uri:
+    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/bc/P"
+    method: POST
+    body_format: json
+    body:
+      jsonrpc: "2.0"
+      method: platform.getCurrentValidators
+      params:
+        nodeIDs: ["{{ get_node_id_res.json.result.nodeID }}"]
+      id: 1
+  register: get_current_validators_res
+  failed_when: get_current_validators_res.json.error is defined
 
 - name: Add validator if not already validating
   uri:
@@ -71,6 +58,6 @@
         username: "{{ avalanche_node_username }}"
         password: "{{ avalanche_node_password }}"
       id: 1
-  when: get_node_id_res.json.result.nodeID not in get_validators_res.json.result.validators
+  when: get_current_validators_res.json.result.validators | length  < 1
   register: add_validator_res
   failed_when: add_validator_res.json.error is defined

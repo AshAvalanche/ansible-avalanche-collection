@@ -14,22 +14,6 @@
   register: list_addresses_res
   failed_when: list_addresses_res.json.error is defined or list_addresses_res.json.result.addresses | length < 1
 
-- name: Export P chain key
-  uri:
-    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/bc/P"
-    method: POST
-    body_format: json
-    body:
-      jsonrpc: "2.0"
-      method: platform.exportKey
-      params:
-        username: "{{ avalanche_node_username }}"
-        password: "{{ avalanche_node_password }}"
-        address: "{{ list_addresses_res.json.result.addresses[0] }}"
-      id: 1
-  register: export_key_res
-  failed_when: export_key_res.json.error is defined
-
 - name: Get current P chain height
   uri:
     url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/bc/P"

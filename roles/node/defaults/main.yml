@@ -77,7 +77,17 @@ avalanchego_chains_configs:
   C:
     state-sync-enabled: true
 
-# Pre-funded account (only on local network)
+# Node keystore
+## "admin user" (used by admin-user and validate tasks)
+avalanche_node_username: admin
+avalanche_node_password: password
+
+## Pre-funded account (only on local network)
 avalanche_prefunded_username: ewoq
 avalanche_prefunded_password: I_l1ve_@_Endor
 avalanche_prefunded_private_key: PrivateKey-ewoqjP7PxY4yr3iLTpLisriqt94hdyDFNgchSxGGztUrTXtNN
+
+# Validation properties
+avalanchego_validation_start_time: "{{ ansible_date_time.epoch | int + 60 }}" # in 1 minute
+avalanchego_validation_end_time: "{{ ansible_date_time.epoch | int + 60 + 604800 }}" # in 1 week
+avalanchego_validation_stake_amount: 1000000000 # 1000000000 nAVAX = 1 AVAX

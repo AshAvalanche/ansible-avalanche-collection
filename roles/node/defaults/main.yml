@@ -86,3 +86,8 @@ avalanche_node_password: password
 avalanche_prefunded_username: ewoq
 avalanche_prefunded_password: I_l1ve_@_Endor
 avalanche_prefunded_private_key: PrivateKey-ewoqjP7PxY4yr3iLTpLisriqt94hdyDFNgchSxGGztUrTXtNN
+
+# Validation properties
+avalanchego_validation_start_time: "{{ ansible_date_time.epoch | int + 60 }}" # in 1 minute
+avalanchego_validation_end_time: "{{ ansible_date_time.epoch | int + 60 + 604800 }}" # in 1 week
+avalanchego_validation_stake_amount: 1000000000 # 1000000000 nAVAX = 1 AVAX

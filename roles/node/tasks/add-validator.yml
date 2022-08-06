@@ -63,9 +63,9 @@
       method: platform.addValidator
       params:
         nodeID: "{{ get_node_id_res.json.result.nodeID }}"
-        startTime: "{{ ansible_date_time.epoch | int + 60 }}"
-        endTime: "{{ ansible_date_time.epoch | int + 60 + 604800 }}"
-        stakeAmount: 1000000000
+        startTime: "{{ avalanchego_validation_start_time }}"
+        endTime: "{{ avalanchego_validation_end_time }}"
+        stakeAmount: "{{ avalanchego_validation_stake_amount }}"
         rewardAddress: "{{ list_addresses_res.json.result.addresses[0] }}"
         delegationFeeRate: 10
         username: "{{ avalanche_node_username }}"

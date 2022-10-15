@@ -3,14 +3,9 @@
 ---
 # Avalanchego version
 avalanchego_version: 1.9.0
-avalanchego_binary_name: "avalanchego-linux-amd64-v{{ avalanchego_version }}.tar.gz"
-avalanchego_binary_url: "https://github.com/ava-labs/avalanchego/releases/download/v{{ avalanchego_version }}/{{ avalanchego_binary_name }}"
 
 # Install directories
 avalanchego_install_dir: /opt/avalanche/avalanchego
-avalanchego_releases_dir: "{{ avalanchego_install_dir }}/releases"
-avalanchego_current_dir: "{{ avalanchego_install_dir }}/current"
-avalanchego_plugins_dir: "{{ avalanchego_current_dir }}/plugins"
 avalanchego_vms_dir: /opt/avalanche/vms
 
 # DB directory
@@ -18,8 +13,6 @@ avalanchego_db_dir: /var/lib/avalanchego/db
 
 # Configuration directories
 avalanchego_conf_dir: /etc/avalanche/avalanchego/conf
-avalanchego_chains_conf_dir: "{{ avalanchego_conf_dir }}/chains"
-avalanchego_vms_conf_dir: "{{ avalanchego_conf_dir }}/vms"
 avalanchego_certs_dir: /etc/avalanche/avalanchego/staking
 
 # Log directory

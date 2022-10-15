@@ -1,6 +1,20 @@
 # Copyright (C) 2022, Gauthier Leonard
 # See the file LICENSE for licensing terms.
 ---
+# Avalanchego version
+avalanchego_binary_name: "avalanchego-linux-amd64-v{{ avalanchego_version }}.tar.gz"
+avalanchego_binary_url: "https://github.com/ava-labs/avalanchego/releases/download/v{{ avalanchego_version }}/{{ avalanchego_binary_name }}"
+
+# Install directories
+avalanchego_releases_dir: "{{ avalanchego_install_dir }}/releases"
+avalanchego_current_dir: "{{ avalanchego_install_dir }}/current"
+avalanchego_plugins_dir: "{{ avalanchego_current_dir }}/plugins"
+
+# Configuration directories
+avalanchego_chains_conf_dir: "{{ avalanchego_conf_dir }}/chains"
+avalanchego_vms_conf_dir: "{{ avalanchego_conf_dir }}/vms"
+
+# List of VMs supported by the collection
 avalanchego_vms_list:
   blobvm:
     aliases:

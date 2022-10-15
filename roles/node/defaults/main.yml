@@ -2,7 +2,7 @@
 # See the file LICENSE for licensing terms.
 ---
 # Avalanchego version
-avalanchego_version: 1.7.3
+avalanchego_version: 1.9.0
 avalanchego_binary_name: "avalanchego-linux-amd64-v{{ avalanchego_version }}.tar.gz"
 avalanchego_binary_url: "https://github.com/ava-labs/avalanchego/releases/download/v{{ avalanchego_version }}/{{ avalanchego_binary_name }}"
 

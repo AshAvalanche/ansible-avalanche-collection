@@ -10,7 +10,7 @@ This Ansible role allows to bootstrap Avalanche nodes:
 
 | Variable                          | Comment                                                                                                                                                                             | Default value                                                  |
 | --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| `avalanchego_version`             | See [AvalancheGo releases](https://github.com/ava-labs/avalanchego/releases)                                                                                                        | `1.7.3`                                                        |
+| `avalanchego_version`             | See [AvalancheGo releases](https://github.com/ava-labs/avalanchego/releases)                                                                                                        | `1.9.0`                                                        |
 | `avalanchego_binary_name`         | Don't change                                                                                                                                                                        | `"avalanchego-linux-amd64-v{{ avalanchego_version }}.tar.gz"`  |
 | `avalanchego_binary_url`          | Don't change                                                                                                                                                                        | `"https://github.com/ava-labs/avalanchego/releases/download/`  |
 |                                   |                                                                                                                                                                                     | `v{{ avalanchego_version }}/{{ avalanchego_binary_name }}"`    |
@@ -77,16 +77,18 @@ List of VMs currently available for install:
 
 Here is the compatibility matrix with AvalancheGo versions:
 
-| AvalancheGo     | `blobvm`      | `spacesvm` | `subnetevm`   | `timestampvm` |
-| --------------- | ------------- | ---------- | ------------- | ------------- |
-| `1.7.0-1.7.4`   | -             | `0.0.1`    | `0.1.0`       | `1.2.0`       |
-| `1.7.5-1.7.6`   | -             | `0.0.2`    | `0.1.1-0.1.2` | `1.2.2`       |
-| `1.7.7-1.7.9`   | `0.0.1-0.0.2` | `0.0.3`    | `0.2.0`       | `1.2.3`       |
-| `1.7.10`        | `0.0.3`       | `0.0.4`    | `0.2.1`       | `1.2.4`       |
-| `1.7.11-1.7.12` | `0.0.4`       | `0.0.5`    | `0.2.2`       | `1.2.5`       |
-| `1.7.13-1.7.14` | `0.0.5-0.0.6` | `0.0.6`    | `0.2.3-0.2.5` | -             |
+| AvalancheGo     | `blobvm`      | `spacesvm`    | `subnetevm`   | `timestampvm` |
+| --------------- | ------------- | ------------- | ------------- | ------------- |
+| `1.7.0-1.7.4`   | -             | `0.0.1`       | `0.1.0`       | `1.2.0`       |
+| `1.7.5-1.7.6`   | -             | `0.0.2`       | `0.1.1-0.1.2` | `1.2.2`       |
+| `1.7.7-1.7.9`   | `0.0.1-0.0.2` | `0.0.3`       | `0.2.0`       | `1.2.3`       |
+| `1.7.10`        | `0.0.3`       | `0.0.4`       | `0.2.1`       | `1.2.4`       |
+| `1.7.11-1.7.12` | `0.0.4`       | `0.0.5`       | `0.2.2`       | `1.2.5`       |
+| `1.7.13-1.7.18` | `0.0.5-0.0.7` | `0.0.6-0.0.7` | `0.2.3-0.2.5` | `1.2.6`       |
+| `1.8.0-1.8.6`   | `0.0.8`       | `0.0.8`       | `0.3.0`       | -             |
+| `1.9.0`         | `0.0.9`       | `0.0.9`       | `0.4.0`       | -             |
 
-**Note:** If an versions incompatibility is detected, an error message will be prompted and the role execution will stop.
+**Note:** If a versions incompatibility is detected, an error message will be prompted and the role execution will stop.
 
 ## How to?
 

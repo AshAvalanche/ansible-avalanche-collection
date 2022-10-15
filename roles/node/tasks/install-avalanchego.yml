@@ -24,14 +24,14 @@
   include_tasks: bootstrap-db.yml
   when: (avalanchego_bootstrap_db is defined) and (avalanchego_bootstrap_db|length > 0)
 
-- name: Download AvalancheGo binary
+- name: "Download AvalancheGo {{ avalanchego_version }} binary"
   get_url:
     url: "{{ avalanchego_binary_url }}"
     dest: "{{ avalanchego_releases_dir }}/{{ avalanchego_binary_name }}"
     owner: "{{ avalanchego_user }}"
     group: "{{ avalanchego_user }}"
 
-- name: Unpack AvalancheGo binary
+- name: "Unpack AvalancheGo {{ avalanchego_version }} binary"
   unarchive:
     src: "{{ avalanchego_releases_dir }}/{{ avalanchego_binary_name }}"
     dest: "{{ avalanchego_install_dir }}"
@@ -40,7 +40,7 @@
     remote_src: yes
     creates: "{{ avalanchego_install_dir }}/avalanchego-v{{ avalanchego_version }}"
 
-- name: Create the symlink to current AvalancheGo binary
+- name: "Create the symlink to AvalancheGo {{ avalanchego_version }} binary"
   file:
     src: "{{ avalanchego_install_dir }}/avalanchego-v{{ avalanchego_version }}/avalanchego"
     dest: "{{ avalanchego_current_dir }}/avalanchego"

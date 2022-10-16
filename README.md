@@ -55,8 +55,11 @@ The repository [ansible-avalanche-getting-started](https://github.com/AshAvalanc
 
 ### Playbooks
 
-- [ash.avalanche.bootstrap_local_network](./playbooks/bootstrap_local_network.yml): bootstrap a local test network (`--network-id=local`)
-- [ash.avalanche.provision_nodes](./playbooks/provision_nodes.yml): provision nodes for Fuji or Mainnet (`--network-id=fuji|mainnet`)
+- [ash.avalanche.bootstrap_local_network](./playbooks/bootstrap_local_network.yml): bootstrap a local test network (`avalanchego_network_id: local`)
+- [ash.avalanche.provision_nodes](./playbooks/provision_nodes.yml): provision nodes for Fuji or Mainnet (`avalanchego_network_id: fuji|mainnet`)
+- [ash.avalanche.create_local_subnet](./playbooks/create_local_subnet.yml): create a subnet on a local test network (**do not** use in production)
+- [ash.avalanche.create_local_blockchains](./playbooks/create_local_blockchains.yml): create blockchains in a subnet on a local test network (**do not** use in production)
+- [ash.avalanche.transfer_avax](./playbooks/transfer_avax.yml): example of how to transfer AVAX from the X-Chain to the C-Chain (**do not** use in production)
 
 ## Inventory requirements
 

@@ -2,15 +2,10 @@
 # See the file LICENSE for licensing terms.
 ---
 # Avalanchego version
-avalanchego_version: 1.7.3
-avalanchego_binary_name: "avalanchego-linux-amd64-v{{ avalanchego_version }}.tar.gz"
-avalanchego_binary_url: "https://github.com/ava-labs/avalanchego/releases/download/v{{ avalanchego_version }}/{{ avalanchego_binary_name }}"
+avalanchego_version: 1.9.0
 
 # Install directories
 avalanchego_install_dir: /opt/avalanche/avalanchego
-avalanchego_releases_dir: "{{ avalanchego_install_dir }}/releases"
-avalanchego_current_dir: "{{ avalanchego_install_dir }}/current"
-avalanchego_plugins_dir: "{{ avalanchego_current_dir }}/plugins"
 avalanchego_vms_dir: /opt/avalanche/vms
 
 # DB directory
@@ -18,8 +13,6 @@ avalanchego_db_dir: /var/lib/avalanchego/db
 
 # Configuration directories
 avalanchego_conf_dir: /etc/avalanche/avalanchego/conf
-avalanchego_chains_conf_dir: "{{ avalanchego_conf_dir }}/chains"
-avalanchego_vms_conf_dir: "{{ avalanchego_conf_dir }}/vms"
 avalanchego_certs_dir: /etc/avalanche/avalanchego/staking
 
 # Log directory
@@ -36,8 +29,8 @@ avalanchego_http_port: 9650
 avalanchego_staking_port: 9651
 
 # Bootstrapping
-avalanchego_network_id: local
-avalanchego_use_existing_certs: yes
+avalanchego_network_id: fuji
+avalanchego_use_existing_certs: no
 avalanchego_local_certs_dir: "{{ playbook_dir }}/files/certs"
 avalanchego_bootstrap_node_id: NodeID-7Xhw2mDxuDS44j42TCB6U5579esbSt3Lg
 avalanchego_bootstrap_db: ""
@@ -58,9 +51,9 @@ avalanchego_node_json:
   api-admin-enabled: true
   # Consensus
   network-id: "{{ avalanchego_network_id }}"
-  snow-sample-size: 2
-  snow-quorum-size: 2
-  snow-mixed-query-num-push-vdr: 2
+  snow-sample-size: 20
+  snow-quorum-size: 15
+  snow-mixed-query-num-push-vdr: 10
   staking-enabled: true
   # Paths
   db-dir: "{{ avalanchego_db_dir }}"

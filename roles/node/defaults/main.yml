@@ -36,7 +36,7 @@ avalanchego_bootstrap_node_id: NodeID-7Xhw2mDxuDS44j42TCB6U5579esbSt3Lg
 avalanchego_bootstrap_db: ""
 
 # Subnets
-avalanche_whitelisted_subnets: ""
+avalanche_whitelisted_subnets: []
 
 # VMs
 avalanchego_vms_install:
@@ -57,13 +57,17 @@ avalanchego_node_json:
   staking-enabled: true
   # Paths
   db-dir: "{{ avalanchego_db_dir }}"
+  subnet-config-dir: "{{ avalanchego_subnets_conf_dir }}"
   chain-config-dir: "{{ avalanchego_chains_conf_dir }}"
   vm-aliases-file: "{{ avalanchego_vms_conf_dir }}/aliases.json"
   log-dir: "{{ avalanchego_log_dir }}"
   # Logging
   log-level: info
   # Subnets
-  whitelisted-subnets: "{{ avalanche_whitelisted_subnets }}"
+  whitelisted-subnets: "{{ avalanche_whitelisted_subnets | join(',') }}"
+
+# Subnets configurations
+avalanchego_subnets_configs: {}
 
 # Chains configurations
 avalanchego_chains_configs:

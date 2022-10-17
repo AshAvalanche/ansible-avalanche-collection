@@ -47,6 +47,10 @@ The repository [ansible-avalanche-getting-started](https://github.com/AshAvalanc
 
 - [ash.avalanche.tx](./plugins/modules): submit a transaction to an Avalanche network
 
+### Filters
+
+- [ash.avalanche.convert](./plugins/filter): convert an amount between AVAX units
+
 ### Roles
 
 - [ash.avalanche.node](./roles/node): install, configure and upgrade Avalanche nodes

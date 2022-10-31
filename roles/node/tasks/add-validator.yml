@@ -26,7 +26,7 @@
   register: get_node_id_res
   failed_when: get_node_id_res.json.error is defined
 
-- name: Check if node is already a P chain validator
+- name: Check if the node is already a validator
   uri:
     url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/bc/P"
     method: POST
@@ -40,7 +40,21 @@
   register: get_current_validators_res
   failed_when: get_current_validators_res.json.error is defined
 
-- name: Add validator if not already validating
+- name: Check if the node is a pending validator
+  uri:
+    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/bc/P"
+    method: POST
+    body_format: json
+    body:
+      jsonrpc: "2.0"
+      method: platform.getPendingValidators
+      params:
+        nodeIDs: ["{{ get_node_id_res.json.result.nodeID }}"]
+      id: 1
+  register: get_pending_validators_res
+  failed_when: get_pending_validators_res.json.error is defined
+
+- name: Add validator if the node is not a current|pending validator
   ash.avalanche.tx:
     http_host: "{{ avalanchego_http_host }}"
     http_port: "{{ avalanchego_http_port }}"
@@ -58,4 +72,6 @@
       username: "{{ avalanche_node_username }}"
       password: "{{ avalanche_node_password }}"
     wait_validation: yes
-  when: get_current_validators_res.json.result.validators | length  < 1
+  when:
+    - (get_current_validators_res.json.result.validators | length) < 1
+    - (get_pending_validators_res.json.result.validators | length) < 1

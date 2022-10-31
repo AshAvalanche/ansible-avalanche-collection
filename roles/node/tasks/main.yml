@@ -17,6 +17,9 @@
 - name: Configure AvalancheGo node
   include_tasks: config-node.yml
 
+- name: Configure subnets
+  include_tasks: config-subnets.yml
+
 - name: Configure chains
   include_tasks: config-chains.yml
 

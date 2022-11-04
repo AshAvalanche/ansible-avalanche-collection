@@ -46,10 +46,12 @@ The repository [ansible-avalanche-getting-started](https://github.com/AshAvalanc
 ### Modules
 
 - [ash.avalanche.tx](./plugins/modules): submit a transaction to an Avalanche network
+- [ash.avalanche.eth_call](./plugins/modules): `eth_call` a smart contract's function on an EVM Avalanche network
 
 ### Filters
 
 - [ash.avalanche.convert](./plugins/filter): convert an amount between AVAX units
+- [ash.avalanche.XXX_to_XXX](./plugins/filter): convert a string between encodings
 
 ### Roles
 

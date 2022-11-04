@@ -42,6 +42,9 @@ avalanche_whitelisted_subnets: []
 avalanchego_vms_install:
   - timestampvm=1.2.0
 
+# Ash protocol (https://ash.center)
+ash_node: no
+
 # node.json
 avalanchego_node_json:
   # Network

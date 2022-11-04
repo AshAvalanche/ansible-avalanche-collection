@@ -14,8 +14,19 @@
   loop_control:
     loop_var: vm
 
+- block:
+    - name: Resolve Ash node configuration from on-chain data
+      include_tasks: ash-node.yml
+
+    - name: Configure AvalancheGo node
+      include_tasks: config-node.yml
+      vars:
+        avalanche_whitelisted_subnets: "{{ ash_whitelisted_subnets }}"
+  when: ash_node
+
 - name: Configure AvalancheGo node
   include_tasks: config-node.yml
+  when: not ash_node
 
 - name: Configure subnets
   include_tasks: config-subnets.yml

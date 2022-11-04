@@ -15,6 +15,16 @@ avalanchego_subnets_conf_dir: "{{ avalanchego_conf_dir }}/subnets"
 avalanchego_chains_conf_dir: "{{ avalanchego_conf_dir }}/chains"
 avalanchego_vms_conf_dir: "{{ avalanchego_conf_dir }}/vms"
 
+# Avalanche networks
+avalanche_networks:
+  fuji:
+    c_chain:
+      chain_id: 43113
+      rpc_url: https://api.avax-test.network/ext/bc/C/rpc
+      explorer_url: https://testnet.snowtrace.io
+      explorer_api: https://api-testnet.snowtrace.io/api
+      ash_router_addr: "0xB41b15Dc8C0Cd5A019e9F91ad5763Fb4aC571378"
+
 # List of VMs supported by the collection
 avalanchego_vms_list:
   blobvm:

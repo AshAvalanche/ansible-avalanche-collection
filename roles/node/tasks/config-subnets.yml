@@ -1,0 +1,11 @@
+# Copyright (C) 2022, Gauthier Leonard
+# See the file LICENSE for licensing terms.
+---
+- name: Generate subnets JSON config files
+  copy:
+    content: "{{ item.value | to_nice_json }}\n"
+    dest: "{{ avalanchego_subnets_conf_dir }}/{{ item.key }}.json"
+    owner: "{{ avalanchego_user }}"
+    group: "{{ avalanchego_user }}"
+  loop: "{{ avalanchego_subnets_configs | dict2items }}"
+  notify: Restart avalanchego

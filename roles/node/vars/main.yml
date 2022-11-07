@@ -11,6 +11,7 @@ avalanchego_current_dir: "{{ avalanchego_install_dir }}/current"
 avalanchego_plugins_dir: "{{ avalanchego_current_dir }}/plugins"
 
 # Configuration directories
+avalanchego_subnets_conf_dir: "{{ avalanchego_conf_dir }}/subnets"
 avalanchego_chains_conf_dir: "{{ avalanchego_conf_dir }}/chains"
 avalanchego_vms_conf_dir: "{{ avalanchego_conf_dir }}/vms"
 

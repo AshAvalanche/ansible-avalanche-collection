@@ -140,6 +140,15 @@ avalanchego_vms_list:
       0.4.0:
         ge: 1.9.0
         le: 1.9.0
+      0.4.1:
+        ge: 1.9.1
+        le: 1.9.1
+      0.4.2:
+        ge: 1.9.1
+        le: 1.9.1
+      0.4.3:
+        ge: 1.9.2
+        le: 1.9.2
   timestampvm:
     aliases:
       - timestampvm

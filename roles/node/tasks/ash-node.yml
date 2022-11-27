@@ -55,8 +55,16 @@
   register: get_subnet_ids_res
   delegate_to: localhost
 
-- name: Generate ash_whitelisted_subnets variable
+- name: Display rented slots on this validator node
+  debug:
+    msg: |
+      Validator node: {{ get_node_id_res.json.result.nodeID }}
+      Number of rented slots: {{ get_subnet_ids_res.call_return | length }}
+      {{ 'Slots rented for subnets (they will be added to the whitelist):' if (get_subnet_ids_res.call_return | length) else '' }}
+      {{ get_subnet_ids_res.call_return | map('regex_replace', 'subnetID:(.*)', '- \1') | join('\n') }}
+
+- name: Generate all_whitelisted_subnets variable
   set_fact:
-    ash_whitelisted_subnets: |
+    all_whitelisted_subnets: |
       {{ avalanche_whitelisted_subnets +
-         (get_subnet_ids_res.call_return | map('regex_replace', 'subnetID:') | list ) }}
+         (get_subnet_ids_res.call_return | map('regex_replace', 'subnetID:') | list | unique ) }}

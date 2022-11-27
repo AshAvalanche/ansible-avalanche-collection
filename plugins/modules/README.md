@@ -2,7 +2,8 @@
 
 The collection provides the following modules:
 
-- `ash.avalanche.tx` (alias: `ash.avalanche.transaction`): submit a transaction to an Avalanche network
+- [ash.avalanche.tx](#ashavalanchetx) (alias: `ash.avalanche.transaction`): submit a transaction to an Avalanche network
+- [ash.avalanche.eth_call](#ashavalancheeth_call): `eth_call` a smart contract's function on an EVM Avalanche network
 
 ## ash.avalanche.tx
 
@@ -61,3 +62,19 @@ blockchain: C/avax
 ### Example playbook
 
 The playbook [ash.avalanche.transfer_avax](../../playbooks/transfer_avax.yml) is provided as an example of how to use the `ash.avalanche.tx` module. See [ansible-avalanche-getting-started](https://github.com/AshAvalanche/ansible-avalanche-getting-started) for more.
+
+## ash.avalanche.eth_call
+
+### Module arguments
+
+| Argument        | Required | Type  | Default value | Comment                                                                                 |
+| --------------- | -------- | ----- | ------------- | --------------------------------------------------------------------------------------- |
+| `rpc_url`       | Yes      | `str` | `None`        | RPC endpoint to call                                                                    |
+| `contract_addr` | Yes      | `str` | `None`        | Address of the smart contract to query (in `0x...` format)                              |
+| `abi`           | Yes      | `str` | `None`        | JSON ABI of the smart contract. Can be retrieved from [Snowtrace](https://snowtrace.io) |
+| `function_sig`  | Yes      | `str` | `None`        | Signature of the function to call. Looks like `foo(uint32,bool)`                        |
+| `parameters`    | Yes      | `raw` | `None`        | List of parameters of the functions.                                                    |
+
+### Example playbook
+
+The playbook [ash.avalanche.node/ash-node](../../roles/node/tasks/ash-node.yml) makes use of this plugin to enrich the node configuration with on-chain data.

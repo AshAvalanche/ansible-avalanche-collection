@@ -1,0 +1,70 @@
+# Copyright (C) 2022, Gauthier Leonard
+# See the file LICENSE for licensing terms.
+---
+- name: Get NodeID
+  uri:
+    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/info"
+    method: POST
+    body_format: json
+    body:
+      jsonrpc: "2.0"
+      method: info.getNodeID
+      id: 1
+  register: get_node_id_res
+  failed_when: get_node_id_res.json.error is defined
+
+- name: Convert NodeID to hexadecimal
+  set_fact:
+    node_id_hex: |-
+      {{ (get_node_id_res.json.result.nodeID | split('-'))[1]
+         | ash.avalanche.cb58_to_hex }}
+
+- name: Get AshRouter ABI from Snowtrace API
+  uri:
+    url: |
+      {{ avalanche_networks[avalanchego_network_id].c_chain.explorer_api
+         + '?module=contract&action=getabi&address='
+         + avalanche_networks[avalanchego_network_id].c_chain.ash_router_addr
+      }}
+  register: ash_router_abi_res
+  failed_when: ash_router_abi_res.json.message == 'NOTOK'
+
+- name: Check that validator renting contract is known to AshRouter
+  become: no
+  ash.avalanche.eth_call:
+    rpc_url: "{{ avalanche_networks[avalanchego_network_id].c_chain.rpc_url }}"
+    contract_addr: "{{ avalanche_networks[avalanchego_network_id].c_chain.ash_router_addr }}"
+    abi: "{{ ash_router_abi_res.json.result }}"
+    function_sig: getValidatorRentingContract(bytes24)
+    parameters:
+      - "{{ node_id_hex }}"
+  register: get_validator_renting_contract_res
+  failed_when: get_validator_renting_contract_res.call_return == '0x0000000000000000000000000000000000000000'
+  delegate_to: localhost
+
+- name: Get list of subnetIDs to whitelist from AshRouter
+  become: no
+  ash.avalanche.eth_call:
+    rpc_url: "{{ avalanche_networks[avalanchego_network_id].c_chain.rpc_url }}"
+    contract_addr: "{{ avalanche_networks[avalanchego_network_id].c_chain.ash_router_addr }}"
+    abi: "{{ ash_router_abi_res.json.result }}"
+    function_sig: getValidatorRentingSubnetIds(bytes24,uint24)
+    parameters:
+      - "{{ node_id_hex }}"
+      - "{{ ansible_date_time.year + ansible_date_time.month }}"
+  register: get_subnet_ids_res
+  delegate_to: localhost
+
+- name: Display rented slots on this validator node
+  debug:
+    msg: |
+      Validator node: {{ get_node_id_res.json.result.nodeID }}
+      Number of rented slots: {{ get_subnet_ids_res.call_return | length }}
+      {{ 'Slots rented for subnets (they will be added to the whitelist):' if (get_subnet_ids_res.call_return | length) else '' }}
+      {{ get_subnet_ids_res.call_return | map('regex_replace', 'subnetID:(.*)', '- \1') | join('\n') }}
+
+- name: Generate all_whitelisted_subnets variable
+  set_fact:
+    all_whitelisted_subnets: |
+      {{ avalanche_whitelisted_subnets +
+         (get_subnet_ids_res.call_return | map('regex_replace', 'subnetID:') | list | unique ) }}

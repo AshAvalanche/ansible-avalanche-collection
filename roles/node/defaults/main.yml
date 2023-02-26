@@ -2,7 +2,7 @@
 # See the file LICENSE for licensing terms.
 ---
 # Avalanchego version
-avalanchego_version: 1.9.0
+avalanchego_version: 1.9.9
 
 # Install directories
 avalanchego_install_dir: /opt/avalanche/avalanchego
@@ -36,7 +36,7 @@ avalanchego_bootstrap_node_id: NodeID-7Xhw2mDxuDS44j42TCB6U5579esbSt3Lg
 avalanchego_bootstrap_db: ""
 
 # Subnets
-avalanche_whitelisted_subnets: []
+avalanche_tracked_subnets: []
 
 # VMs
 avalanchego_vms_install:
@@ -54,6 +54,7 @@ avalanchego_node_json:
   http-port: "{{ avalanchego_http_port }}"
   staking-port: "{{ avalanchego_staking_port }}"
   api-admin-enabled: true
+  api-keystore-enabled: true
   # Consensus
   network-id: "{{ avalanchego_network_id }}"
   snow-sample-size: 20
@@ -69,7 +70,7 @@ avalanchego_node_json:
   # Logging
   log-level: info
   # Subnets
-  whitelisted-subnets: "{{ avalanche_whitelisted_subnets | join(',') }}"
+  track-subnets: "{{ avalanche_tracked_subnets | join(',') }}"
 
 # Subnets configurations
 avalanchego_subnets_configs: {}

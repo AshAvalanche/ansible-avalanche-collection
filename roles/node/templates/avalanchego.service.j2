@@ -8,7 +8,7 @@ StartLimitIntervalSec=0
 Type=simple
 User={{ avalanchego_user }}
 WorkingDirectory={{ avalanchego_install_dir }}
-ExecStart={{ avalanchego_install_dir }}/current/avalanchego --build-dir={{ avalanchego_install_dir }}/current --config-file={{ avalanchego_conf_dir }}/node.json
+ExecStart={{ avalanchego_install_dir }}/current/avalanchego --plugin-dir={{ avalanchego_install_dir }}/current/plugins --config-file={{ avalanchego_conf_dir }}/node.json
 Restart=no
 
 [Install]

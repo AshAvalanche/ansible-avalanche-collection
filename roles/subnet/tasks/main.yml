@@ -144,5 +144,5 @@
   debug:
     msg: |-
       The subnet has been created and the validators added.
-      Make sure to add the subnet ID to the whitelisted-subnets list of the validators.
+      Make sure to add the subnet ID to the track-subnets list of the validators.
       Subnet ID = {{ subnet_info.id }}

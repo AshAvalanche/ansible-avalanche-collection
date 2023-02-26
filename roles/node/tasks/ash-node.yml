@@ -66,5 +66,5 @@
 - name: Generate all_whitelisted_subnets variable
   set_fact:
     all_whitelisted_subnets: |
-      {{ avalanche_whitelisted_subnets +
+      {{ avalanche_tracked_subnets +
          (get_subnet_ids_res.call_return | map('regex_replace', 'subnetID:') | list | unique ) }}

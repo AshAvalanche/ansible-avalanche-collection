@@ -39,8 +39,11 @@ avalanchego_bootstrap_db: ""
 avalanche_tracked_subnets: []
 
 # VMs
-avalanchego_vms_install:
-  - timestampvm=1.2.0
+avalanchego_vms_install: []
+## Example
+##  - subnetevm=0.4.10
+##  - timestampvm=1.3.0
+##  - spacesvm=0.0.15
 
 # Ash protocol (https://ash.center)
 ## If set to yes, will enrich the node configuration with on-chain information

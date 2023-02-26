@@ -50,15 +50,6 @@
     group: "{{ avalanchego_user }}"
   notify: Restart avalanchego
 
-- name: Create the symlink to current evm binary in plugins dir
-  file:
-    src: "{{ avalanchego_install_dir }}/avalanchego-v{{ avalanchego_version }}/plugins/evm"
-    dest: "{{ avalanchego_plugins_dir }}/evm"
-    state: link
-    owner: "{{ avalanchego_user }}"
-    group: "{{ avalanchego_user }}"
-  notify: Restart avalanchego
-
 - name: Template avalanchego.service file
   template:
     src: avalanchego.service.j2

@@ -23,8 +23,8 @@ It aims at:
 
 This collection has been tested to work with the following versions:
 
-- Ubuntu 20.04
-- AvalancheGo >= 1.7.0
+- Ubuntu 20.04-22.04
+- AvalancheGo >= 1.9.6
 
 ## Installation
 

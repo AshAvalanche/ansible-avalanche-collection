@@ -1,5 +1,8 @@
 #!/bin/python3
 
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (c) 2022-2023, E36 Knots
+
 import os
 import requests
 import re

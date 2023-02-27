@@ -1,7 +1,8 @@
 #!/usr/bin/python
 
-# Copyright (C) 2022, Gauthier Leonard
-# See the file LICENSE for licensing terms.
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (c) 2022-2023, E36 Knots
+
 from __future__ import absolute_import, division, print_function
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.common.text.converters import jsonify

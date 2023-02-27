@@ -1,5 +1,5 @@
-# Copyright (C) 2022, Léo Schoukroun
-# See the file LICENSE for licensing terms.
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (c) 2022-2023, E36 Knots
 ---
 - name: Add validator playbook
   hosts: avalanche_nodes

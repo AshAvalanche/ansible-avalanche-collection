@@ -1,6 +1,6 @@
 #!/usr/bin/python
-# Copyright 2022 TOSIT.IO
-# SPDX-License-Identifier: Apache-2.0
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (c) 2022-2023, E36 Knots
 
 from ansible.errors import AnsibleError
 

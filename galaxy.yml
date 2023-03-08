@@ -1,5 +1,5 @@
-# Copyright (C) 2022, Gauthier Leonard
-# See the file LICENSE for licensing terms.
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (c) 2022-2023, E36 Knots
 
 ### REQUIRED
 # The namespace of the collection. This can be a company/brand/organization or product namespace under which all
@@ -19,11 +19,12 @@ readme: README.md
 # A list of the collection's content authors. Can be just the name or in the format 'Full Name <email> (url)
 # @nicks:irc/im.site#channel'
 authors:
-  - Gauthier Leonard <gauthier_leonard@msn.com>
+  - Gauthier Leonard <gauthier@e36knots.com>
+  - Léo Schoukroun <leo@e36knots.com>
 
 ### OPTIONAL but strongly recommended
 # A short summary description of the collection
-description: Ansible roles to manage Avalanche nodes, subnets and blockchains
+description: Ansible roles to manage Avalanche nodes, Subnets and blockchains
 
 # The path to the license file for the collection. This path is relative to the root of the collection. This key is
 # mutually exclusive with 'license'
@@ -45,7 +46,7 @@ dependencies: {}
 repository: https://github.com/AshAvalanche/ansible-avalanche-collection
 
 # The URL to any online docs
-documentation: https://github.com/AshAvalanche/ansible-avalanche-getting-started
+documentation: https://docs.ash.center/docs/tools/ansible-avalanche-collection/overview
 
 # The URL to the homepage of the collection/project
 homepage: http://example.com

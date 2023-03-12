@@ -1,0 +1,16 @@
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (c) 2022-2023, E36 Knots
+---
+- name: List links in {{ avalanchego_plugins_dir }}
+  find:
+    paths: "{{ avalanchego_plugins_dir }}"
+    file_type: link
+  register: links
+
+- name: Remove outdated links in {{ avalanchego_plugins_dir }}
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  when: item.path | basename not in avalanchego_vms_install | join
+  no_log: true
+  with_items: "{{ links.files }}"

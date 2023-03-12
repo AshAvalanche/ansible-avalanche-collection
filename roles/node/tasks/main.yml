@@ -4,6 +4,9 @@
 - name: Install AvalancheGo
   include_tasks: install-avalanchego.yml
 
+- name: Clean plugins dir
+  include_tasks: clean-plugins-dir.yml
+
 - name: Install VMs
   include_tasks: install-vm.yml
   vars:

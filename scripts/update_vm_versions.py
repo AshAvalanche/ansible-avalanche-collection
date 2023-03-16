@@ -18,12 +18,9 @@ GITHUB_API_URL = 'https://api.github.com'
 VARS_YAML_PATH = '../roles/node/vars/main.yml'
 VARS_YAML_HEADER_SIZE = 3
 VMS_REPOS = {
-    'blobvm': 'AshAvalanche/blobvm',
-    'spacesvm': 'AshAvalanche/spacesvm',
     'subnetevm': 'AshAvalanche/subnet-evm',
-    # Versions not available in timestampvm's README
-    # 'timestampvm': 'AshAvalanche/timestampvm',
 }
+MIN_AVAX_VERSION = '1.9.6'
 
 vms_versions_comp = {}
 
@@ -38,7 +35,7 @@ for vm, repo in VMS_REPOS.items():
     compatibility_specs = list(
         re.finditer(
             r'^\[v(?P<vm_start_ver>\d+\.\d+\.\d+)-?v?(?P<vm_end_ver>\d+\.\d+\.\d+)?\] '
-            r'AvalancheGo@v(?P<avax_start_ver>\d+\.\d+\.\d+)-?v?(?P<avax_end_ver>\d+\.\d+\.\d+)?$',
+            r'AvalancheGo@v(?P<avax_start_ver>\d+\.\d+\.\d+)-?v?(?P<avax_end_ver>\d+\.\d+\.\d+)?',
             readme_raw.text,
             flags=re.MULTILINE,
         )
@@ -53,15 +50,18 @@ for vm, repo in VMS_REPOS.items():
         for major in range(vm_start_ver.major, vm_end_ver.major + 1):
             for minor in range(vm_start_ver.minor, vm_end_ver.minor + 1):
                 for micro in range(vm_start_ver.micro, vm_end_ver.micro + 1):
-                    versions_comp.update(
-                        {
-                            f'{major}.{minor}.{micro}': {
-                                'ge': c.group('avax_start_ver'),
-                                'le': c.group('avax_end_ver')
-                                or c.group('avax_start_ver'),
+                    if version.parse(c.group('avax_start_ver')) >= version.parse(
+                        MIN_AVAX_VERSION
+                    ):
+                        versions_comp.update(
+                            {
+                                f'{major}.{minor}.{micro}': {
+                                    'ge': c.group('avax_start_ver'),
+                                    'le': c.group('avax_end_ver')
+                                    or c.group('avax_start_ver'),
+                                }
                             }
-                        }
-                    )
+                        )
 
     vms_versions_comp.update({vm: versions_comp})
 
@@ -77,5 +77,5 @@ with open(vars_yaml_abs_path) as vars_yaml:
 for vm, v_comp in vms_versions_comp.items():
     vars_obj['avalanchego_vms_list'][vm]['versions_comp'] = v_comp
 
-with open(vars_yaml_abs_path, 'w') as vars_yaml:
+with open(vars_yaml_abs_path + '.updated', 'w') as vars_yaml:
     vars_yaml.write(vars_header + yaml.dump(vars_obj, Dumper=yaml.CDumper))

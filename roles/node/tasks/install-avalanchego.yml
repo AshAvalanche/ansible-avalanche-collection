@@ -1,6 +1,12 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # Copyright (c) 2022-2023, E36 Knots
 ---
+- name: Check that AvalancheGo {{ avalanchego_version }} is supported
+  debug:
+    msg: "AvalancheGo {{ avalanchego_version }} >= {{ avalanchego_min_version }}"
+  run_once: yes
+  failed_when: not avalanchego_version is version(avalanchego_min_version, 'ge')
+
 - name: "Create {{ avalanchego_user }} user"
   user:
     name: "{{ avalanchego_user }}"

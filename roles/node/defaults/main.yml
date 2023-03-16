@@ -46,7 +46,7 @@ avalanchego_vms_install: []
 ##  - spacesvm=0.0.15
 
 # Ash protocol (https://ash.center)
-## If set to yes, will enrich the node configuration with on-chain information
+## If set to `yes`, will enrich the node configuration with on-chain information
 ## Warning: If the node is not known to the Ash protocol the role will fail
 ash_node: no
 

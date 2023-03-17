@@ -17,16 +17,23 @@
 
 - name: "Download {{ vm_name }} {{ vm_version }} binary"
   get_url:
-    url: "{{ vm_info.download_url }}/v{{ vm_version }}/{{ vm_binary_name }}"
-    dest: "{{ avalanchego_vms_dir }}/{{ vm_name }}/releases/{{ vm_binary_name }}"
-    checksum: "sha512:{{ vm_info.download_url }}/v{{ vm_version }}/{{ vm_binary_name }}.sha512"
+    url: "{{ vm_info.download_url }}/v{{ vm_version }}/{{ avalanchego_vm_binary_filename }}"
+    dest: "{{ avalanchego_vms_dir }}/{{ vm_name }}/releases/{{ avalanchego_vm_binary_filename }}"
+    checksum: "sha256:{{ vm_info.download_url }}/v{{ vm_version }}/{{ avalanchego_vm_checksum_filename }}"
     owner: "{{ avalanchego_user }}"
-    group: "{{ avalanchego_user }}"
+    group: "{{ avalanchego_group }}"
+
+- name: "Create {{ vm_name }}-v{{ vm_version }} directory"
+  file:
+    path: "{{ avalanchego_vms_dir }}/{{ vm_name }}/{{ vm_name }}-v{{ vm_version }}"
+    state: directory
+    owner: "{{ avalanchego_user }}"
+    group: "{{ avalanchego_group }}"
 
 - name: "Unpack {{ vm_name }} binary"
   unarchive:
-    src: "{{ avalanchego_vms_dir }}/{{ vm_name }}/releases/{{ vm_binary_name }}"
-    dest: "{{ avalanchego_vms_dir }}/{{ vm_name }}"
+    src: "{{ avalanchego_vms_dir }}/{{ vm_name }}/releases/{{ avalanchego_vm_binary_filename }}"
+    dest: "{{ avalanchego_vms_dir }}/{{ vm_name }}/{{ vm_name }}-v{{ vm_version }}"
     remote_src: yes
     owner: "{{ avalanchego_user }}"
     group: "{{ avalanchego_group }}"

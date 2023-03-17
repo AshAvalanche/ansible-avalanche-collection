@@ -42,7 +42,7 @@ avalanche_tracked_subnets: []
 # VMs
 avalanchego_vms_install: []
 ## Example
-##  - subnetevm=0.4.10
+##  - subnet-evm=0.4.10
 ##  - timestampvm=1.3.0
 ##  - spacesvm=0.0.15
 

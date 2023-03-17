@@ -26,13 +26,16 @@ avalanche_networks:
       explorer_api: https://api-testnet.snowtrace.io/api
       ash_router_addr: "0xB41b15Dc8C0Cd5A019e9F91ad5763Fb4aC571378"
 
+# String templates for VM files to download
+avalanchego_vm_binary_filename: "{{ vm_name }}_{{ vm_version }}_linux_amd64.tar.gz"
+avalanchego_vm_checksum_filename: "{{ vm_name }}_{{ vm_version }}_checksums.txt"
+
 # List of VMs supported by the collection
 avalanchego_vms_list:
-  subnetevm:
+  subnet-evm:
     aliases:
-      - subnetevm
-    binary_prefix: subnetevm-linux-amd64
-    download_url: https://github.com/AshAvalanche/subnet-evm/releases/download
+      - subnet-evm
+    download_url: https://github.com/ava-labs/subnet-evm/releases/download
     genesis_build_method: subnetevm.buildGenesis
     genesis_json_key: genesisBytes
     genesis_rpc_extra_path: /rpc

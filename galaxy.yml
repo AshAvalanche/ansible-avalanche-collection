@@ -11,7 +11,7 @@ namespace: ash
 name: avalanche
 
 # The version of the collection. Must be compatible with semantic versioning
-version: 0.4.1
+version: 0.5.0
 
 # The path to the Markdown (.md) readme file. This path is relative to the root of the collection
 readme: README.md
@@ -47,9 +47,6 @@ repository: https://github.com/AshAvalanche/ansible-avalanche-collection
 
 # The URL to any online docs
 documentation: https://docs.ash.center/docs/tools/ansible-avalanche-collection/overview
-
-# The URL to the homepage of the collection/project
-homepage: http://example.com
 
 # The URL to the collection issue tracker
 issues: https://github.com/AshAvalanche/ansible-avalanche-collection/issues

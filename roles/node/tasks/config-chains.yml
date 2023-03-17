@@ -6,7 +6,7 @@
     path: "{{ avalanchego_chains_conf_dir }}/{{ item }}"
     state: directory
     owner: "{{ avalanchego_user }}"
-    group: "{{ avalanchego_user }}"
+    group: "{{ avalanchego_group }}"
   loop: "{{ avalanchego_chains_configs.keys() }}"
 
 - name: Generate chains config.json
@@ -14,6 +14,6 @@
     content: "{{ item.value | to_nice_json }}\n"
     dest: "{{ avalanchego_chains_conf_dir }}/{{ item.key }}/config.json"
     owner: "{{ avalanchego_user }}"
-    group: "{{ avalanchego_user }}"
+    group: "{{ avalanchego_group }}"
   loop: "{{ avalanchego_chains_configs | dict2items }}"
   notify: Restart avalanchego

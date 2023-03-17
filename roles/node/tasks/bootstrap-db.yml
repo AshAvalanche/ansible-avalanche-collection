@@ -6,5 +6,5 @@
     src: "{{ avalanchego_bootstrap_db }}"
     dest: "{{ avalanchego_db_dir }}"
     owner: "{{ avalanchego_user }}"
-    group: "{{ avalanchego_user }}"
+    group: "{{ avalanchego_group }}"
     creates: "{{ avalanchego_db_dir }}/{{ avalanchego_network_id }}"

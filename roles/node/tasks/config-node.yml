@@ -44,7 +44,7 @@
     content: "{{ node_conf_json | to_nice_json(indent=2) }}\n"
     dest: "{{ avalanchego_conf_dir }}/node.json"
     owner: "{{ avalanchego_user }}"
-    group: "{{ avalanchego_user }}"
+    group: "{{ avalanchego_group }}"
   notify: Restart avalanchego
 
 - name: Upload nodes certificates
@@ -52,7 +52,7 @@
     src: "{{ avalanchego_local_certs_dir }}/{{ inventory_hostname }}.{{ item }}"
     dest: "{{ avalanchego_certs_dir }}/staker.{{ item }}"
     owner: "{{ avalanchego_user }}"
-    group: "{{ avalanchego_user }}"
+    group: "{{ avalanchego_group }}"
   loop:
     - crt
     - key
@@ -65,5 +65,5 @@
     dest: "{{ avalanchego_vms_conf_dir }}/aliases.json"
     lstrip_blocks: yes
     owner: "{{ avalanchego_user }}"
-    group: "{{ avalanchego_user }}"
+    group: "{{ avalanchego_group }}"
   notify: New VM

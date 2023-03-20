@@ -6,6 +6,6 @@
     content: "{{ item.value | to_nice_json }}\n"
     dest: "{{ avalanchego_subnets_conf_dir }}/{{ item.key }}.json"
     owner: "{{ avalanchego_user }}"
-    group: "{{ avalanchego_user }}"
+    group: "{{ avalanchego_group }}"
   loop: "{{ avalanchego_subnets_configs | dict2items }}"
   notify: Restart avalanchego

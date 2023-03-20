@@ -7,10 +7,10 @@
     file_type: link
   register: links
 
-- name: Remove outdated links in {{ avalanchego_plugins_dir }}
+- name: "Remove outdated links in {{ avalanchego_plugins_dir }}"
   file:
     path: "{{ item.path }}"
     state: absent
-  when: item.path | basename not in avalanchego_vms_install | join
+  when: (item.path | basename) not in (avalanchego_vms_install | join)
   no_log: true
   with_items: "{{ links.files }}"

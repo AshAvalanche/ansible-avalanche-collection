@@ -70,11 +70,11 @@ To install a VM on the node, add it to `avalanchego_vms_install` following `VM_N
 
 List of VMs currently available for installation:
 
-- `subnetevm`: The [Subnet EVM](https://github.com/ava-labs/subnet-evm) in versions `0.4.8` or later
+- `subnet-evm`: The [Subnet EVM](https://github.com/ava-labs/subnet-evm) in versions `0.4.8` or later
 
 Here is the compatibility matrix with AvalancheGo versions:
 
-| AvalancheGo   | `subnetevm`     |
+| AvalancheGo   | `subnet-evm`    |
 | ------------- | --------------- |
 | `1.9.6-1.9.8` | `0.4.8`         |
 | `1.9.9`       | `0.4.9-0.4.10`  |

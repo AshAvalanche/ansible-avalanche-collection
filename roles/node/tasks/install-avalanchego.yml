@@ -1,22 +1,27 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # Copyright (c) 2022-2023, E36 Knots
 ---
-- name: Check that AvalancheGo {{ avalanchego_version }} is supported
+- name: "Check that AvalancheGo {{ avalanchego_version }} is supported"
   debug:
     msg: "AvalancheGo {{ avalanchego_version }} >= {{ avalanchego_min_version }}"
   run_once: yes
   failed_when: not avalanchego_version is version(avalanchego_min_version, 'ge')
 
+- name: "Create {{ avalanchego_group }} group"
+  group:
+    name: "{{ avalanchego_group }}"
+
 - name: "Create {{ avalanchego_user }} user"
   user:
     name: "{{ avalanchego_user }}"
+    group: "{{ avalanchego_group }}"
 
 - name: Create AvalancheGo dirs
   file:
     path: "{{ item }}"
     state: directory
     owner: "{{ avalanchego_user }}"
-    group: "{{ avalanchego_user }}"
+    group: "{{ avalanchego_group }}"
   loop:
     - "{{ avalanchego_plugins_dir }}"
     - "{{ avalanchego_releases_dir }}"
@@ -36,14 +41,14 @@
     url: "{{ avalanchego_binary_url }}"
     dest: "{{ avalanchego_releases_dir }}/{{ avalanchego_binary_name }}"
     owner: "{{ avalanchego_user }}"
-    group: "{{ avalanchego_user }}"
+    group: "{{ avalanchego_group }}"
 
 - name: "Unpack AvalancheGo {{ avalanchego_version }} binary"
   unarchive:
     src: "{{ avalanchego_releases_dir }}/{{ avalanchego_binary_name }}"
     dest: "{{ avalanchego_install_dir }}"
     owner: "{{ avalanchego_user }}"
-    group: "{{ avalanchego_user }}"
+    group: "{{ avalanchego_group }}"
     remote_src: yes
     creates: "{{ avalanchego_install_dir }}/avalanchego-v{{ avalanchego_version }}"
 
@@ -53,7 +58,7 @@
     dest: "{{ avalanchego_current_dir }}/avalanchego"
     state: link
     owner: "{{ avalanchego_user }}"
-    group: "{{ avalanchego_user }}"
+    group: "{{ avalanchego_group }}"
   notify: Restart avalanchego
 
 - name: Template avalanchego.service file

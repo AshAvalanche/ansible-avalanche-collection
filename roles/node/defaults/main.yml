@@ -18,8 +18,9 @@ avalanchego_certs_dir: /etc/avalanche/avalanchego/staking
 # Log directory
 avalanchego_log_dir: /var/log/avalanche/avalanchego
 
-# User
+# User and group
 avalanchego_user: avalanche
+avalanchego_group: avalanche
 
 # Network
 avalanchego_use_static_ip: yes
@@ -41,7 +42,7 @@ avalanche_tracked_subnets: []
 # VMs
 avalanchego_vms_install: []
 ## Example
-##  - subnetevm=0.4.10
+##  - subnet-evm=0.4.10
 ##  - timestampvm=1.3.0
 ##  - spacesvm=0.0.15
 

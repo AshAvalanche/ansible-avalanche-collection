@@ -18,7 +18,7 @@ GITHUB_API_URL = 'https://api.github.com'
 VARS_YAML_PATH = '../roles/node/vars/main.yml'
 VARS_YAML_HEADER_SIZE = 3
 VMS_REPOS = {
-    'subnetevm': 'AshAvalanche/subnet-evm',
+    'subnet-evm': 'ava-labs/subnet-evm',
 }
 MIN_AVAX_VERSION = '1.9.6'
 

@@ -1,10 +1,14 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # Copyright (c) 2022-2023, E36 Knots
 ---
-# Avalanchego version
+# AvalancheGo version
 avalanchego_min_version: 1.9.6
 avalanchego_binary_name: "avalanchego-linux-amd64-v{{ avalanchego_version }}.tar.gz"
 avalanchego_binary_url: "https://github.com/ava-labs/avalanchego/releases/download/v{{ avalanchego_version }}/{{ avalanchego_binary_name }}"
+
+# AvalancheGo GPG key
+avalanchego_gpg_key_name: avalanchego.gpg.key
+avalanchego_gpg_key_url: "https://downloads.avax.network/{{ avalanchego_gpg_key_name }}"
 
 # Install directories
 avalanchego_releases_dir: "{{ avalanchego_install_dir }}/releases"

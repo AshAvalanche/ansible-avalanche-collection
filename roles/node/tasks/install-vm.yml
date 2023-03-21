@@ -4,7 +4,7 @@
 - name: "Check that {{ vm_name }}={{ vm_version }} is compatible with avalanchego={{ avalanchego_version }}"
   debug:
     msg: "AvalancheGo version {{ item.key }} {{ item.value }}: {{ avalanchego_version is version(item.value, item.key) }}"
-  run_once: yes
+  run_once: true
   loop: "{{ vm_info.versions_comp[vm_version] | dict2items }}"
   failed_when: not avalanchego_version is version(item.value, item.key)
 
@@ -34,7 +34,7 @@
   unarchive:
     src: "{{ avalanchego_vms_dir }}/{{ vm_name }}/releases/{{ avalanchego_vm_binary_filename }}"
     dest: "{{ avalanchego_vms_dir }}/{{ vm_name }}/{{ vm_name }}-v{{ vm_version }}"
-    remote_src: yes
+    remote_src: true
     owner: "{{ avalanchego_user }}"
     group: "{{ avalanchego_group }}"
     creates: "{{ avalanchego_vms_dir }}/{{ vm_name}}/{{ vm_name }}-v{{ vm_version }}/{{ vm_name }}"

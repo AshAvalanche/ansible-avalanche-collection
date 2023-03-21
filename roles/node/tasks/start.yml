@@ -8,4 +8,4 @@
   service:
     name: avalanchego
     state: started
-    enabled: yes
+    enabled: true

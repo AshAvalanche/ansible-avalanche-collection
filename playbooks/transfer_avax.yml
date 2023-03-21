@@ -15,7 +15,7 @@
           to: "{{ avax_transfer_to_address_bech32 }}"
           assetID: AVAX
           amount: "{{ avax_transfer_amount_navax }}"
-        wait_validation: yes
+        wait_validation: true
       register: xchain_transac_res
 
     - debug:
@@ -31,7 +31,7 @@
         params:
           to: "{{ avax_transfer_to_address_hex }}"
           sourceChain: X
-        wait_validation: yes
+        wait_validation: true
       register: cchain_transac_res
 
     - debug:

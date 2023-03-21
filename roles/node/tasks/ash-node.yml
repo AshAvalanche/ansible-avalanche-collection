@@ -30,7 +30,7 @@
   failed_when: ash_router_abi_res.json.message == 'NOTOK'
 
 - name: Check that validator renting contract is known to AshRouter
-  become: no
+  become: false
   ash.avalanche.eth_call:
     rpc_url: "{{ avalanche_networks[avalanchego_network_id].c_chain.rpc_url }}"
     contract_addr: "{{ avalanche_networks[avalanchego_network_id].c_chain.ash_router_addr }}"
@@ -43,7 +43,7 @@
   delegate_to: localhost
 
 - name: Get list of subnetIDs to whitelist from AshRouter
-  become: no
+  become: false
   ash.avalanche.eth_call:
     rpc_url: "{{ avalanche_networks[avalanchego_network_id].c_chain.rpc_url }}"
     contract_addr: "{{ avalanche_networks[avalanchego_network_id].c_chain.ash_router_addr }}"

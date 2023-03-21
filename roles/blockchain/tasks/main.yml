@@ -91,7 +91,7 @@
       vmID: "{{ avalanchego_vms_list[blockchain_vm].id }}"
       name: "{{ blockchain_name }}"
       genesisData: "{{ genesis_data }}"
-    wait_validation: yes
+    wait_validation: true
 
 - name: Get blockchains list
   uri:

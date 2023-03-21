@@ -3,6 +3,6 @@
 ---
 - name: Provision nodes
   hosts: avalanche_nodes
-  become: yes
+  become: true
   roles:
     - role: ash.avalanche.node

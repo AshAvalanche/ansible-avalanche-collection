@@ -3,13 +3,13 @@
 ---
 - name: Provision bootstrap node
   hosts: bootstrap_node
-  become: yes
+  become: true
   roles:
     - role: ash.avalanche.node
 
 - name: Provision other network nodes
   hosts: avalanche_nodes:!bootstrap_node
-  become: yes
+  become: true
   roles:
     - role: ash.avalanche.node
 

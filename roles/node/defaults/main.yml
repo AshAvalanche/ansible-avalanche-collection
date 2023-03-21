@@ -24,7 +24,7 @@ avalanchego_user: avalanche
 avalanchego_group: avalanche
 
 # Network
-avalanchego_use_static_ip: yes
+avalanchego_use_static_ip: true
 # Change this to public IP to accept API calls from the outside
 avalanchego_http_host: 127.0.0.1
 avalanchego_http_port: 9650
@@ -32,7 +32,7 @@ avalanchego_staking_port: 9651
 
 # Bootstrapping
 avalanchego_network_id: fuji
-avalanchego_use_existing_certs: no
+avalanchego_use_existing_certs: false
 avalanchego_local_certs_dir: "{{ playbook_dir }}/files/certs"
 avalanchego_bootstrap_node_id: NodeID-7Xhw2mDxuDS44j42TCB6U5579esbSt3Lg
 avalanchego_bootstrap_db: ""
@@ -48,9 +48,9 @@ avalanchego_vms_install: []
 ##  - spacesvm=0.0.15
 
 # Ash protocol (https://ash.center)
-## If set to `yes`, will enrich the node configuration with on-chain information
+## If set to `true`, will enrich the node configuration with on-chain information
 ## Warning: If the node is not known to the Ash protocol the role will fail
-ash_node: no
+ash_node: false
 
 # node.json
 avalanchego_node_json:

@@ -63,7 +63,7 @@
   template:
     src: aliases.json.j2
     dest: "{{ avalanchego_vms_conf_dir }}/aliases.json"
-    lstrip_blocks: yes
+    lstrip_blocks: true
     owner: "{{ avalanchego_user }}"
     group: "{{ avalanchego_group }}"
   notify: New VM

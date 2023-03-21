@@ -85,7 +85,7 @@
     params:
       controlKeys: "{{ subnet_control_keys }}"
       threshold: "{{ subnet_control_keys_threshold }}"
-    wait_validation: yes
+    wait_validation: true
 
 - name: Get subnets list
   uri:
@@ -137,7 +137,7 @@
       startTime: "{{ subnet_validators_starttime }}"
       endTime: "{{ subnet_validators_endtime }}"
       weight: "{{ subnet_validators_weight }}"
-    wait_validation: yes
+    wait_validation: true
   loop: "{{ validators_ids }}"
 
 - name: Display created subnet info

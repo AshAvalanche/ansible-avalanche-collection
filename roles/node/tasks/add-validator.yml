@@ -73,7 +73,7 @@
       delegationFeeRate: 10
       username: "{{ avalanche_node_username }}"
       password: "{{ avalanche_node_password }}"
-    wait_validation: yes
+    wait_validation: true
   when:
     - (get_current_validators_res.json.result.validators | length) < 1
     - (get_pending_validators_res.json.result.validators | length) < 1

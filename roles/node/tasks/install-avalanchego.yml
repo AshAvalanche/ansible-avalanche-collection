@@ -31,10 +31,23 @@
     - "{{ avalanchego_vms_conf_dir }}"
     - "{{ avalanchego_certs_dir }}"
     - "{{ avalanchego_log_dir }}"
+    - "{{ avalanchego_gpg_dir }}"
 
 - name: Bootstrap database
   include_tasks: bootstrap-db.yml
   when: (avalanchego_bootstrap_db is defined) and (avalanchego_bootstrap_db|length > 0)
+
+- name: Download AvalancheGo GPG key
+  get_url:
+    url: "{{ avalanchego_gpg_key_url }}"
+    dest: "{{ avalanchego_gpg_dir }}/{{ avalanchego_gpg_key_name }}"
+    owner: "{{ avalanchego_user }}"
+    group: "{{ avalanchego_group }}"
+
+- name: Import AvalancheGo GPG key
+  command: "gpg --import {{ avalanchego_gpg_dir }}/{{ avalanchego_gpg_key_name }}"
+  register: avalanchego_gpg_import
+  changed_when: "'imported: 1' in avalanchego_gpg_import.stderr"
 
 - name: "Download AvalancheGo {{ avalanchego_version }} binary"
   get_url:
@@ -42,6 +55,17 @@
     dest: "{{ avalanchego_releases_dir }}/{{ avalanchego_binary_name }}"
     owner: "{{ avalanchego_user }}"
     group: "{{ avalanchego_group }}"
+
+- name: "Download AvalancheGo {{ avalanchego_version }} binary signature"
+  get_url:
+    url: "{{ avalanchego_binary_url }}.sig"
+    dest: "{{ avalanchego_releases_dir }}/{{ avalanchego_binary_name }}.sig"
+    owner: "{{ avalanchego_user }}"
+    group: "{{ avalanchego_group }}"
+
+- name: Verify AvalancheGo binary GPG signature
+  command: "gpg --verify {{ avalanchego_releases_dir }}/{{ avalanchego_binary_name }}.sig {{ avalanchego_releases_dir }}/{{ avalanchego_binary_name }}"
+  changed_when: no
 
 - name: "Unpack AvalancheGo {{ avalanchego_version }} binary"
   unarchive:

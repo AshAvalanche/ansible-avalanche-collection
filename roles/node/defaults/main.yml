@@ -14,6 +14,7 @@ avalanchego_db_dir: /var/lib/avalanchego/db
 # Configuration directories
 avalanchego_conf_dir: /etc/avalanche/avalanchego/conf
 avalanchego_certs_dir: /etc/avalanche/avalanchego/staking
+avalanchego_gpg_dir: /etc/avalanche/avalanchego/gnupg
 
 # Log directory
 avalanchego_log_dir: /var/log/avalanche/avalanchego

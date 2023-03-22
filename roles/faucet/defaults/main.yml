@@ -27,7 +27,7 @@ avalanche_faucet_config:
   subnet_token: SUBNET
   subnet_rpc: http://192.168.60.11:9650/ext/bc/k7xVKQheY8iBpcFg7SxCcYyfiUZeCMRyRgPZRfdQnuFiyojKd/rpc
   subnet_chain_id: 13213
-  subnet_explorer: http://192.168.60.11:4000/
+  subnet_explorer: http://192.168.60.11:4000
   subnet_token_image: https://docs.ash.center/img/ash-logo.svg
   subnet_max_priority_fee: 2000000000
   subnet_max_fee: 100000000000

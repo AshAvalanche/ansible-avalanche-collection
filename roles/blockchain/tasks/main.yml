@@ -20,7 +20,7 @@
   until: bootstrapped_res.json.result.isBootstrapped
   retries: 10
 
-- name: Check that the subnet exists
+- name: Check that the Subnet exists
   uri:
     url: "{{ avalanchego_http_protocol }}://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/P"
     method: POST

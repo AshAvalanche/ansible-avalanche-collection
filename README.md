@@ -12,7 +12,7 @@ It aims at:
 
 - **Provisioning Avalanche nodes** on Fuji or Mainnet with flawless upgrade capabilities. Ansible also brings easy node configuration persistence and idempotent deployments.
 - **Bootstrapping local test networks** that really mimic production environments
-- **Automating subnet and blockchain operations** (subnet whitelisting, plugin deployment) for validators
+- **Automating Subnet and blockchain operations** (subnet whitelisting, plugin deployment) for validators
 - And more
 
 ## Requirements
@@ -63,8 +63,8 @@ The repository [ansible-avalanche-getting-started](https://github.com/AshAvalanc
 
 - [ash.avalanche.bootstrap_local_network](./playbooks/bootstrap_local_network.yml): bootstrap a local test network (`avalanchego_network_id: local`)
 - [ash.avalanche.provision_nodes](./playbooks/provision_nodes.yml): provision nodes for Fuji or Mainnet (`avalanchego_network_id: fuji|mainnet`)
-- [ash.avalanche.create_local_subnet](./playbooks/create_local_subnet.yml): create a subnet on a local test network (**do not** use in production)
-- [ash.avalanche.create_local_blockchains](./playbooks/create_local_blockchains.yml): create blockchains in a subnet on a local test network (**do not** use in production)
+- [ash.avalanche.create_local_subnet](./playbooks/create_local_subnet.yml): create a Subnet on a local test network (**do not** use in production)
+- [ash.avalanche.create_local_blockchains](./playbooks/create_local_blockchains.yml): create blockchains in a Subnet on a local test network (**do not** use in production)
 - [ash.avalanche.transfer_avax](./playbooks/transfer_avax.yml): example of how to transfer AVAX from the X-Chain to the C-Chain (**do not** use in production)
 
 ## Inventory requirements
@@ -74,10 +74,10 @@ The repository [ansible-avalanche-getting-started](https://github.com/AshAvalanc
   - For local networks, **one of the nodes** has to be in the `bootstrap_node` group. This node has to **be started first to serve as a bootstrap node** for the others. For an example of how to do that, see the [bootstrap_local_network.yml](../../playbooks/bootstrap_local_network.yml) playbook.
 - `ash.avalanche.subnet`:
   - **The node used to make API calls** have to be in the `subnet_control_node` group.
-  - **The nodes to be added as validators** to the subnet have to be in the `subnet_validators` group. The Ansible host has to be able to connect to those nodes via SSH.
+  - **The nodes to be added as validators** to the Subnet have to be in the `subnet_validators` group. The Ansible host has to be able to connect to those nodes via SSH.
 - `ash.avalanche.blockchain`:
   - **The node used to make API calls** have to be in the `subnet_control_node` group.
-  - **The validators** of the subnet have to be in the `subnet_validators` group. The Ansible host has to be able to connect to those nodes via SSH.
+  - **The validators** of the Subnet have to be in the `subnet_validators` group. The Ansible host has to be able to connect to those nodes via SSH.
 
 ## Roadmap
 

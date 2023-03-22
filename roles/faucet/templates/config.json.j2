@@ -1,0 +1,31 @@
+{
+    "GLOBAL_RL": {
+        "ID": "GLOBAL",
+        "RATELIMIT": {
+            "REVERSE_PROXIES": 2,
+            "MAX_LIMIT": 40,
+            "WINDOW_SIZE": 1,
+            "PATH": "/",
+            "SKIP_FAILED_REQUESTS": false
+        }
+    },
+    "evmchains": [
+        {
+            "ID": "{{ avalanche_faucet_config['subnet_id'] }}",
+            "NAME": "{{ avalanche_faucet_config['subnet_name'] }}",
+            "TOKEN": "{{ avalanche_faucet_config['subnet_token'] }}",
+            "RPC": "{{ avalanche_faucet_config['subnet_rpc'] }}",
+            "CHAINID": {{ avalanche_faucet_config['subnet_chain_id'] }},
+            "EXPLORER": "{{ avalanche_faucet_config['subnet_explorer'] }}",
+            "IMAGE": "{{ avalanche_faucet_config['subnet_token_image'] }}",
+            "MAX_PRIORITY_FEE": "{{ avalanche_faucet_config['subnet_max_priority_fee'] }}",
+            "MAX_FEE": "{{ avalanche_faucet_config['subnet_max_fee'] }}",
+            "DRIP_AMOUNT": {{ avalanche_faucet_config['subnet_drip_amount'] }},
+            "RATELIMIT": {
+                "MAX_LIMIT": {{ avalanche_faucet_config['subnet_rate_max_limit'] }},
+                "WINDOW_SIZE": {{ avalanche_faucet_config['subnet_window_size'] }}
+            }
+        }
+    ],
+    "erc20tokens": []
+}

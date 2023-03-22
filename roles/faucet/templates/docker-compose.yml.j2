@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  faucet:
+    image: {{ avalanche_faucet_image }}:{{ avalanche_faucet_image_version }}
+    restart: always
+    container_name: "faucet"
+    ports:
+      - {{ avalanche_faucet_port }}:8000
+    env_file:
+      - {{ avalanche_faucet_conf_dir }}/.env
+    volumes:
+      - {{ avalanche_faucet_conf_dir }}/config.json:/avalanche-faucet/build/config.json

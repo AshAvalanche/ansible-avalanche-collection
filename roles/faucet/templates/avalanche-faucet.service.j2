@@ -1,0 +1,15 @@
+[Unit]
+Description=Avalanche Faucet
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+User={{ avalanche_faucet_user }}
+WorkingDirectory={{ avalanche_faucet_conf_dir }}
+ExecStart=/usr/bin/env /usr/local/bin/docker-compose -f {{ avalanche_faucet_conf_dir }}/docker-compose.yml up -d
+ExecStop=/usr/bin/env /usr/local/bin/docker-compose -f {{ avalanche_faucet_conf_dir }}/docker-compose.yml stop
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

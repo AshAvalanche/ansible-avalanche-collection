@@ -3,7 +3,7 @@
 ---
 - name: Wait for blockchains to be bootstrapped
   uri:
-    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/info"
+    url: "{{ avalanchego_http_protocol }}://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/info"
     method: POST
     body_format: json
     body:
@@ -13,7 +13,7 @@
         chain: "{{ item }}"
       id: 1
   register: bootstrapped_res
-  failed_when: bootstrapped_res.json.error is defined
+  failed_when: (bootstrapped_res.status != 200) or (bootstrapped_res.json.error is defined)
   loop:
     - P
     - X
@@ -23,7 +23,7 @@
 
 - name: Check if pre-funded account user already exists
   uri:
-    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/keystore"
+    url: "{{ avalanchego_http_protocol }}://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/keystore"
     method: POST
     body_format: json
     body:
@@ -34,7 +34,7 @@
 
 - name: Create pre-funded account user
   uri:
-    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/keystore"
+    url: "{{ avalanchego_http_protocol }}://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/keystore"
     method: POST
     body_format: json
     body:
@@ -46,11 +46,11 @@
       id: 1
   when: avalanche_prefunded_username not in users_list_res.json.result.users
   register: users_create_res
-  failed_when: users_create_res.json.error is defined
+  failed_when: (users_create_res.status != 200) or (users_create_res.json.error is defined)
 
 - name: Give pre-funded account control over X-Chain address
   uri:
-    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/bc/X"
+    url: "{{ avalanchego_http_protocol }}://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/bc/X"
     method: POST
     body_format: json
     body:
@@ -62,7 +62,7 @@
         privateKey: "{{ avalanche_prefunded_private_key }}"
       id: 1
   register: import_key_res
-  failed_when: import_key_res.json.error is defined
+  failed_when: (import_key_res.status != 200) or (import_key_res.json.error is defined)
 
 - name: Display created X-Chain address
   debug:
@@ -70,7 +70,7 @@
 
 - name: Give pre-funded account control over P-Chain address
   uri:
-    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/bc/P"
+    url: "{{ avalanchego_http_protocol }}://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/bc/P"
     method: POST
     body_format: json
     body:
@@ -82,7 +82,7 @@
         privateKey: "{{ avalanche_prefunded_private_key }}"
       id: 1
   register: import_key_res
-  failed_when: import_key_res.json.error is defined
+  failed_when: (import_key_res.status != 200) or (import_key_res.json.error is defined)
 
 - name: Display created P-Chain address
   debug:
@@ -90,7 +90,7 @@
 
 - name: Give pre-funded account control over C-Chain address
   uri:
-    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/bc/C/avax"
+    url: "{{ avalanchego_http_protocol }}://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/bc/C/avax"
     method: POST
     body_format: json
     body:
@@ -102,7 +102,7 @@
         privateKey: "{{ avalanche_prefunded_private_key }}"
       id: 1
   register: import_key_res
-  failed_when: import_key_res.json.error is defined
+  failed_when: (import_key_res.status != 200) or (import_key_res.json.error is defined)
 
 - name: Display created C-Chain address
   debug:

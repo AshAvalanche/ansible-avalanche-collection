@@ -3,7 +3,7 @@
 ---
 - name: Get P chain address
   uri:
-    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/bc/P"
+    url: "{{ avalanchego_http_protocol }}://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/bc/P"
     method: POST
     body_format: json
     body:
@@ -14,11 +14,11 @@
         password: "{{ avalanche_node_password }}"
       id: 1
   register: list_addresses_res
-  failed_when: list_addresses_res.json.error is defined or list_addresses_res.json.result.addresses | length < 1
+  failed_when: (list_addresses_res.status != 200) or (list_addresses_res.json.error is defined) or list_addresses_res.json.result.addresses | length < 1
 
 - name: Get NodeID
   uri:
-    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/info"
+    url: "{{ avalanchego_http_protocol }}://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/info"
     method: POST
     body_format: json
     body:
@@ -26,11 +26,11 @@
       method: info.getNodeID
       id: 1
   register: get_node_id_res
-  failed_when: get_node_id_res.json.error is defined
+  failed_when: (get_node_id_res.status != 200) or (get_node_id_res.json.error is defined)
 
 - name: Check if the node is already a validator
   uri:
-    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/bc/P"
+    url: "{{ avalanchego_http_protocol }}://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/bc/P"
     method: POST
     body_format: json
     body:
@@ -40,11 +40,11 @@
         nodeIDs: ["{{ get_node_id_res.json.result.nodeID }}"]
       id: 1
   register: get_current_validators_res
-  failed_when: get_current_validators_res.json.error is defined
+  failed_when: (get_current_validators_res.status != 200) or (get_current_validators_res.json.error is defined)
 
 - name: Check if the node is a pending validator
   uri:
-    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/bc/P"
+    url: "{{ avalanchego_http_protocol }}://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/bc/P"
     method: POST
     body_format: json
     body:
@@ -54,12 +54,13 @@
         nodeIDs: ["{{ get_node_id_res.json.result.nodeID }}"]
       id: 1
   register: get_pending_validators_res
-  failed_when: get_pending_validators_res.json.error is defined
+  failed_when: (get_pending_validators_res.status != 200) or (get_pending_validators_res.json.error is defined)
 
 - name: Add validator if the node is not a current|pending validator
   ash.avalanche.tx:
     http_host: "{{ avalanchego_http_host }}"
     http_port: "{{ avalanchego_http_port }}"
+    protocol: "{{ avalanchego_http_protocol }}"
     blockchain: P
     method: platform.addValidator
     username: "{{ avalanche_node_username }}"

@@ -24,7 +24,7 @@
     - name: Configure AvalancheGo node
       include_tasks: config-node.yml
       vars:
-        avalanche_tracked_subnets: "{{ all_whitelisted_subnets }}"
+        avalanchego_track_subnets: "{{ all_tracked_subnets }}"
   when: ash_node
 
 - name: Configure AvalancheGo node

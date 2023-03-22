@@ -29,7 +29,8 @@
     - "{{ avalanchego_subnets_conf_dir }}"
     - "{{ avalanchego_chains_conf_dir }}"
     - "{{ avalanchego_vms_conf_dir }}"
-    - "{{ avalanchego_certs_dir }}"
+    - "{{ avalanchego_staking_certs_dir }}"
+    - "{{ avalanchego_https_certs_dir }}"
     - "{{ avalanchego_log_dir }}"
     - "{{ avalanchego_gpg_dir }}"
 

@@ -13,7 +13,8 @@ avalanchego_db_dir: /var/lib/avalanchego/db
 
 # Configuration directories
 avalanchego_conf_dir: /etc/avalanche/avalanchego/conf
-avalanchego_certs_dir: /etc/avalanche/avalanchego/staking
+avalanchego_staking_certs_dir: /etc/avalanche/avalanchego/staking
+avalanchego_https_certs_dir: /etc/ssl/certs/avalanche/avalanchego
 avalanchego_gpg_dir: /etc/avalanche/avalanchego/gnupg
 
 # Log directory
@@ -23,22 +24,30 @@ avalanchego_log_dir: /var/log/avalanche/avalanchego
 avalanchego_user: avalanche
 avalanchego_group: avalanche
 
-# Network
-avalanchego_use_static_ip: true
-# Change this to public IP to accept API calls from the outside
+# HTTP
+## Change this to public IP to accept API calls from the outside
 avalanchego_http_host: 127.0.0.1
 avalanchego_http_port: 9650
+## If set to `true`, will use existing certificates found in `avalanchego_https_local_certs_dir`
+avalanchego_https_enabled: false
+avalanchego_https_local_certs_dir: "{{ playbook_dir }}/files/https"
+
+# Public IP
+avalanchego_static_public_ip: true
+
+# Staking
 avalanchego_staking_port: 9651
+## If set to `true`, will use existing certificates found in `avalanchego_staking_local_certs_dir`
+avalanchego_staking_use_local_certs: false
+avalanchego_staking_local_certs_dir: "{{ playbook_dir }}/files/staking"
 
 # Bootstrapping
 avalanchego_network_id: fuji
-avalanchego_use_existing_certs: false
-avalanchego_local_certs_dir: "{{ playbook_dir }}/files/certs"
 avalanchego_bootstrap_node_id: NodeID-7Xhw2mDxuDS44j42TCB6U5579esbSt3Lg
 avalanchego_bootstrap_db: ""
 
 # Subnets
-avalanche_tracked_subnets: []
+avalanchego_track_subnets: []
 
 # VMs
 avalanchego_vms_install: []
@@ -54,18 +63,20 @@ ash_node: false
 
 # node.json
 avalanchego_node_json:
-  # Network
+  # HTTP
   http-host: "{{ avalanchego_http_host }}"
   http-port: "{{ avalanchego_http_port }}"
-  staking-port: "{{ avalanchego_staking_port }}"
   api-admin-enabled: true
   api-keystore-enabled: true
+  http-tls-enabled: "{{ avalanchego_https_enabled }}"
+  # Staking
+  staking-enabled: true
+  staking-port: "{{ avalanchego_staking_port }}"
   # Consensus
   network-id: "{{ avalanchego_network_id }}"
   snow-sample-size: 20
   snow-quorum-size: 15
   snow-mixed-query-num-push-vdr: 10
-  staking-enabled: true
   # Paths
   db-dir: "{{ avalanchego_db_dir }}"
   subnet-config-dir: "{{ avalanchego_subnets_conf_dir }}"
@@ -75,7 +86,7 @@ avalanchego_node_json:
   # Logging
   log-level: info
   # Subnets
-  track-subnets: "{{ avalanche_tracked_subnets | join(',') }}"
+  track-subnets: "{{ avalanchego_track_subnets | join(',') }}"
 
 # Subnets configurations
 avalanchego_subnets_configs: {}

@@ -4,6 +4,7 @@
 # Network
 avalanchego_http_host: 127.0.0.1
 avalanchego_http_port: 9650
+avalanchego_https_enabled: false
 
 # Subnet
 subnet_control_username: ewoq

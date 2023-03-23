@@ -8,7 +8,7 @@ This Ansible role allows to create an Avalanche subnet.
 | ------------------------------- | -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
 | `avalanchego_http_host`         | [--http-host](https://docs.avax.network/build/references/avalanchego-config-flags#--http-host-string) argument | `127.0.0.1`                                             |
 | `avalanchego_http_port`         | [--http-port](https://docs.avax.network/build/references/avalanchego-config-flags#--http-port-int) argument    | `9650`                                                  |
-| `avalanchego_https_enabled`     | Wether the HTTP API endpoints are using TLS or not                                                             | `false`                                                 |
+| `avalanchego_https_enabled`     | Whether the HTTP API endpoints are using TLS or not                                                            | `false`                                                 |
 | `subnet_control_username`       | Username of the user that has control over the `subnet_control_keys`                                           | `ewoq`                                                  |
 | `subnet_control_password`       | Password of the user that has control over the `subnet_control_keys`                                           | `I_l1ve_@_Endor`                                        |
 | `subnet_control_keys_threshold` | The number of control keys needed to operate the Subnet                                                        | `2`                                                     |

@@ -17,7 +17,7 @@
 
 # - name: Reload VMs
 #   uri:
-#     url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/admin"
+#     url: "{{ avalanchego_http_protocol }}://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/admin"
 #     method: POST
 #     body_format: json
 #     body:
@@ -26,6 +26,6 @@
 #       params: {}
 #       id: 1
 #   register: load_vms_res
-#   failed_when: load_vms_res.json.error is defined
+#   failed_when: (load_vms_res.status != 200) or (load_vms_res.json.error is defined)
 #   listen: New VM
 #   when: avalanchego_version is version('1.7.6', '>=')

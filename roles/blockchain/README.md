@@ -8,6 +8,7 @@ This Ansible role allows to create an Avalanche blockchain.
 | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
 | `avalanchego_http_host`     | [--http-host](https://docs.avax.network/build/references/avalanchego-config-flags#--http-host-string) argument                                                                                                                        | `127.0.0.1`                                         |
 | `avalanchego_http_port`     | [--http-port](https://docs.avax.network/build/references/avalanchego-config-flags#--http-port-int) argument                                                                                                                           | `9650`                                              |
+| `avalanchego_https_enabled` | Whether the HTTP API endpoints are using TLS or not                                                                                                                                                                                   | `false`                                             |
 | `subnet_id`                 |                                                                                                                                                                                                                                       | `aUC7SX8QGVwsbwS4YNuavVTbinjJLrPjNNjdpZbbcFZZFSxFd` |
 | `subnet_control_username`   |                                                                                                                                                                                                                                       | `ewoq`                                              |
 | `subnet_control_password`   |                                                                                                                                                                                                                                       | `I_l1ve_@_Endor`                                    |
@@ -19,7 +20,7 @@ This Ansible role allows to create an Avalanche blockchain.
 ## Inventory requirements
 
 - **The node used to make API calls** have to be in the `subnet_control_node` group.
-- **The subnet validators** have to be in the `subnet_validators` group. The Ansible host has to be able to connect to those nodes via SSH (to create blockchain aliases.
+- **The Subnet validators** have to be in the `subnet_validators` group. The Ansible host has to be able to connect to those nodes via SSH (to create blockchain aliases.
 
 ## How to?
 

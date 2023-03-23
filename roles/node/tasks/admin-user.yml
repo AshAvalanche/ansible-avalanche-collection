@@ -3,7 +3,7 @@
 ---
 - name: Check if node user account already exists
   uri:
-    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/keystore"
+    url: "{{ avalanchego_http_protocol }}://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/keystore"
     method: POST
     body_format: json
     body:
@@ -11,11 +11,11 @@
       method: keystore.listUsers
       id: 1
   register: list_users_res
-  failed_when: list_users_res.json.error is defined
+  failed_when: (list_users_res.status != 200) or (list_users_res.json.error is defined)
 
 - name: Create node user account
   uri:
-    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/keystore"
+    url: "{{ avalanchego_http_protocol }}://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/keystore"
     method: POST
     body_format: json
     body:
@@ -27,11 +27,11 @@
       id: 1
   when: avalanche_node_username not in list_users_res.json.result.users
   register: users_create_res
-  failed_when: users_create_res.json.error is defined
+  failed_when: (users_create_res.status != 200) or (users_create_res.json.error is defined)
 
 - name: Check if P chain address already exists
   uri:
-    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/bc/P"
+    url: "{{ avalanchego_http_protocol }}://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/bc/P"
     method: POST
     body_format: json
     body:
@@ -42,11 +42,11 @@
         password: "{{ avalanche_node_password }}"
       id: 1
   register: list_addresses_res
-  failed_when: list_addresses_res.json.error is defined
+  failed_when: (list_addresses_res.status != 200) or (list_addresses_res.json.error is defined)
 
 - name: Create P chain address for node user account
   uri:
-    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/bc/P"
+    url: "{{ avalanchego_http_protocol }}://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/bc/P"
     method: POST
     body_format: json
     body:
@@ -58,4 +58,4 @@
       id: 1
   when: list_addresses_res.json.result.addresses | length < 1
   register: create_address_res
-  failed_when: create_address_res.json.error is defined
+  failed_when: (create_address_res.status != 200) or (create_address_res.json.error is defined)

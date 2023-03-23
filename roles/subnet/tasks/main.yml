@@ -3,7 +3,7 @@
 ---
 - name: Wait for P-Chain to be bootstrapped
   uri:
-    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/info"
+    url: "{{ avalanchego_http_protocol }}://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/info"
     method: POST
     body_format: json
     body:
@@ -13,13 +13,13 @@
         chain: P
       id: 1
   register: bootstrapped_res
-  failed_when: bootstrapped_res.json.error is defined
+  failed_when: (bootstrapped_res.status != 200) or (bootstrapped_res.json.error is defined)
   until: bootstrapped_res.json.result.isBootstrapped
   retries: 10
 
-- name: Check that subnet control user exists
+- name: Check that Subnet control user exists
   uri:
-    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/keystore"
+    url: "{{ avalanchego_http_protocol }}://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/keystore"
     method: POST
     body_format: json
     body:
@@ -28,12 +28,12 @@
       id: 1
   register: users_list_res
   failed_when: >
-    (users_list_res.json.error is defined) or
+    ((users_list_res.status != 200) or (users_list_res.json.error is defined)) or
     (subnet_control_username not in users_list_res.json.result.users)
 
-- name: Check that subnet control user owns the control keys
+- name: Check that Subnet control user owns the control keys
   uri:
-    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/bc/P"
+    url: "{{ avalanchego_http_protocol }}://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/bc/P"
     method: POST
     body_format: json
     body:
@@ -45,12 +45,12 @@
       id: 1
   register: user_addr_res
   failed_when: >
-    (user_addr_res.json.error is defined) or
+    ((user_addr_res.status != 200) or (user_addr_res.json.error is defined)) or
     not (subnet_control_keys | intersect(user_addr_res.json.result.addresses) | length)
 
 - name: Get existing subnets list
   uri:
-    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/bc/P"
+    url: "{{ avalanchego_http_protocol }}://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/bc/P"
     method: POST
     body_format: json
     body:
@@ -63,21 +63,22 @@
   set_fact:
     subnets_w_same_keys_ids: '{{ subnets_list_res.json.result | to_json | from_json | json_query("subnets[?sort(controlKeys)==sort([''" + (subnet_control_keys | join("'',''")) + "''])].id") }}'
 
-- name: Confirm subnet creation
+- name: Confirm Subnet creation
   pause:
     prompt: >-
-      A subnet using the same control keys already exists.
+      A Subnet using the same control keys already exists.
       Are you sure you want to create another one? [yes/no]
   register: confirm_prompt
   when: subnets_w_same_keys_ids | length
 
-- name: Abort subnet creation
+- name: Abort Subnet creation
   meta: end_play
   when: not (confirm_prompt.user_input | default('yes') | bool)
 
-- name: Create the subnet
+- name: Create the Subnet
   ash.avalanche.tx:
     http_host: "{{ avalanchego_http_host }}"
+    protocol: "{{ avalanchego_http_protocol }}"
     blockchain: P
     method: platform.createSubnet
     username: "{{ subnet_control_username }}"
@@ -89,7 +90,7 @@
 
 - name: Get subnets list
   uri:
-    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/bc/P"
+    url: "{{ avalanchego_http_protocol }}://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/bc/P"
     method: POST
     body_format: json
     body:
@@ -102,13 +103,13 @@
   set_fact:
     subnets_w_same_keys_after: '{{ subnets_list_res.json.result | to_json | from_json |  json_query("subnets[?sort(controlKeys)==sort([''" + (subnet_control_keys | join("'',''")) + "''])]") }}'
 
-- name: Get created subnet info
+- name: Get created Subnet info
   set_fact:
     subnet_info: '{{ subnets_w_same_keys_after | json_query("[?!contains([''" + (subnets_w_same_keys_ids | join("'',''")) + "''], id)]") | first }}'
 
 - name: Get validators nodeIDs 1/2
   uri:
-    url: "http://{{ hostvars[item]['avalanchego_http_host'] }}:{{ hostvars[item]['avalanchego_http_port'] | default(avalanchego_http_port) }}/ext/info"
+    url: "{{ avalanchego_http_protocol }}://{{ hostvars[item]['avalanchego_http_host'] }}:{{ hostvars[item]['avalanchego_http_port'] | default(avalanchego_http_port) }}/ext/info"
     method: POST
     body_format: json
     body:
@@ -116,7 +117,7 @@
       method: info.getNodeID
       id: 1
   register: node_ids_res
-  failed_when: node_ids_res.json.error is defined
+  failed_when: (node_ids_res.status != 200) or (node_ids_res.json.error is defined)
   delegate_to: "{{ item }}"
   loop: "{{ groups['subnet_validators'] }}"
 
@@ -124,9 +125,10 @@
   set_fact:
     validators_ids: "{{ node_ids_res | json_query('results[*].json.result.nodeID') }}"
 
-- name: Add validators to the subnet
+- name: Add validators to the Subnet
   ash.avalanche.tx:
     http_host: "{{ avalanchego_http_host }}"
+    protocol: "{{ avalanchego_http_protocol }}"
     blockchain: P
     method: platform.addSubnetValidator
     username: "{{ subnet_control_username }}"
@@ -140,9 +142,9 @@
     wait_validation: true
   loop: "{{ validators_ids }}"
 
-- name: Display created subnet info
+- name: Display created Subnet info
   debug:
     msg: |-
-      The subnet has been created and the validators added.
-      Make sure to add the subnet ID to the track-subnets list of the validators.
+      The Subnet has been created and the validators added.
+      Make sure to add the Subnet ID to the track-subnets list of the validators.
       Subnet ID = {{ subnet_info.id }}

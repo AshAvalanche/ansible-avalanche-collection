@@ -7,6 +7,7 @@
     - name: Export AVAX from the X-Chain
       ash.avalanche.tx:
         http_host: "{{ avalanchego_http_host }}"
+        protocol: "{{ avalanchego_https_enabled | ternary('https', 'http') }}"
         blockchain: X
         method: avm.export
         username: "{{ avax_transfer_from_username }}"
@@ -24,6 +25,7 @@
     - name: Import AVAX to the C-Chain
       ash.avalanche.tx:
         http_host: "{{ avalanchego_http_host }}"
+        protocol: "{{ avalanchego_https_enabled | ternary('https', 'http') }}"
         blockchain: C/avax
         method: avax.import
         username: "{{ avax_transfer_to_username }}"

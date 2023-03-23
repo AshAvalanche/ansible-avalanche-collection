@@ -9,7 +9,7 @@
 - name: Construct public-ip conf
   set_fact:
     node_conf_public_ip: |
-      {{ {'public-ip': ansible_host} if avalanchego_use_static_ip else {} }}
+      {{ {'public-ip': ansible_host} if avalanchego_static_public_ip else {} }}
 
 - name: Construct bootstrap-* conf
   set_fact:
@@ -25,9 +25,17 @@
   set_fact:
     node_conf_staking_tls_files: |
       {{ {
-           'staking-tls-cert-file': avalanchego_certs_dir + '/staker.crt',
-           'staking-tls-key-file': avalanchego_certs_dir + '/staker.key'
-         } if avalanchego_use_existing_certs else {} }}
+           'staking-tls-cert-file': avalanchego_staking_certs_dir + '/' + inventory_hostname + '.crt',
+           'staking-tls-key-file': avalanchego_staking_certs_dir + '/' + inventory_hostname + '.key'
+         } if avalanchego_staking_use_local_certs else {} }}
+
+- name: Construct http-tls-*-file conf
+  set_fact:
+    node_conf_http_tls_files: |
+      {{ {
+           'http-tls-cert-file': avalanchego_https_certs_dir + '/' + inventory_hostname + '.crt',
+           'http-tls-key-file': avalanchego_https_certs_dir + '/' + inventory_hostname + '.key'
+         } if avalanchego_https_enabled else {} }}
 
 - name: Construct node.json conf
   set_fact:
@@ -36,7 +44,8 @@
          combine(
            node_conf_public_ip,
            node_conf_bootstrap,
-           node_conf_staking_tls_files
+           node_conf_staking_tls_files,
+           node_conf_http_tls_files
          ) }}
 
 - name: Generate node.json
@@ -47,17 +56,48 @@
     group: "{{ avalanchego_group }}"
   notify: Restart avalanchego
 
-- name: Upload nodes certificates
+- name: Upload node staking certificates
   copy:
-    src: "{{ avalanchego_local_certs_dir }}/{{ inventory_hostname }}.{{ item }}"
-    dest: "{{ avalanchego_certs_dir }}/staker.{{ item }}"
+    src: "{{ avalanchego_staking_local_certs_dir }}/{{ inventory_hostname }}.{{ item }}"
+    dest: "{{ avalanchego_staking_certs_dir }}/{{ inventory_hostname }}.{{ item }}"
     owner: "{{ avalanchego_user }}"
     group: "{{ avalanchego_group }}"
+    mode: 0400
   loop:
     - crt
     - key
-  when: avalanchego_use_existing_certs
+  when: avalanchego_staking_use_local_certs
   notify: Restart avalanchego
+
+# Handle TLS certificates for HTTPS
+- block:
+    - name: Upload node HTTPS certificates
+      copy:
+        src: "{{ avalanchego_https_local_certs_dir }}/{{ inventory_hostname }}.{{ item }}"
+        dest: "{{ avalanchego_https_certs_dir }}/{{ inventory_hostname }}.{{ item }}"
+        owner: "{{ avalanchego_user }}"
+        group: "{{ avalanchego_group }}"
+        mode: 0400
+      loop:
+        - crt
+        - key
+      notify: Restart avalanchego
+
+    - name: Upload CA certificate
+      copy:
+        src: "{{ avalanchego_https_local_certs_dir }}/ca.crt"
+        dest: "/usr/local/share/ca-certificates/avalanchego-ca.crt"
+        owner: "{{ avalanchego_user }}"
+        group: "{{ avalanchego_group }}"
+        mode: 0444
+      notify: Restart avalanchego
+
+    - name: Trust CA certificate
+      command: update-ca-certificates
+      register: update_ca_certificates
+      changed_when: "'1 added' in update_ca_certificates.stdout"
+      notify: Restart avalanchego
+  when: avalanchego_https_enabled
 
 - name: Template aliases.json file
   template:

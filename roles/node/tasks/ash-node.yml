@@ -3,7 +3,7 @@
 ---
 - name: Get NodeID
   uri:
-    url: "http://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/info"
+    url: "{{ avalanchego_http_protocol }}://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/info"
     method: POST
     body_format: json
     body:
@@ -11,7 +11,7 @@
       method: info.getNodeID
       id: 1
   register: get_node_id_res
-  failed_when: get_node_id_res.json.error is defined
+  failed_when: (get_node_id_res.status != 200) or (get_node_id_res.json.error is defined)
 
 - name: Convert NodeID to hexadecimal
   set_fact:
@@ -63,8 +63,8 @@
       {{ 'Slots rented for subnets (they will be added to the whitelist):' if (get_subnet_ids_res.call_return | length) else '' }}
       {{ get_subnet_ids_res.call_return | map('regex_replace', 'subnetID:(.*)', '- \1') | join('\n') }}
 
-- name: Generate all_whitelisted_subnets variable
+- name: Generate all_tracked_subnets variable
   set_fact:
-    all_whitelisted_subnets: |
-      {{ avalanche_tracked_subnets +
+    all_tracked_subnets: |
+      {{ avalanchego_track_subnets +
          (get_subnet_ids_res.call_return | map('regex_replace', 'subnetID:') | list | unique ) }}

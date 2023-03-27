@@ -1,0 +1,36 @@
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (c) 2022-2023, E36 Knots
+---
+- name: Template config.json file
+  template:
+    src: config.json.j2
+    dest: "{{ avalanche_faucet_conf_dir }}/config.json"
+    owner: "{{ avalanche_faucet_user }}"
+    group: "{{ avalanche_faucet_group }}"
+  notify: Restart avalanche-faucet
+
+- name: Template .env file
+  template:
+    src: .env.j2
+    dest: "{{ avalanche_faucet_conf_dir }}/.env"
+    owner: "{{ avalanche_faucet_user }}"
+    group: "{{ avalanche_faucet_group }}"
+  notify: Restart avalanche-faucet
+
+- name: Template docker-compose.yml
+  template:
+    src: docker-compose.yml.j2
+    dest: "{{ avalanche_faucet_conf_dir }}/docker-compose.yml"
+    owner: "{{ avalanche_faucet_group }}"
+    group: "{{ avalanche_faucet_group }}"
+  notify: Restart avalanche-faucet
+
+- name: Template avalanche-faucet.service file
+  template:
+    src: avalanche-faucet.service.j2
+    dest: /etc/systemd/system/avalanche-faucet.service
+  notify: Restart avalanche-faucet
+
+- name: Reload systemctl daemons
+  systemd:
+    daemon_reload: true

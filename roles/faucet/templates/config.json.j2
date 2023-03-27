@@ -1,0 +1,14 @@
+{
+    "GLOBAL_RL": {
+        "ID": "GLOBAL",
+        "RATELIMIT": {
+            "REVERSE_PROXIES": 2,
+            "MAX_LIMIT": 40,
+            "WINDOW_SIZE": 1,
+            "PATH": "/",
+            "SKIP_FAILED_REQUESTS": false
+        }
+    },
+    "evmchains": {{ avalanche_faucet_chains | to_nice_json(sort_keys=False) | indent(4) }},
+    "erc20tokens": []
+}

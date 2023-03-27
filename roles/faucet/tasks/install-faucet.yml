@@ -1,0 +1,23 @@
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (c) 2022-2023, E36 Knots
+---
+- name: "Create {{ avalanche_faucet_group }} group"
+  group:
+    name: "{{ avalanche_faucet_group }}"
+
+- name: "Create {{ avalanche_faucet_user }} user"
+  user:
+    name: "{{ avalanche_faucet_user }}"
+    groups:
+      - "{{ avalanche_faucet_group }}"
+      - "{{ avalanche_faucet_docker_group }}"
+
+- name: Create Avalanche Faucet dirs
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ avalanche_faucet_user }}"
+    group: "{{ avalanche_faucet_group }}"
+  loop:
+    - "{{ avalanche_faucet_conf_dir }}"
+    - "{{ avalanche_faucet_log_dir }}"

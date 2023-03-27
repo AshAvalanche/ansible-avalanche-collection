@@ -1,0 +1,43 @@
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (c) 2022-2023, E36 Knots
+---
+# Avalanche Faucet version
+avalanche_faucet_image: ghcr.io/ashavalanche/faucet-image
+avalanche_faucet_image_version: disable-captcha-variable
+
+# Configuration directories
+avalanche_faucet_conf_dir: /etc/avalanche/faucet/conf
+
+# Log directory
+avalanche_faucet_log_dir: /var/log/avalanche/faucet
+
+# User and group
+avalanche_faucet_user: faucet
+avalanche_faucet_group: faucet
+avalanche_faucet_docker_group: docker
+
+# Network
+avalanche_faucet_port: 8000
+
+# Avalanche Faucet configuration
+# config.json
+avalanche_faucet_chains:
+  - ID: ASH
+    NAME: Subnet-EVM Local Subnet
+    TOKEN: SUBNET
+    RPC: http://192.168.60.11:9650/ext/bc/k7xVKQheY8iBpcFg7SxCcYyfiUZeCMRyRgPZRfdQnuFiyojKd/rpc
+    CHAINID: 13213
+    EXPLORER: http://192.168.60.11:4000
+    IMAGE: https://docs.ash.center/img/ash-logo.svg
+    MAX_PRIORITY_FEE: 2000000000
+    MAX_FEE: 100000000000
+    DRIP_AMOUNT: 2
+    RATELIMIT:
+      MAX_LIMIT: 1
+      WINDOW_SIZE: 1440
+
+# .env
+avalanche_faucet_env:
+  # ewoq private key
+  ASH: "0x56289e99c94b6912bfc12adc093c9b51124f0dc54ac7a766b2bc5ccf558d8027"
+  CAPTCHA_SECRET: ""

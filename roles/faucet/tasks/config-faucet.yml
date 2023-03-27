@@ -7,13 +7,7 @@
     dest: "{{ avalanche_faucet_conf_dir }}/config.json"
     owner: "{{ avalanche_faucet_user }}"
     group: "{{ avalanche_faucet_group }}"
-
-- name: Template config.json file
-  template:
-    src: config.json.j2
-    dest: "{{ avalanche_faucet_conf_dir }}/config.json"
-    owner: "{{ avalanche_faucet_user }}"
-    group: "{{ avalanche_faucet_group }}"
+  notify: Restart avalanche-faucet
 
 - name: Template .env file
   template:
@@ -21,6 +15,7 @@
     dest: "{{ avalanche_faucet_conf_dir }}/.env"
     owner: "{{ avalanche_faucet_user }}"
     group: "{{ avalanche_faucet_group }}"
+  notify: Restart avalanche-faucet
 
 - name: Template docker-compose.yml
   template:

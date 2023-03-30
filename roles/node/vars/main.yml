@@ -23,16 +23,6 @@ avalanchego_vms_conf_dir: "{{ avalanchego_conf_dir }}/vms"
 # HTTP URLs protocol
 avalanchego_http_protocol: "{{ 'https' if avalanchego_https_enabled else 'http' }}"
 
-# Avalanche networks
-avalanche_networks:
-  fuji:
-    c_chain:
-      chain_id: 43113
-      rpc_url: https://api.avax-test.network/ext/bc/C/rpc
-      explorer_url: https://testnet.snowtrace.io
-      explorer_api: https://api-testnet.snowtrace.io/api
-      ash_router_addr: "0xB41b15Dc8C0Cd5A019e9F91ad5763Fb4aC571378"
-
 # String templates for VM files to download
 avalanchego_vm_binary_filename: "{{ vm_name }}_{{ vm_version }}_linux_amd64.tar.gz"
 avalanchego_vm_checksum_filename: "{{ vm_name }}_{{ vm_version }}_checksums.txt"

@@ -1,5 +1,26 @@
 # Changelog
 
+## [v0.6.1](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.6.1) (2023-03-30)
+
+[Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.6.0...v0.6.1)
+
+**Breaking changes:**
+
+- feat: remove ash node logic from node role [\#45](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/45) ([Nuttymoon](https://github.com/Nuttymoon))
+
+**Implemented enhancements:**
+
+- feat: add faucet role [\#42](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/42) ([leopaul36](https://github.com/leopaul36))
+
+**Closed issues:**
+
+- Remove Ash node logic from this collection [\#40](https://github.com/AshAvalanche/ansible-avalanche-collection/issues/40)
+- Avalanche Subnet faucet role [\#36](https://github.com/AshAvalanche/ansible-avalanche-collection/issues/36)
+
+**Merged pull requests:**
+
+- docs: add changelog [\#43](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/43) ([Nuttymoon](https://github.com/Nuttymoon))
+
 ## [v0.6.0](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.6.0) (2023-03-23)
 
 [Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.5.1...v0.6.0)

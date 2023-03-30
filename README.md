@@ -85,4 +85,4 @@ Follow the [tutorials](https://docs.ash.center/docs/tools/ansible-avalanche-coll
 - [x] Subnet role
 - [x] VMs management
 - [x] Blockchain role
-- [ ] TLS support
+- [x] TLS support

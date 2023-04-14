@@ -79,11 +79,12 @@ List of VMs currently available for installation:
 
 Here is the compatibility matrix with AvalancheGo versions:
 
-| AvalancheGo   | `subnet-evm`    |
-| ------------- | --------------- |
-| `1.9.6-1.9.8` | `0.4.8`         |
-| `1.9.9`       | `0.4.9-0.4.10`  |
-| `1.9.10`      | `0.4.11-0.4.12` |
+| AvalancheGo     | `subnet-evm`    |
+| --------------- | --------------- |
+| `1.9.6-1.9.8`   | `0.4.8`         |
+| `1.9.9`         | `0.4.9-0.4.10`  |
+| `1.9.10-1.9.16` | `0.4.11-0.4.12` |
+| `1.10.0`        | `0.5.0`         |
 
 **Note:** If a versions incompatibility is detected, an error message will be prompted and the role execution will stop.
 

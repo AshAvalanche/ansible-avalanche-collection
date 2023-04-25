@@ -1,0 +1,48 @@
+# SPDX-License-Identifier:  BUSL-1.1
+# Copyright (c) 2022-2023, E36 Knots
+---
+- name: Create Blockscout dirs
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ blockscout_user }}"
+    group: "{{ blockscout_user }}"
+  loop:
+    - "{{ blockscout_conf_dir }}"
+    - "{{ blockscout_custom_dir }}"
+    - "{{ blockscout_log_dir }}"
+    - "{{ blockscout_data_dir }}"
+
+- name: Template docker-compose.yml
+  template:
+    src: docker-compose.yml.j2
+    dest: "{{ blockscout_conf_dir }}/docker-compose.yml"
+    owner: "{{ blockscout_user }}"
+    group: "{{ blockscout_user }}"
+  notify: Restart blockscout
+
+- name: Template vars.env
+  template:
+    src: vars.env.j2
+    dest: "{{ blockscout_conf_dir }}/vars.env"
+    owner: "{{ blockscout_user }}"
+    group: "{{ blockscout_user }}"
+  notify: Restart blockscout
+
+- name: Upload logo image
+  copy:
+    src: "{{ blockscout_header_logo_file }}"
+    dest: "{{ blockscout_custom_dir }}/{{ blockscout_header_logo_file }}"
+    owner: "{{ blockscout_user }}"
+    group: "{{ blockscout_user }}"
+  notify: Restart blockscout
+
+- name: Template blockscout.service file
+  template:
+    src: blockscout.service.j2
+    dest: /etc/systemd/system/blockscout.service
+  notify: Restart blockscout
+
+- name: Reload systemctl daemons
+  systemd:
+    daemon_reload: true

@@ -1,0 +1,9 @@
+# SPDX-License-Identifier:  BUSL-1.1
+# Copyright (c) 2022-2023, E36 Knots
+---
+- name: Install Blockscout
+  hosts: blockscout
+  become: true
+  roles:
+    - role: geerlingguy.docker
+    - role: ash.avalanche.blockscout

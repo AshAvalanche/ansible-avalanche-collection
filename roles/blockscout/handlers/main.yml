@@ -1,0 +1,7 @@
+# SPDX-License-Identifier:  BUSL-1.1
+# Copyright (c) 2022-2023, E36 Knots
+---
+- name: Restart blockscout
+  service:
+    name: blockscout
+    state: restarted

@@ -1,0 +1,62 @@
+# SPDX-License-Identifier:  BUSL-1.1
+# Copyright (c) 2022-2023, E36 Knots
+---
+# Blockscout version
+blockscout_image: blockscout/blockscout
+blockscout_image_version: 5.1.0
+
+# Configuration directories
+blockscout_conf_dir: /etc/blockscout/conf
+blockscout_custom_dir: "{{ blockscout_conf_dir }}/custom"
+
+# Log directory
+blockscout_log_dir: /var/log/blockscout
+
+# Data directory
+blockscout_data_dir: /var/lib/postgres
+
+# User
+blockscout_user: root
+
+# Blockscout variables
+blockscout_rpc: http://192.168.60.11:9650/ext/bc/27Lga51x8AQnBDJTnE6sUSiFmdrDSqCYhbkiTQD8oBd1EqotZ1/rpc
+blockscout_header_logo_file: ash-logo-circle-30.svg
+
+# Blockscout Docker env variables
+blockscout_env_vars:
+  # Logo
+  LOGO: "/images/custom/{{ blockscout_header_logo_file }}"
+  # Port
+  PORT: 4000
+  # RPC variables
+  ETHEREUM_JSONRPC_VARIANT: geth
+  ETHEREUM_JSONRPC_HTTP_URL: "{{ blockscout_rpc }}"
+  ETHEREUM_JSONRPC_TRACE_URL: "{{ blockscout_rpc }}"
+  CHAIN_ID: 13213
+  # Database
+  DATABASE_URL: postgresql://postgres:@host.docker.internal:7432/blockscout?ssl=false
+  # Native coin does not exist in Coin Gecko
+  DISABLE_EXCHANGE_RATES: "true"
+  INDEXER_DISABLE_ADDRESS_COIN_BALANCE_FETCHER: "true"
+  # debug_traceTransaction not available
+  INDEXER_DISABLE_INTERNAL_TRANSACTIONS_FETCHER: "true"
+  # txpool_content not available
+  INDEXER_DISABLE_PENDING_TRANSACTIONS_FETCHER: "true"
+  # Page title
+  NETWORK: EVM
+  SUBNETWORK: My Subnet
+  blockscout_image_version: "{{ blockscout_image_version }}"
+  # Disable Apps menu
+  APPS_MENU: "false"
+  EXTERNAL_APPS: []
+  COIN_NAME: SUBNET
+  # ?
+  ECTO_USE_SSL: "false"
+  # Disable metrics viewer
+  WOBSERVER_ENABLED: "false"
+  # Disable Rust Smart Contract verifier
+  ENABLE_RUST_VERIFICATION_SERVICE: "false"
+  # Disable Sol2Uml
+  VISUALIZE_SOL2UML_ENABLED: "false"
+  # Disable other explorer links
+  SUPPORTED_CHAINS: []

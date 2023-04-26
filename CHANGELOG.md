@@ -1,5 +1,13 @@
 # Changelog
 
+## [v0.7.1](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.7.1) (2023-04-26)
+
+[Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.7.0...v0.7.1)
+
+**Implemented enhancements:**
+
+- feat: add ash\_cli role [\#50](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/50) ([Nuttymoon](https://github.com/Nuttymoon))
+
 ## [v0.7.0](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.7.0) (2023-04-26)
 
 [Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.6.1...v0.7.0)

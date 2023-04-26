@@ -1,5 +1,17 @@
 # Changelog
 
+## [v0.7.0](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.7.0) (2023-04-26)
+
+[Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.6.1...v0.7.0)
+
+**Implemented enhancements:**
+
+- Add Blockscout role [\#48](https://github.com/AshAvalanche/ansible-avalanche-collection/issues/48)
+
+**Merged pull requests:**
+
+- feat: add blockscout role [\#49](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/49) ([leopaul36](https://github.com/leopaul36))
+
 ## [v0.6.1](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.6.1) (2023-03-30)
 
 [Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.6.0...v0.6.1)

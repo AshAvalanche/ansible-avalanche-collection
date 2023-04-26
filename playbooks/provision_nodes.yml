@@ -5,4 +5,5 @@
   hosts: avalanche_nodes
   become: true
   roles:
+    - role: ash.avalanche.ash_cli
     - role: ash.avalanche.node

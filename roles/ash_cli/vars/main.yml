@@ -1,0 +1,5 @@
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (c) 2022-2023, E36 Knots
+---
+ash_cli_binary_name: "ash-linux-amd64-v{{ ash_cli_version }}"
+ash_cli_binary_url: "https://github.com/AshAvalanche/ash-rs/releases/download/v{{ ash_cli_version }}/{{ ash_cli_binary_name }}"

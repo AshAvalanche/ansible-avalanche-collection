@@ -12,7 +12,7 @@
       - "{{ avalanche_faucet_group }}"
       - "{{ avalanche_faucet_docker_group }}"
 
-- name: Create Avalanche Faucet dirs
+- name: Create Avalanche Faucet directories
   file:
     path: "{{ item }}"
     state: directory

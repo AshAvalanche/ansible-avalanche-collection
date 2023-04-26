@@ -1,0 +1,20 @@
+# SPDX-License-Identifier:  BUSL-1.1
+# Copyright (c) 2022-2023, E36 Knots
+---
+- name: Install Prometheus Node Exporter
+  hosts: avalanche_nodes
+  become: true
+  roles:
+    - role: prometheus.prometheus.node_exporter
+
+- name: Install Prometheus
+  hosts: prometheus
+  become: true
+  roles:
+    - role: prometheus.prometheus.prometheus
+
+- name: Install Grafana
+  hosts: grafana
+  become: true
+  roles:
+    - role: cloudalchemy.grafana

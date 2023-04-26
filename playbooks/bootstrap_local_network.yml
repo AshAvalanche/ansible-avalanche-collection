@@ -5,12 +5,14 @@
   hosts: bootstrap_node
   become: true
   roles:
+    - role: ash.avalanche.ash_cli
     - role: ash.avalanche.node
 
 - name: Provision other network nodes
   hosts: avalanche_nodes:!bootstrap_node
   become: true
   roles:
+    - role: ash.avalanche.ash_cli
     - role: ash.avalanche.node
 
 - name: Provision prefunded account on bootstrap node

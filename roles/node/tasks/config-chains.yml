@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # Copyright (c) 2022-2023, E36 Knots
 ---
-- name: Create chains conf dirs
+- name: Create chains conf directories
   file:
     path: "{{ avalanchego_chains_conf_dir }}/{{ item }}"
     state: directory

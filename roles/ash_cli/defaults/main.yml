@@ -1,0 +1,8 @@
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (c) 2022-2023, E36 Knots
+---
+# Ash CLI version
+ash_cli_version: 0.1.0
+
+# Install directories
+ash_cli_install_dir: /opt/avalanche/ash-cli

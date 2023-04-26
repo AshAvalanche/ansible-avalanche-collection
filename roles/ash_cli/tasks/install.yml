@@ -1,0 +1,28 @@
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (c) 2022-2023, E36 Knots
+---
+- name: Create Ash CLI directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+  loop:
+    - "{{ ash_cli_install_dir }}"
+
+- name: "Download Ash CLI {{ ash_cli_version }} binary"
+  get_url:
+    url: "{{ ash_cli_binary_url }}"
+    dest: "{{ ash_cli_install_dir }}/{{ ash_cli_binary_name }}"
+    checksum: "sha512:{{ ash_cli_binary_url }}.sha512"
+    owner: root
+    group: root
+    mode: 0755
+
+- name: "Create the symlink to Ash CLI {{ ash_cli_version }} binary"
+  file:
+    src: "{{ ash_cli_install_dir }}/{{ ash_cli_binary_name }}"
+    dest: /usr/local/bin/ash
+    state: link
+    owner: root
+    group: root

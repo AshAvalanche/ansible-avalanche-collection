@@ -16,7 +16,7 @@
     name: "{{ avalanchego_user }}"
     group: "{{ avalanchego_group }}"
 
-- name: Create AvalancheGo dirs
+- name: Create AvalancheGo directories
   file:
     path: "{{ item }}"
     state: directory

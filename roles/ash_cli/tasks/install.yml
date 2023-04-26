@@ -8,12 +8,14 @@
     owner: root
     group: root
   loop:
-    - "{{ ash_cli_install_dir }}"
+    - "{{ ash_cli_releases_dir }}"
+    - "{{ ash_cli_bin_dir }}"
+    - "{{ ash_cli_conf_dir }}"
 
 - name: "Download Ash CLI {{ ash_cli_version }} binary"
   get_url:
     url: "{{ ash_cli_binary_url }}"
-    dest: "{{ ash_cli_install_dir }}/{{ ash_cli_binary_name }}"
+    dest: "{{ ash_cli_releases_dir }}/{{ ash_cli_binary_name }}"
     checksum: "sha512:{{ ash_cli_binary_url }}.sha512"
     owner: root
     group: root
@@ -21,8 +23,16 @@
 
 - name: "Create the symlink to Ash CLI {{ ash_cli_version }} binary"
   file:
-    src: "{{ ash_cli_install_dir }}/{{ ash_cli_binary_name }}"
-    dest: /usr/local/bin/ash
+    src: "{{ ash_cli_releases_dir }}/{{ ash_cli_binary_name }}"
+    dest: "{{ ash_cli_bin_dir }}/ash"
     state: link
     owner: root
     group: root
+
+- name: Template ash command
+  template:
+    src: ash-command.j2
+    dest: /usr/local/bin/ash
+    owner: root
+    group: root
+    mode: 0755

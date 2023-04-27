@@ -3,3 +3,6 @@
 ---
 - name: Install Ash CLI
   include_tasks: install.yml
+
+- name: Configure Ash CLI
+  include_tasks: config.yml

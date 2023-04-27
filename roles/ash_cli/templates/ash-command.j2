@@ -1,0 +1,5 @@
+{# SPDX-License-Identifier: BSD-3-Clause
+Copyright (c) 2022-2023, E36 Knots #}
+#!/bin/bash
+
+ASH_CONFIG={{ ash_cli_conf_dir }}/default.yml AVALANCHE_NETWORK={{ avalanche_network_id }} {{ ash_cli_bin_dir }}/ash "$@"

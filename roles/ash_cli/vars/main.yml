@@ -3,3 +3,7 @@
 ---
 ash_cli_binary_name: "ash-linux-amd64-v{{ ash_cli_version }}"
 ash_cli_binary_url: "https://github.com/AshAvalanche/ash-rs/releases/download/v{{ ash_cli_version }}/{{ ash_cli_binary_name }}"
+
+# Install directories
+ash_cli_releases_dir: "{{ ash_cli_install_dir }}/releases"
+ash_cli_bin_dir: "{{ ash_cli_install_dir }}/bin"

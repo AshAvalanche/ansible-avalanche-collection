@@ -1,5 +1,19 @@
 # Changelog
 
+## [v0.7.2](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.7.2) (2023-04-27)
+
+[Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.7.1...v0.7.2)
+
+**Implemented enhancements:**
+
+- Configure Ash CLI depending on the current network [\#53](https://github.com/AshAvalanche/ansible-avalanche-collection/issues/53)
+- Add a monitoring stack playbook [\#51](https://github.com/AshAvalanche/ansible-avalanche-collection/issues/51)
+
+**Merged pull requests:**
+
+- feat\(ash\_cli\): add config playbook [\#54](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/54) ([Nuttymoon](https://github.com/Nuttymoon))
+- feat: monitoring stack [\#52](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/52) ([leopaul36](https://github.com/leopaul36))
+
 ## [v0.7.1](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.7.1) (2023-04-26)
 
 [Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.7.0...v0.7.1)

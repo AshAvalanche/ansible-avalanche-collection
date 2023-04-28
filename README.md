@@ -39,7 +39,7 @@ git clone https://github.com/AshAvalanche/ansible-avalanche-collection.git ansib
 
 ## Getting started
 
-Follow the [tutorials](https://docs.ash.center/docs/tools/ansible-avalanche-collection/tutorials/local-test-network) on the [Ash docs website](https://docs.ash.center/) to get started!
+Follow the [tutorials](https://ash.center/docs/toolkit/ansible-avalanche-collection/tutorials/local-test-network) on the [Ash docs website](https://ash.center/) to get started!
 
 ## Collection resources
 

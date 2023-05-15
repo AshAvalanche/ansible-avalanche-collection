@@ -30,7 +30,7 @@ avalanchego_http_host: 127.0.0.1
 avalanchego_http_port: 9650
 ## If set to `true`, will use existing certificates found in `avalanchego_https_local_certs_dir`
 avalanchego_https_enabled: false
-## If set to `false`, no file upload will be done. Certificates are expected to be present on the target host.
+## If set to `""`, no file will be uploaded. Certificates are expected to be present on the target host.
 avalanchego_https_local_certs_dir: "{{ playbook_dir }}/files/https"
 avalanchego_https_cert_file: "{{ avalanchego_https_certs_dir }}/{{ inventory_hostname }}.crt"
 avalanchego_https_key_file: "{{ avalanchego_https_certs_dir }}/{{ inventory_hostname }}.key"

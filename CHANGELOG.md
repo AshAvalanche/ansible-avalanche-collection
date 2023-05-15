@@ -1,5 +1,22 @@
 # Changelog
 
+## [v0.7.3](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.7.3) (2023-05-15)
+
+[Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.7.2...v0.7.3)
+
+**Implemented enhancements:**
+
+- Certificate upload should be optional [\#58](https://github.com/AshAvalanche/ansible-avalanche-collection/issues/58)
+
+**Fixed bugs:**
+
+- Missing variables for http-tls-\* [\#57](https://github.com/AshAvalanche/ansible-avalanche-collection/issues/57)
+
+**Merged pull requests:**
+
+- fix: make http-tls certs upload optional [\#59](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/59) ([leopaul36](https://github.com/leopaul36))
+- feat: bump avalanchego\_vms\_list [\#55](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/55) ([leopaul36](https://github.com/leopaul36))
+
 ## [v0.7.2](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.7.2) (2023-04-27)
 
 [Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.7.1...v0.7.2)

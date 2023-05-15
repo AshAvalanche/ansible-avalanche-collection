@@ -33,8 +33,8 @@
   set_fact:
     node_conf_http_tls_files: |
       {{ {
-           'http-tls-cert-file': avalanchego_https_certs_dir + '/' + inventory_hostname + '.crt',
-           'http-tls-key-file': avalanchego_https_certs_dir + '/' + inventory_hostname + '.key'
+           'http-tls-cert-file': avalanchego_https_cert_file,
+           'http-tls-key-file': avalanchego_https_key_file
          } if avalanchego_https_enabled else {} }}
 
 - name: Construct node.json conf
@@ -81,6 +81,7 @@
       loop:
         - crt
         - key
+      when: avalanchego_https_local_certs_dir != ""
       notify: Restart avalanchego
 
     - name: Upload CA certificate
@@ -90,6 +91,7 @@
         owner: "{{ avalanchego_user }}"
         group: "{{ avalanchego_group }}"
         mode: 0444
+      when: avalanchego_https_local_certs_dir != ""
       notify: Restart avalanchego
 
     - name: Trust CA certificate

@@ -19,16 +19,16 @@ def run_module():
         command=dict(type="str", required=True),
         options=dict(type="dict", required=False, default={}),
         ash_path=dict(type="str", required=False, default="/usr/local/bin/ash"),
-        no_json=dict(type="bool", required=False, default=False),
+        json=dict(type="bool", required=False, default=True),
     )
 
     # define result argument
-    result = dict(changed=False, output={})
+    result = dict(changed=False)
 
     # create the module instance
     module = AnsibleModule(argument_spec=module_args, supports_check_mode=False)
 
-    # stop here if there are flags / parameters in the command variable
+    # stop here if there are flags/options in the command variable
     if module.params["command"].find("--") != -1:
         module.fail_json(
             msg="The command parameter can not contain options or flags, please use the options parameter",
@@ -47,7 +47,7 @@ def run_module():
             value = str(value)
         command.append(value)
     # force json output
-    if not module.params["no_json"]:
+    if module.params["json"]:
         command.append("--json")
 
     # run the command

@@ -7,7 +7,6 @@ from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
 
-import subprocess
 import json
 
 from ansible.module_utils.basic import AnsibleModule
@@ -51,17 +50,23 @@ def run_module():
         command.append("--json")
 
     # run the command
-    run = subprocess.run(" ".join(command), capture_output=True, shell=True)
+    run = module.run_command(" ".join(command))
 
-    # exit with failure if there was an execution error
-    if run.stderr:
-        module.fail_json(msg=run.stderr, **result)
+    # exit with failure if there is a stderr
+    if run[2]:
+        module.fail_json(
+            msg=run[2],
+            command=" ".join(command),
+            **result,
+        )
 
     # TODO: act on result['changed'] when the cli will perform transactions
     # result['changed'] = True
 
     # save the json output
     result["output"] = json.loads(run.stdout)
+    # save the json output from stdout
+    result["output"] = json.loads(run[1])
 
     # exit with the result if there was no error
     module.exit_json(**result)

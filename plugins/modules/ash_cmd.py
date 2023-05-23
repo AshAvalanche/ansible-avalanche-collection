@@ -60,8 +60,8 @@ def run_module():
     # run the command
     run = module.run_command(" ".join(command))
 
-    # exit with failure if there is a stderr
-    if run[2]:
+    # exit with failure if rc is not 0
+    if run[0] > 0:
         module.fail_json(
             msg=run[2],
             command=" ".join(command),

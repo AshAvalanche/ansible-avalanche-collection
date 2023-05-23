@@ -30,10 +30,10 @@ def run_module():
 
     # stop here if there are flags/options in the command variable
     # regex to match flags/options
-    regex = r"-\w+"
+    regex = r" --?\w+"
     if re.search(regex, " ".join(module.params["command"])):
         module.fail_json(
-            msg="The command parameter can not contain options or flags, please use the options parameter",
+            msg="The command parameter can not contain options or flags. Please use the options parameter.",
             **result,
         )
 

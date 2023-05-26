@@ -18,3 +18,25 @@
   become: true
   roles:
     - role: cloudalchemy.grafana
+
+- name: Import templated Grafana dashboard
+  hosts: grafana
+  become: true
+  tasks:
+    - name: Template subnets Grafana dashboard
+      template:
+        src: "{{ item }}"
+        dest: "{{ grafana_data_dir }}/dashboards/{{ item | basename | regex_replace('\\.j2$', '') }}"
+        owner: grafana
+        group: grafana
+        mode: 0640
+      loop:
+        - "{{ playbook_dir }}/../files/dashboards/subnets.json.j2"
+      when: grafana_subnets_dashboard_variables is defined
+      register: template_subnets
+
+    - name: Restart Grafana
+      service:
+        name: grafana-server
+        state: restarted
+      when: template_subnets.changed

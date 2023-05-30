@@ -1,5 +1,17 @@
 # Changelog
 
+## [v0.7.5](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.7.5) (2023-05-30)
+
+[Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.7.4...v0.7.5)
+
+**Implemented enhancements:**
+
+- Add Subnets dashboard to install\_monitoring\_stack [\#64](https://github.com/AshAvalanche/ansible-avalanche-collection/issues/64)
+
+**Merged pull requests:**
+
+- feat: add subnets dashboard and logic [\#65](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/65) ([leopaul36](https://github.com/leopaul36))
+
 ## [v0.7.4](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.7.4) (2023-05-23)
 
 [Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.7.3...v0.7.4)

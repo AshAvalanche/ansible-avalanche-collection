@@ -6,4 +6,4 @@
   become: true
   roles:
     - role: geerlingguy.docker
-    - role: ash.avalanche.blockscout
+    - role: ash.avalanche.evm.blockscout

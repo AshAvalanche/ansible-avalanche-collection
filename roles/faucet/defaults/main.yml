@@ -21,7 +21,7 @@ avalanche_faucet_port: 8000
 
 # Avalanche Faucet configuration
 # config.json
-avalanche_faucet_chains:
+avalanche_faucet_evmchains:
   - ID: ASH
     NAME: Subnet-EVM Local Subnet
     TOKEN: SUBNET

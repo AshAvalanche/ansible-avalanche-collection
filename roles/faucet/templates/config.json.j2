@@ -9,6 +9,6 @@
             "SKIP_FAILED_REQUESTS": false
         }
     },
-    "evmchains": {{ avalanche_faucet_chains | to_nice_json(sort_keys=False) | indent(4) }},
+    "evmchains": {{ avalanche_faucet_evmchains | to_nice_json(sort_keys=False) | indent(4) }},
     "erc20tokens": []
 }

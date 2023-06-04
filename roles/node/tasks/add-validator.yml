@@ -1,80 +1,61 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # Copyright (c) 2022-2023, E36 Knots
 ---
-- name: Get P chain address
-  uri:
-    url: "{{ avalanchego_http_protocol }}://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/bc/P"
-    method: POST
-    body_format: json
-    body:
-      jsonrpc: "2.0"
-      method: platform.listAddresses
-      params:
-        username: "{{ avalanche_node_username }}"
-        password: "{{ avalanche_node_password }}"
-      id: 1
-  register: list_addresses_res
-  failed_when: (list_addresses_res.status != 200) or (list_addresses_res.json.error is defined) or list_addresses_res.json.result.addresses | length < 1
+- name: Check that Ash CLI is installed
+  shell: ash help
+  changed_when: false
 
-- name: Get NodeID
-  uri:
-    url: "{{ avalanchego_http_protocol }}://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/info"
-    method: POST
-    body_format: json
-    body:
-      jsonrpc: "2.0"
-      method: info.getNodeID
-      id: 1
-  register: get_node_id_res
-  failed_when: (get_node_id_res.status != 200) or (get_node_id_res.json.error is defined)
+- name: Ensure that the P-Chain is bootstrapped
+  ash.avalanche.ash_cmd:
+    command: avalanche node is-bootstrapped P
+  register: is_pchain_bootstrapped_res
+  failed_when: not is_pchain_bootstrapped_res.output.isBootstrapped
 
-- name: Check if the node is already a validator
-  uri:
-    url: "{{ avalanchego_http_protocol }}://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/bc/P"
-    method: POST
-    body_format: json
-    body:
-      jsonrpc: "2.0"
-      method: platform.getCurrentValidators
-      params:
-        nodeIDs: ["{{ get_node_id_res.json.result.nodeID }}"]
-      id: 1
-  register: get_current_validators_res
-  failed_when: (get_current_validators_res.status != 200) or (get_current_validators_res.json.error is defined)
+- name: Get node information
+  ash.avalanche.ash_cmd:
+    command: avalanche node info
+  register: node_info_res
 
-- name: Check if the node is a pending validator
-  uri:
-    url: "{{ avalanchego_http_protocol }}://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/bc/P"
-    method: POST
-    body_format: json
-    body:
-      jsonrpc: "2.0"
-      method: platform.getPendingValidators
-      params:
-        nodeIDs: ["{{ get_node_id_res.json.result.nodeID }}"]
-      id: 1
-  register: get_pending_validators_res
-  failed_when: (get_pending_validators_res.status != 200) or (get_pending_validators_res.json.error is defined)
+- name: Check if the node is already a validator (1/2)
+  ash.avalanche.ash_cmd:
+    command: avalanche validator list
+    options:
+      subnet-id: "{{ avalanche_primary_network_id }}"
+  register: validators_list_res
 
-- name: Add validator if the node is not a current|pending validator
-  ash.avalanche.tx:
-    http_host: "{{ avalanchego_http_host }}"
-    http_port: "{{ avalanchego_http_port }}"
-    protocol: "{{ avalanchego_http_protocol }}"
-    blockchain: P
-    method: platform.addValidator
-    username: "{{ avalanche_node_username }}"
-    password: "{{ avalanche_node_password }}"
-    params:
-      nodeID: "{{ get_node_id_res.json.result.nodeID }}"
-      startTime: "{{ avalanchego_validation_start_time }}"
-      endTime: "{{ avalanchego_validation_end_time }}"
-      stakeAmount: "{{ avalanchego_validation_stake_amount }}"
-      rewardAddress: "{{ list_addresses_res.json.result.addresses[0] }}"
-      delegationFeeRate: 10
-      username: "{{ avalanche_node_username }}"
-      password: "{{ avalanche_node_password }}"
-    wait_validation: true
+- name: Check if the node is already a validator (2/2)
+  set_fact:
+    node_is_validator: "{{ validators_list_res.output | json_query('[?nodeID==`' + node_info_res.output.id + '`]') | length > 0 }}"
+
+- name: Check if the node is a pending validator (1/2)
+  ash.avalanche.ash_cmd:
+    command: avalanche validator list
+    options:
+      subnet-id: "{{ avalanche_primary_network_id }}"
+      pending: true
+  register: validators_list_res
+
+- name: Check if the node is a pending validator (2/2)
+  set_fact:
+    node_is_pending_validator: "{{ validators_list_res.output | json_query('[?nodeID==`' + node_info_res.output.id + '`]') | length > 0 }}"
+
+- debug:
+    msg: |
+      {{ node_info_res.output.id }}
+      {{ avalanche_validator_stake_amount }}
+      {{ avalanche_validator_delegation_fee }}
+      {{ avalanche_validator_start_time }}
+      {{ avalanche_validator_end_time }}
+
+- name: Add node as network validator if it is not already a validator
+  ash.avalanche.ash_cmd:
+    command: "avalanche validator add {{ node_info_res.output.id }} {{ avalanche_validator_stake_amount }}"
+    options:
+      start-time: "{{ avalanche_validator_start_time }}"
+      end-time: "{{ avalanche_validator_end_time }}"
+      delegation-fee: "{{ avalanche_validator_delegation_fee }}"
+  environment:
+    AVALANCHE_PRIVATE_KEY: "{{ avalanche_validator_private_key }}"
   when:
-    - (get_current_validators_res.json.result.validators | length) < 1
-    - (get_pending_validators_res.json.result.validators | length) < 1
+    - not node_is_validator
+    - not node_is_pending_validator

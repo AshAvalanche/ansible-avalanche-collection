@@ -3,6 +3,7 @@
 ---
 - name: Add validator playbook
   hosts: avalanche_nodes
+  become: true
   tasks:
     - name: Add validator task
       include_role:

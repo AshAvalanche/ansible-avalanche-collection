@@ -7,3 +7,6 @@ ash_cli_binary_url: "https://github.com/AshAvalanche/ash-rs/releases/download/v{
 # Install directories
 ash_cli_releases_dir: "{{ ash_cli_install_dir }}/releases"
 ash_cli_bin_dir: "{{ ash_cli_install_dir }}/bin"
+
+# Avalanche constants
+avalanche_primary_network_id: 11111111111111111111111111111111LpoYY

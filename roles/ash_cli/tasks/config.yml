@@ -6,20 +6,60 @@
     cmd: ash conf init --config {{ ash_cli_conf_dir }}/default.yml
     creates: "{{ ash_cli_conf_dir }}/default.yml"
 
-- name: Add local network configuration
-  blockinfile:
-    path: "{{ ash_cli_conf_dir }}/default.yml"
-    block: |
-      - name: local
-        subnets:
-        - id: 11111111111111111111111111111111LpoYY
-          controlKeys: []
-          threshold: 0
-          blockchains:
-          - id: 11111111111111111111111111111111LpoYY
-            name: P-Chain
-            vmId: 11111111111111111111111111111111LpoYY
-            vmType: PVM
-            rpcUrl: {{ avalanche_pchain_local_url }}
-    insertafter: "avalancheNetworks:"
+- block:
+    - name: Initialize minimal Ash CLI configuration
+      command:
+        cmd: ash conf init --config {{ ash_cli_conf_dir }}/minimal.yml
+        creates: "{{ ash_cli_conf_dir }}/minimal.yml"
+
+    - name: Add local network P-Chain configuration
+      blockinfile:
+        path: "{{ ash_cli_conf_dir }}/minimal.yml"
+        block: |
+          - name: local
+            subnets:
+            - id: "{{ avalanche_primary_network_id }}"
+              controlKeys: []
+              threshold: 0
+              blockchains:
+              - id: "{{ avalanche_primary_network_id }}"
+                name: P-Chain
+                vmID: "{{ avalanche_primary_network_id }}"
+                vmType: PlatformVM
+                rpcUrl: {{ avalanche_pchain_local_url }}
+        insertafter: "avalancheNetworks:"
+
+    - name: Get C-Chain and X-Chain chain and VM IDs
+      ash.avalanche.ash_cmd:
+        command: "avalanche subnet info {{ avalanche_primary_network_id }}"
+        options:
+          config: "{{ ash_cli_conf_dir }}/minimal.yml"
+      register: primary_network_info
+
+    - name: Complete local network configuration
+      blockinfile:
+        path: "{{ ash_cli_conf_dir }}/default.yml"
+        block: |
+          - name: local
+            subnets:
+            - id: "{{ avalanche_primary_network_id }}"
+              controlKeys: []
+              threshold: 0
+              blockchains:
+              - id: "{{ avalanche_primary_network_id }}"
+                name: P-Chain
+                vmID: "{{ avalanche_primary_network_id }}"
+                vmType: PlatformVM
+                rpcUrl: {{ avalanche_pchain_local_url }}
+              - id: "{{ (primary_network_info.output | json_query("blockchains[?name=='C-Chain']"))[0].id }}"
+                name: C-Chain
+                vmID: "{{ (primary_network_info.output | json_query("blockchains[?name=='C-Chain']"))[0].vmID }}"
+                vmType: PlatformVM
+                rpcUrl: {{ avalanche_cchain_local_url }}
+              - id: "{{ (primary_network_info.output | json_query("blockchains[?name=='X-Chain']"))[0].id }}"
+                name: X-Chain
+                vmID: "{{ (primary_network_info.output | json_query("blockchains[?name=='X-Chain']"))[0].vmID }}"
+                vmType: PlatformVM
+                rpcUrl: {{ avalanche_xchain_local_url }}
+        insertafter: "avalancheNetworks:"
   when: avalanche_network_id == "local"

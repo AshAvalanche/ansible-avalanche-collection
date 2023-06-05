@@ -9,9 +9,13 @@ ash_cli_install_dir: /opt/avalanche/ash-cli
 ash_cli_conf_dir: /etc/avalanche/ash-cli/conf
 
 # Avalanche context
-avalanche_network_id: fuji
-## Only used if `avalanche_network_id` is `local`
-avalanche_local_url: http://127.0.0.1:9650
-avalanche_pchain_local_url: "{{ avalanche_local_url }}/ext/bc/P"
-avalanche_cchain_local_url: "{{ avalanche_local_url }}/ext/bc/C/rpc"
-avalanche_xchain_local_url: "{{ avalanche_local_url }}/ext/bc/X"
+ash_cli_avalanche_network_id: fuji
+ash_cli_local_endpoint: http://127.0.0.1:9650
+
+# Custom networks to add to the Ash CLI configuration
+ash_cli_custom_networks:
+  ## The `local` network is always added
+  local:
+    pchain_rpc_url: "{{ ash_cli_local_endpoint }}/ext/bc/P"
+    cchain_rpc_url: "{{ ash_cli_local_endpoint }}/ext/bc/C/rpc"
+    xchain_rpc_url: "{{ ash_cli_local_endpoint }}/ext/bc/X"

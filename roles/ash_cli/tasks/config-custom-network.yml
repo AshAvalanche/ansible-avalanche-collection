@@ -1,0 +1,70 @@
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (c) 2022-2023, E36 Knots
+---
+# Parameters
+# - network: The custom network to add. Should have the following structure:
+#     key: network_name
+#     value:
+#       pchain_rpc_url: ...
+#       cchain_rpc_url: ...
+#       xchain_rpc_url: ...
+
+- name: Initialize minimal Ash CLI configuration
+  command:
+    cmd: ash conf init --config {{ ash_cli_conf_dir }}/minimal.yml
+    creates: "{{ ash_cli_conf_dir }}/minimal.yml"
+
+- name: "Add '{{ network.key }}' network P-Chain configuration"
+  blockinfile:
+    path: "{{ ash_cli_conf_dir }}/minimal.yml"
+    block: |
+      - name: {{ network.key }}
+        subnets:
+        - id: "{{ avalanche_primary_network_id }}"
+          controlKeys: []
+          threshold: 0
+          blockchains:
+          - id: "{{ avalanche_primary_network_id }}"
+            name: P-Chain
+            vmID: "{{ avalanche_primary_network_id }}"
+            vmType: PlatformVM
+            rpcUrl: {{ network.value.pchain_rpc_url }}
+    insertafter: "avalancheNetworks:"
+    marker: "# {mark} ASH MANAGED BLOCK: '{{ network.key }}' NETWORK"
+
+- name: "Get C-Chain and X-Chain chain and VM IDs for '{{ network.key }}' network"
+  ash.avalanche.ash_cmd:
+    command: "avalanche subnet info {{ avalanche_primary_network_id }}"
+    options:
+      config: "{{ ash_cli_conf_dir }}/minimal.yml"
+  environment:
+    AVALANCHE_NETWORK: "{{ network.key }}"
+  register: primary_network_info
+
+- name: "Complete '{{ network.key }}' network configuration"
+  blockinfile:
+    path: "{{ ash_cli_conf_dir }}/default.yml"
+    block: |
+      - name: {{ network.key }}
+        subnets:
+        - id: "{{ avalanche_primary_network_id }}"
+          controlKeys: []
+          threshold: 0
+          blockchains:
+          - id: "{{ avalanche_primary_network_id }}"
+            name: P-Chain
+            vmID: "{{ avalanche_primary_network_id }}"
+            vmType: PlatformVM
+            rpcUrl: {{ network.value.pchain_rpc_url }}
+          - id: "{{ (primary_network_info.output | json_query("blockchains[?name=='C-Chain']"))[0].id }}"
+            name: C-Chain
+            vmID: "{{ (primary_network_info.output | json_query("blockchains[?name=='C-Chain']"))[0].vmID }}"
+            vmType: PlatformVM
+            rpcUrl: {{ network.value.cchain_rpc_url }}
+          - id: "{{ (primary_network_info.output | json_query("blockchains[?name=='X-Chain']"))[0].id }}"
+            name: X-Chain
+            vmID: "{{ (primary_network_info.output | json_query("blockchains[?name=='X-Chain']"))[0].vmID }}"
+            vmType: PlatformVM
+            rpcUrl: {{ network.value.xchain_rpc_url }}
+    insertafter: "avalancheNetworks:"
+    marker: "# {mark} ASH MANAGED BLOCK: '{{ network.key }}' NETWORK"

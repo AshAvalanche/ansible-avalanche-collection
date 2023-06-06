@@ -1,61 +1,26 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # Copyright (c) 2022-2023, E36 Knots
 ---
+## /!\ Cannot be used on mainnet /!\
+# Parameters
+# - subnet_id: ID of the Subnet to add the validator to
+
 - name: Check that Ash CLI is installed
   shell: ash help
   changed_when: false
 
-- name: Ensure that the P-Chain is bootstrapped
-  ash.avalanche.ash_cmd:
-    command: avalanche node is-bootstrapped P
-  register: is_pchain_bootstrapped_res
-  failed_when: not is_pchain_bootstrapped_res.output.isBootstrapped
-
 - name: Get node information
   ash.avalanche.ash_cmd:
     command: avalanche node info
+    options:
+      http-host: "{{ avalanchego_http_host }}"
+      http-port: "{{ avalanchego_http_port }}"
+      https: "{{ avalanchego_https_enabled }}"
   register: node_info_res
 
-- name: Check if the node is already a validator (1/2)
-  ash.avalanche.ash_cmd:
-    command: avalanche validator list
-    options:
-      subnet-id: "{{ avalanche_primary_network_id }}"
-  register: validators_list_res
-
-- name: Check if the node is already a validator (2/2)
-  set_fact:
-    node_is_validator: "{{ validators_list_res.output | json_query('[?nodeID==`' + node_info_res.output.id + '`]') | length > 0 }}"
-
-- name: Check if the node is a pending validator (1/2)
-  ash.avalanche.ash_cmd:
-    command: avalanche validator list
-    options:
-      subnet-id: "{{ avalanche_primary_network_id }}"
-      pending: true
-  register: validators_list_res
-
-- name: Check if the node is a pending validator (2/2)
-  set_fact:
-    node_is_pending_validator: "{{ validators_list_res.output | json_query('[?nodeID==`' + node_info_res.output.id + '`]') | length > 0 }}"
-
-- debug:
-    msg: |
-      {{ node_info_res.output.id }}
-      {{ avalanche_validator_stake_amount }}
-      {{ avalanche_validator_delegation_fee }}
-      {{ avalanche_validator_start_time }}
-      {{ avalanche_validator_end_time }}
-
-- name: Add node as network validator if it is not already a validator
-  ash.avalanche.ash_cmd:
-    command: "avalanche validator add {{ node_info_res.output.id }} {{ avalanche_validator_stake_amount }}"
-    options:
-      start-time: "{{ avalanche_validator_start_time }}"
-      end-time: "{{ avalanche_validator_end_time }}"
-      delegation-fee: "{{ avalanche_validator_delegation_fee }}"
-  environment:
-    AVALANCHE_PRIVATE_KEY: "{{ avalanche_validator_private_key }}"
-  when:
-    - not node_is_validator
-    - not node_is_pending_validator
+- name: Add the node as validator
+  include_role:
+    name: ash.avalanche.subnet
+    tasks_from: add-validator
+  vars:
+    node_id: "{{ node_info_res.output.id }}"

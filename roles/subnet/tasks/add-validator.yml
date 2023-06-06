@@ -1,0 +1,50 @@
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (c) 2022-2023, E36 Knots
+---
+# /!\ Cannot be used on mainnet /!\
+# Parameters
+# - subnet_id: ID of the Subnet to add the validator to
+# - node_id: ID of the node to add as validator
+
+- name: Check if the node is already a validator (1/2)
+  ash.avalanche.ash_cmd:
+    command: avalanche validator list
+    options:
+      subnet-id: "{{ subnet_id }}"
+  environment:
+    AVALANCHE_NETWORK: "{{ subnet_avalanche_network_id }}"
+  register: validators_list_res
+
+- name: Check if the node is already a validator (2/2)
+  set_fact:
+    node_is_validator: "{{ validators_list_res.output | json_query('[?nodeID==`' + node_id + '`]') | length > 0 }}"
+
+- name: Check if the node is a pending validator (1/2)
+  ash.avalanche.ash_cmd:
+    command: avalanche validator list
+    options:
+      subnet-id: "{{ subnet_id }}"
+      pending: true
+  environment:
+    AVALANCHE_NETWORK: "{{ subnet_avalanche_network_id }}"
+  register: pending_validators_list_res
+
+- name: Check if the node is a pending validator (2/2)
+  set_fact:
+    node_is_pending_validator: "{{ pending_validators_list_res.output | json_query('[?nodeID==`' + node_id + '`]') | length > 0 }}"
+
+- name: "Add '{{ node_id }}' as validator if it is not already"
+  ash.avalanche.ash_cmd:
+    command: "avalanche validator add {{ node_id }} {{ subnet_validator_stake_or_weight }}"
+    options:
+      subnet-id: "{{ subnet_id }}"
+      start-time: "{{ subnet_validator_start_time }}"
+      end-time: "{{ subnet_validator_end_time }}"
+      delegation-fee: "{{ subnet_validator_delegation_fee }}"
+  environment:
+    AVALANCHE_NETWORK: "{{ subnet_avalanche_network_id }}"
+    AVALANCHE_KEY_ENCODING: "{{ subnet_txs_key_encoding }}"
+    AVALANCHE_PRIVATE_KEY: "{{ subnet_txs_private_key }}"
+  when:
+    - not node_is_validator
+    - not node_is_pending_validator

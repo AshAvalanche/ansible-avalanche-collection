@@ -42,6 +42,9 @@ def run_module():
 
     # add the params
     for key, value in module.params["options"].items():
+        # if value is boolean false, then skip
+        if value is False:
+            continue
         command.append("--" + key)
         # if value is boolean true, then it's a flag:
         if value is True:

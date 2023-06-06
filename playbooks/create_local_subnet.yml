@@ -1,7 +1,0 @@
-# SPDX-License-Identifier: BSD-3-Clause
-# Copyright (c) 2022-2023, E36 Knots
----
-- name: Create the Subnet
-  hosts: subnet_control_node
-  roles:
-    - role: ash.avalanche.subnet

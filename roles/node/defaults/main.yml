@@ -95,14 +95,18 @@ avalanchego_chains_configs:
   C:
     state-sync-enabled: true
 
-# Validator configuration
-## Used to enroll the node on the network
-## /!\ Cannot be used on the mainnet /!\
-avalanche_validator_private_key: PrivateKey-ewoqjP7PxY4yr3iLTpLisriqt94hdyDFNgchSxGGztUrTXtNN
-avalanche_validator_start_time: '{{ lookup("pipe", "date -d ''2 minutes'' --rfc-3339=seconds").replace(" ", "T")  }}' # in 2 minutes
-avalanche_validator_end_time: '{{ lookup("pipe", "date -d ''1 week'' --rfc-3339=seconds").replace(" ", "T")  }}' # in 1 week
-avalanche_validator_stake_amount: 1 # in AVAX
-avalanche_validator_delegation_fee: 2 # in percent
+# Validator configuration (for the Primary Network)
+## Private key used to sign the staking transaction
+## /!\ Cannot be used on mainnet /!\
+subnet_txs_private_key: PrivateKey-ewoqjP7PxY4yr3iLTpLisriqt94hdyDFNgchSxGGztUrTXtNN
+## Private key encoding (cb58 or hex)
+subnet_txs_key_encoding: cb58
+
+## Validation parameters
+subnet_validator_start_time: '{{ lookup("pipe", "date -d ''2 minutes'' --rfc-3339=seconds").replace(" ", "T")  }}' # in 2 minutes
+subnet_validator_end_time: '{{ lookup("pipe", "date -d ''1 week'' --rfc-3339=seconds").replace(" ", "T")  }}' # in 1 week
+subnet_validator_stake_or_weight: 1 # in AVAX
+subnet_validator_delegation_fee: 2 # in percent
 
 # Ash CLI installation
 ## Whether to automatically install and configure Ash CLI

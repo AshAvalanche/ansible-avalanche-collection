@@ -2,7 +2,7 @@
 # Copyright (c) 2022-2023, E36 Knots
 ---
 # Avalanchego version
-avalanchego_version: 1.9.9
+avalanchego_version: 1.10.0
 
 # Install directories
 avalanchego_install_dir: /opt/avalanche/avalanchego
@@ -97,7 +97,6 @@ avalanchego_chains_configs:
 
 # Validator configuration (for the Primary Network)
 ## Private key used to sign the staking transaction
-## /!\ Cannot be used on mainnet /!\
 subnet_txs_private_key: PrivateKey-ewoqjP7PxY4yr3iLTpLisriqt94hdyDFNgchSxGGztUrTXtNN
 ## Private key encoding (cb58 or hex)
 subnet_txs_key_encoding: cb58
@@ -108,6 +107,6 @@ subnet_validator_end_time: '{{ lookup("pipe", "date -d ''1 week'' --rfc-3339=sec
 subnet_validator_stake_or_weight: 1 # in AVAX
 subnet_validator_delegation_fee: 2 # in percent
 
-# Ash CLI installation
-## Whether to automatically install and configure Ash CLI
+# Ash CLI configuration
+## Whether to install and configure Ash CLI on the node
 ash_cli_install: true

@@ -4,7 +4,6 @@
 # Subnet configuration
 subnet_avalanche_network_id: local
 ## Private key used to sign transactions
-## /!\ Cannot be used on mainnet /!\
 subnet_txs_private_key: PrivateKey-ewoqjP7PxY4yr3iLTpLisriqt94hdyDFNgchSxGGztUrTXtNN
 ## Private key encoding (cb58 or hex)
 subnet_txs_key_encoding: cb58
@@ -66,6 +65,6 @@ subnet_validators_ids_list: []
 subnet_validator_start_time: '{{ lookup("pipe", "date -d ''2 minutes'' --rfc-3339=seconds").replace(" ", "T")  }}' # in 2 minutes
 subnet_validator_end_time: '{{ lookup("pipe", "date -d ''1 week'' --rfc-3339=seconds").replace(" ", "T")  }}' # in 1 week
 ### Stake in AVAX for the Primary Network or weight for permissioned Subnets
-subnet_validator_stake_or_weight: 1
+subnet_validator_stake_or_weight: 100
 ### In percent. Only used for the Primary Network
 subnet_validator_delegation_fee: 2

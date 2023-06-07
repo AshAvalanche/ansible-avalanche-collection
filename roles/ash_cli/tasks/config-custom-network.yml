@@ -5,6 +5,7 @@
 # - network: The custom network to add. Should have the following structure:
 #     key: network_name
 #     value:
+#       info_rpc_url: ...
 #       pchain_rpc_url: ...
 #       cchain_rpc_url: ...
 #       xchain_rpc_url: ...
@@ -31,6 +32,23 @@
             rpcUrl: {{ network.value.pchain_rpc_url }}
     insertafter: "avalancheNetworks:"
     marker: "# {mark} ASH MANAGED BLOCK: '{{ network.key }}' NETWORK"
+
+- name: Split info endpoint URL
+  set_fact:
+    info_endpoint_url: "{{ network.value.info_rpc_url | urlsplit }}"
+
+- name: Wait for the P-Chain to be bootstrapped
+  ash.avalanche.ash_cmd:
+    command: avalanche node is-bootstrapped P
+    options:
+      http-host: "{{ info_endpoint_url.hostname }}"
+      http-port: "{{ info_endpoint_url.port }}"
+      https: "{{ info_endpoint_url.scheme == 'https' }}"
+  environment:
+    AVALANCHE_NETWORK: "{{ network.key }}"
+  register: pchain_is_bootstrapped_res
+  until: pchain_is_bootstrapped_res.output.isBootstrapped
+  retries: 10
 
 - name: "Get C-Chain and X-Chain chain and VM IDs for '{{ network.key }}' network"
   ash.avalanche.ash_cmd:

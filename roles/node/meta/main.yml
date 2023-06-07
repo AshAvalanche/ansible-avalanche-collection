@@ -1,9 +1,0 @@
-# SPDX-License-Identifier: BSD-3-Clause
-# Copyright (c) 2022-2023, E36 Knots
----
-dependencies:
-  - role: ash.avalanche.ash_cli
-    vars:
-      ash_cli_avalanche_network_id: "{{ avalanchego_network_id }}"
-      ash_cli_local_endpoint: "{{ 'https' if avalanchego_https_enabled else 'http' }}://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}"
-    when: ash_cli_install

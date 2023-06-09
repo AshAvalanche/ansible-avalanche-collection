@@ -33,7 +33,6 @@
   set_fact:
     ash_cli_custom_networks:
       local:
-        info_rpc_url: "{{ ash_cli_local_endpoint }}/ext/info"
         pchain_rpc_url: "{{ ash_cli_local_endpoint }}/ext/bc/P"
         cchain_rpc_url: "{{ ash_cli_local_endpoint }}/ext/bc/C/rpc"
         xchain_rpc_url: "{{ ash_cli_local_endpoint }}/ext/bc/X"

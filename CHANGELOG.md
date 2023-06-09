@@ -1,5 +1,17 @@
 # Changelog
 
+## [Unreleased](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/HEAD)
+
+[Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.7.6...HEAD)
+
+**Breaking changes:**
+
+- Use Ash CLI for API calls and transactions [\#69](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/69) ([Nuttymoon](https://github.com/Nuttymoon))
+
+**Implemented enhancements:**
+
+- Use Ash CLI to perform API calls and issue transactions [\#68](https://github.com/AshAvalanche/ansible-avalanche-collection/issues/68)
+
 ## [v0.7.6](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.7.6) (2023-06-02)
 
 [Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.7.5...v0.7.6)

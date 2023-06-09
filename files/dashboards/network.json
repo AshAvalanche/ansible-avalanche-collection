@@ -2016,7 +2016,7 @@
         {
           "datasource": "Prometheus",
           "exemplar": true,
-          "expr": "increase(avalanche_X_vtx_accepted_count{job=\"avalanchego\"}[5m]) ",
+          "expr": "increase(avalanche_X_blks_accepted_count{job=\"avalanchego\"}[5m]) ",
           "hide": true,
           "interval": "",
           "legendFormat": "",

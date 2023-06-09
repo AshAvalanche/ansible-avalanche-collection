@@ -27,16 +27,18 @@ avalanchego_http_protocol: "{{ 'https' if avalanchego_https_enabled else 'http' 
 avalanchego_vm_binary_filename: "{{ vm_name }}_{{ vm_version }}_linux_amd64.tar.gz"
 avalanchego_vm_checksum_filename: "{{ vm_name }}_{{ vm_version }}_checksums.txt"
 
+# Avalanche constants
+avalanche_primary_network_id: 11111111111111111111111111111111LpoYY
+
 # List of VMs supported by the collection
 avalanchego_vms_list:
   subnet-evm:
+    download_url: https://github.com/ava-labs/subnet-evm/releases/download
+    id: spePNvBxaWSYL2tB5e2xMmMNBQkXMN8z2XEbz1ML2Aahatwoc
+    # Used in Ash CLI
+    ash_vm_type: SubnetEVM
     aliases:
       - subnet-evm
-    download_url: https://github.com/ava-labs/subnet-evm/releases/download
-    genesis_build_method: subnetevm.buildGenesis
-    genesis_json_key: genesisBytes
-    genesis_rpc_extra_path: /rpc
-    id: spePNvBxaWSYL2tB5e2xMmMNBQkXMN8z2XEbz1ML2Aahatwoc
     versions_comp:
       0.4.8:
         ge: 1.9.6

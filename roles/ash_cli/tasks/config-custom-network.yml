@@ -1,0 +1,36 @@
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (c) 2022-2023, E36 Knots
+---
+# Parameters
+# - network: The custom network to add. Should have the following structure:
+#     key: network_name
+#     value:
+#       pchain_rpc_url: ...
+#       cchain_rpc_url: ...
+#       xchain_rpc_url: ...
+
+- name: "Template '{{ network.key }}' network configuration"
+  blockinfile:
+    path: "{{ ash_cli_conf_dir }}/default.yml"
+    block: |
+      - name: {{ network.key }}
+        subnets:
+        - id: "{{ avalanche_primary_network_id }}"
+          controlKeys: []
+          threshold: 0
+          blockchains:
+          - id: {{ avalanche_primary_network_id }}
+            name: P-Chain
+            vmID: {{ avalanche_primary_network_id }}
+            vmType: PlatformVM
+            rpcUrl: {{ network.value.pchain_rpc_url }}
+          - name: C-Chain
+            vmID: mgj786NP7uDwBCcq6YwThhaN8FLyybkCa4zBWTQbNgmK6k9A6
+            vmType: Coreth
+            rpcUrl: {{ network.value.cchain_rpc_url }}
+          - name: X-Chain
+            vmID: jvYyfQTxGMJLuGWa55kdP2p2zSUYsQ5Raupu4TW34ZAUBAbtq
+            vmType: AvalancheVM
+            rpcUrl: {{ network.value.xchain_rpc_url }}
+    insertafter: "avalancheNetworks:"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: Ash CLI '{{ network.key }}' network"

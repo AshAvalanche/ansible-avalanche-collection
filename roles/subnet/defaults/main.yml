@@ -1,16 +1,70 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # Copyright (c) 2022-2023, E36 Knots
 ---
-# Network
-avalanchego_http_host: 127.0.0.1
-avalanchego_http_port: 9650
-avalanchego_https_enabled: false
+# Subnet configuration
+subnet_avalanche_network_id: local
+## Private key used to sign transactions
+subnet_txs_private_key: PrivateKey-ewoqjP7PxY4yr3iLTpLisriqt94hdyDFNgchSxGGztUrTXtNN
+## Private key encoding (cb58 or hex)
+subnet_txs_key_encoding: cb58
 
-# Subnet
-subnet_control_username: ewoq
-subnet_control_password: I_l1ve_@_Endor
-subnet_control_keys_threshold: 2
-subnet_control_keys: []
-subnet_validators_weight: 1
-subnet_validators_starttime: '{{ lookup(''pipe'', ''date -d "5 minutes" +%s'') }}'
-subnet_validators_endtime: '{{ lookup(''pipe'', ''date -d "1 month" +%s'') }}'
+# Blockchains configuration
+## Whether to fail if a blockchain with the same name already exists
+subnet_blockchains_check_name: true
+## List of blockchains to create in the Subnet
+subnet_blockchains_list:
+  - name: AshSubnetEVM
+    ## Name of the VM in the collection
+    ## See https://ash.center/docs/toolkit/ansible-avalanche-collection/reference/roles/avalanche-node#supported-vms-and-avalanchego-compatibility
+    vm: subnet-evm
+    genesis_data:
+      config:
+        chainId: 66666
+        homesteadBlock: 0
+        eip150Block: 0
+        eip150Hash: "0x2086799aeebeae135c246c65021c82b4e15a2c451340993aacfd2751886514f0"
+        eip155Block: 0
+        eip158Block: 0
+        byzantiumBlock: 0
+        constantinopleBlock: 0
+        petersburgBlock: 0
+        istanbulBlock: 0
+        muirGlacierBlock: 0
+        subnetEVMTimestamp: 0
+        feeConfig:
+          gasLimit: 8000000
+          minBaseFee: 25000000000
+          targetGas: 15000000
+          baseFeeChangeDenominator: 36
+          minBlockGasCost: 0
+          maxBlockGasCost: 1000000
+          targetBlockRate: 2
+          blockGasCostStep: 200000
+      alloc:
+        8db97C7cEcE249c2b98bDC0226Cc4C2A57BF52FC:
+          balance: "0x295BE96E64066972000000"
+      nonce: "0x0"
+      timestamp: "0x0"
+      extraData: "0x00"
+      gasLimit: "0x7A1200"
+      difficulty: "0x0"
+      mixHash: "0x0000000000000000000000000000000000000000000000000000000000000000"
+      coinbase: "0x0000000000000000000000000000000000000000"
+      number: "0x0"
+      gasUsed: "0x0"
+      parentHash: "0x0000000000000000000000000000000000000000000000000000000000000000"
+
+# Validators configuration
+## Whether to add validator nodes to the Subnet
+## The nodes are looked up in the `subnet_validators_ids_list` variable
+subnet_validators_add: true
+## List of node IDs to add to the Subnet (useful for third-party nodes)
+subnet_validators_ids_list: []
+
+## Validation parameters
+subnet_validator_start_time: '{{ lookup("pipe", "date -d ''2 minutes'' --rfc-3339=seconds").replace(" ", "T")  }}' # in 2 minutes
+subnet_validator_end_time: '{{ lookup("pipe", "date -d ''1 week'' --rfc-3339=seconds").replace(" ", "T")  }}' # in 1 week
+### Stake in AVAX for the Primary Network or weight for permissioned Subnets
+subnet_validator_stake_or_weight: 100
+### In percent. Only used for the Primary Network
+subnet_validator_delegation_fee: 2

@@ -1,0 +1,34 @@
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (c) 2022-2023, E36 Knots
+---
+# Create a Subnet and add nodes from the `subnet_validators` group as validators
+- name: Create the Subnet
+  hosts: subnet_txs_host[0]
+  roles:
+    - role: ash.avalanche.subnet
+
+- name: Add nodes as Subnet validators from inventory
+  hosts: subnet_validators
+  serial: 1
+  vars:
+    subnet_id: "{{ hostvars[groups['subnet_txs_host'][0]].subnet_info_res.output.id }}"
+  tasks:
+    - include_role:
+        name: ash.avalanche.node
+        tasks_from: add-validator
+
+- name: Subnet creation recap
+  hosts: subnet_txs_host[0]
+  vars:
+    subnet: "{{ subnet_info_res.output }}"
+  tasks:
+    - name: Display Subnet information
+      debug:
+        msg: "{{ subnet_info_res.output }}"
+
+    - name: Operation to do on each Subnet validator
+      debug:
+        msg: |-
+          The Subnet has been created with its blockchains, and the validators added.
+          Make sure to add the Subnet ID to the `avalanchego_track_subnets` list of each validator.
+          Subnet ID = {{ subnet.id }}

@@ -1,5 +1,0 @@
-# SPDX-License-Identifier: BSD-3-Clause
-# Copyright (c) 2022-2023, E36 Knots
----
-# HTTP URLs protocol
-avalanchego_http_protocol: "{{ 'https' if avalanchego_https_enabled else 'http' }}"

@@ -2,13 +2,21 @@
 # Copyright (c) 2022-2023, E36 Knots
 ---
 # Ash CLI version
-ash_cli_version: 0.1.1
+ash_cli_version: 0.2.1
 
 # Directories
 ash_cli_install_dir: /opt/avalanche/ash-cli
 ash_cli_conf_dir: /etc/avalanche/ash-cli/conf
 
 # Avalanche context
-avalanche_network_id: fuji
-## Only used if `avalanche_network_id` is `local`
-avalanche_pchain_local_url: http://127.0.0.1:9650/ext/bc/P
+ash_cli_avalanche_network_id: fuji
+
+# Custom networks to add to the Ash CLI configuration
+ash_cli_custom_networks:
+  {}
+  ## Example for the `local` network
+  ## local:
+  ##   info_rpc_url: "http://127.0.0.1:9650/ext/info"
+  ##   pchain_rpc_url: "http://127.0.0.1:9650/ext/bc/P"
+  ##   cchain_rpc_url: "http://127.0.0.1:9650/ext/bc/C/rpc"
+  ##   xchain_rpc_url: "http://127.0.0.1:9650/ext/bc/X"

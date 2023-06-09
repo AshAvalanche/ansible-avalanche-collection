@@ -5,20 +5,10 @@
   hosts: bootstrap_node
   become: true
   roles:
-    - role: ash.avalanche.ash_cli
     - role: ash.avalanche.node
 
 - name: Provision other network nodes
   hosts: avalanche_nodes:!bootstrap_node
   become: true
   roles:
-    - role: ash.avalanche.ash_cli
     - role: ash.avalanche.node
-
-- name: Provision prefunded account on bootstrap node
-  hosts: bootstrap_node
-  tasks:
-    - name: Provision prefunded account
-      include_role:
-        name: ash.avalanche.node
-        tasks_from: prefunded-account.yml

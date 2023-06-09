@@ -1,0 +1,25 @@
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (c) 2022-2023, E36 Knots
+---
+# /!\ Cannot be used on mainnet /!\
+- name: Create the Subnet
+  ash.avalanche.ash_cmd:
+    command: avalanche subnet create
+    options:
+      wait: true
+  environment:
+    AVALANCHE_NETWORK: "{{ subnet_avalanche_network_id }}"
+    AVALANCHE_KEY_ENCODING: "{{ subnet_txs_key_encoding }}"
+    AVALANCHE_PRIVATE_KEY: "{{ subnet_txs_private_key }}"
+  register: subnet_create_res
+
+- name: Get Subnet information
+  ash.avalanche.ash_cmd:
+    command: "avalanche subnet info {{ subnet_create_res.output.id }}"
+  environment:
+    AVALANCHE_NETWORK: "{{ subnet_avalanche_network_id }}"
+  register: subnet_info_res
+
+- name: Display Subnet information
+  debug:
+    msg: "{{ subnet_info_res.output }}"

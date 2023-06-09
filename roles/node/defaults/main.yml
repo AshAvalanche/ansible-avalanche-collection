@@ -2,7 +2,7 @@
 # Copyright (c) 2022-2023, E36 Knots
 ---
 # Avalanchego version
-avalanchego_version: 1.9.9
+avalanchego_version: 1.10.0
 
 # Install directories
 avalanchego_install_dir: /opt/avalanche/avalanchego
@@ -46,6 +46,7 @@ avalanchego_staking_local_certs_dir: "{{ playbook_dir }}/files/staking"
 
 # Bootstrapping
 avalanchego_network_id: fuji
+## Node ID of the first validator on `local` networks
 avalanchego_bootstrap_node_id: NodeID-7Xhw2mDxuDS44j42TCB6U5579esbSt3Lg
 avalanchego_bootstrap_db: ""
 
@@ -94,17 +95,18 @@ avalanchego_chains_configs:
   C:
     state-sync-enabled: true
 
-# Node keystore
-## "admin user" (used by admin-user and validate tasks)
-avalanche_node_username: admin
-avalanche_node_password: password
+# Validator configuration (for the Primary Network)
+## Private key used to sign the staking transaction
+subnet_txs_private_key: PrivateKey-ewoqjP7PxY4yr3iLTpLisriqt94hdyDFNgchSxGGztUrTXtNN
+## Private key encoding (cb58 or hex)
+subnet_txs_key_encoding: cb58
 
-## Pre-funded account (only on local network)
-avalanche_prefunded_username: ewoq
-avalanche_prefunded_password: I_l1ve_@_Endor
-avalanche_prefunded_private_key: PrivateKey-ewoqjP7PxY4yr3iLTpLisriqt94hdyDFNgchSxGGztUrTXtNN
+## Validation parameters
+subnet_validator_start_time: '{{ lookup("pipe", "date -d ''2 minutes'' --rfc-3339=seconds").replace(" ", "T")  }}' # in 2 minutes
+subnet_validator_end_time: '{{ lookup("pipe", "date -d ''1 week'' --rfc-3339=seconds").replace(" ", "T")  }}' # in 1 week
+subnet_validator_stake_or_weight: 1 # in AVAX
+subnet_validator_delegation_fee: 2 # in percent
 
-# Validation properties
-avalanchego_validation_start_time: "{{ ansible_date_time.epoch | int + 60 }}" # in 1 minute
-avalanchego_validation_end_time: "{{ ansible_date_time.epoch | int + 60 + 604800 }}" # in 1 week
-avalanchego_validation_stake_amount: "{{ 1 | ash.avalanche.convert('AVAX', 'nAVAX') | int }}"
+# Ash CLI configuration
+## Whether to install and configure Ash CLI on the node
+ash_cli_install: true

@@ -6,20 +6,7 @@
     cmd: ash conf init --config {{ ash_cli_conf_dir }}/default.yml
     creates: "{{ ash_cli_conf_dir }}/default.yml"
 
-- name: Add local network configuration
-  blockinfile:
-    path: "{{ ash_cli_conf_dir }}/default.yml"
-    block: |
-      - name: local
-        subnets:
-        - id: 11111111111111111111111111111111LpoYY
-          controlKeys: []
-          threshold: 0
-          blockchains:
-          - id: 11111111111111111111111111111111LpoYY
-            name: P-Chain
-            vmId: 11111111111111111111111111111111LpoYY
-            vmType: PVM
-            rpcUrl: {{ avalanche_pchain_local_url }}
-    insertafter: "avalancheNetworks:"
-  when: avalanche_network_id == "local"
+- include_tasks: config-custom-network.yml
+  loop: "{{ ash_cli_custom_networks | dict2items }}"
+  loop_control:
+    loop_var: network

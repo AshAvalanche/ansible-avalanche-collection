@@ -1,0 +1,78 @@
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (c) 2022-2023, E36 Knots
+---
+# /!\ Cannot be used on mainnet /!\
+# Parameters
+# - subnet_id: Subnet ID
+# - blockchain: Blockchain to create. Should have the following structure:
+#     name: Blockchain name
+#     vm: Name of the VM in the collection
+#     genesis_data: Genesis data as dictionary
+
+- name: Include AvalancheGo VMs list
+  include_vars: ../../node/vars/main.yml
+
+- name: Check that the blockchain VM is supported
+  assert:
+    that:
+      - blockchain.vm in avalanchego_vms_list
+    msg: |
+      The blockchain VM '{{ blockchain.vm }}' is not supported.
+      Supported VMs: {{ avalanchego_vms_list.keys() }}
+
+- name: Check if a blockchain with the same name already exists
+  ash.avalanche.ash_cmd:
+    command: "avalanche subnet info {{ subnet_id }}"
+  environment:
+    AVALANCHE_NETWORK: "{{ subnet_avalanche_network_id }}"
+  register: subnet_info_res
+  failed_when: (subnet_info_res.output.blockchains | json_query('[?name==`' + blockchain.name + '`]') | length > 0)
+  when: subnet_blockchains_check_name
+
+- name: Create the blockchain's genesis JSON file
+  tempfile:
+    prefix: "{{ blockchain.name }}"
+    suffix: .json
+  register: blockchain_genesis_json_file
+
+- name: Populate the blockchain's genesis JSON file
+  copy:
+    content: "{{ blockchain.genesis_data }}"
+    dest: "{{ blockchain_genesis_json_file.path }}"
+
+- name: Encode the blockchain's genesis data to bytes
+  ash.avalanche.ash_cmd:
+    command:
+      - avalanche vm encode-genesis
+      - "{{ blockchain_genesis_json_file.path }}"
+    options:
+      vm-type: "{{ avalanchego_vms_list[blockchain.vm].ash_vm_type }}"
+  register: blockchain_genesis_bytes_res
+
+- name: "Create '{{ blockchain.name }}' blockchain"
+  ash.avalanche.ash_cmd:
+    command:
+      - avalanche blockchain create
+      - "{{ blockchain.name }}"
+    options:
+      subnet-id: "{{ subnet_id }}"
+      vm-type: "{{ avalanchego_vms_list[blockchain.vm].ash_vm_type }}"
+      vm-id: "{{ avalanchego_vms_list[blockchain.vm].id }}"
+      genesis-str: "{{ blockchain_genesis_bytes_res.output.genesisBytes }}"
+      wait: true
+  environment:
+    AVALANCHE_NETWORK: "{{ subnet_avalanche_network_id }}"
+    AVALANCHE_KEY_ENCODING: "{{ subnet_txs_key_encoding }}"
+    AVALANCHE_PRIVATE_KEY: "{{ subnet_txs_private_key }}"
+  register: blockchain_create_res
+
+- name: Get Subnet information
+  ash.avalanche.ash_cmd:
+    command: "avalanche subnet info {{ subnet_id }}"
+  environment:
+    AVALANCHE_NETWORK: "{{ subnet_avalanche_network_id }}"
+  register: subnet_info_res
+
+- name: Display blockchain information
+  debug:
+    msg: '{{ (subnet_info_res.output.blockchains | json_query("[?name==''" + blockchain.name + "'']"))[0] }}'

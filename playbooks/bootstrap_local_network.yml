@@ -6,9 +6,17 @@
   become: true
   roles:
     - role: ash.avalanche.node
+      vars:
+        ash_cli_install: false
 
 - name: Provision other network nodes
   hosts: avalanche_nodes:!bootstrap_node
+  become: true
+  roles:
+    - role: ash.avalanche.node
+
+- name: Install Ash CLI on the bootstrap node
+  hosts: bootstrap_node
   become: true
   roles:
     - role: ash.avalanche.node

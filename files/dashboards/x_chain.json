@@ -3,7 +3,10 @@
     "list": [
       {
         "builtIn": 1,
-        "datasource": "-- Grafana --",
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
         "enable": true,
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
@@ -19,9 +22,9 @@
     ]
   },
   "editable": true,
-  "gnetId": null,
+  "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 51,
+  "id": 7,
   "links": [
     {
       "icon": "external link",
@@ -31,6 +34,7 @@
       "type": "dashboards"
     }
   ],
+  "liveNow": false,
   "panels": [
     {
       "datasource": "Prometheus",
@@ -41,6 +45,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -102,44 +108,52 @@
             "max"
           ],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "pluginVersion": "8.0.4",
       "targets": [
         {
+          "datasource": "Prometheus",
+          "editorMode": "code",
           "exemplar": true,
-          "expr": "round(increase(avalanche_X_avalanche_vtx_accepted_count{job=\"avalanchego\"}[1m]))>0",
+          "expr": "round(increase(avalanche_X_blks_accepted_count{job=\"avalanchego\"}[1m]))>0",
           "interval": "",
           "legendFormat": "Accepted",
+          "range": true,
           "refId": "A"
         },
         {
+          "datasource": "Prometheus",
+          "editorMode": "code",
           "exemplar": true,
-          "expr": "round(increase(avalanche_X_avalanche_vtx_rejected_count{job=\"avalanchego\"}[1m]))>0",
+          "expr": "round(increase(avalanche_X_blks_rejected_count{job=\"avalanchego\"}[1m]))>0",
           "hide": true,
           "interval": "",
           "legendFormat": "Rejected",
+          "range": true,
           "refId": "B"
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Vertices Accepted/Rejected in Last Minute",
+      "title": "Blocks Accepted/Rejected in Last Minute",
       "type": "timeseries"
     },
     {
       "datasource": "Prometheus",
-      "description": "The average time between a vertex's issuance and acceptance by this node over the last 5 minutes.",
+      "description": "The average time between a block's issuance and acceptance by this node over the last 5 minutes.",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -197,31 +211,37 @@
             "max"
           ],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "pluginVersion": "8.0.4",
       "targets": [
         {
-          "expr": "rate(avalanche_X_avalanche_vtx_accepted_sum{job=\"avalanchego\"}[5m]) / rate(avalanche_X_avalanche_vtx_accepted_count{job=\"avalanchego\"}[5m])",
+          "datasource": "Prometheus",
+          "editorMode": "code",
+          "expr": "rate(avalanche_X_blks_accepted_sum{job=\"avalanchego\"}[5m]) / rate(avalanche_X_blks_accepted_count{job=\"avalanchego\"}[5m])",
           "interval": "",
           "legendFormat": "Accepted",
+          "range": true,
           "refId": "A"
         },
         {
-          "expr": "rate(avalanche_X_avalanche_vtx_rejected_sum{job=\"avalanchego\"}[5m]) / rate(avalanche_X_avalanche_vtx_rejected_count{job=\"avalanchego\"}[5m])",
+          "datasource": "Prometheus",
+          "editorMode": "code",
+          "expr": "rate(avalanche_X_blks_rejected_sum{job=\"avalanchego\"}[5m]) / rate(avalanche_X_blks_rejected_count{job=\"avalanchego\"}[5m])",
           "hide": false,
           "interval": "",
           "legendFormat": "Rejected",
+          "range": true,
           "refId": "B"
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Vertex Acceptance Latency",
+      "title": "Block Acceptance Latency",
       "type": "timeseries"
     },
     {
@@ -233,6 +253,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -290,34 +312,29 @@
             "max"
           ],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "pluginVersion": "8.0.4",
       "targets": [
         {
+          "datasource": "Prometheus",
+          "editorMode": "code",
           "exemplar": true,
-          "expr": "avalanche_X_avalanche_txs_processing{job=\"avalanchego\"}>0",
+          "expr": "avalanche_X_blks_processing{job=\"avalanchego\"}>0",
           "hide": false,
           "interval": "",
-          "legendFormat": "Transactions",
-          "refId": "A"
-        },
-        {
-          "exemplar": true,
-          "expr": "avalanche_X_avalanche_vtx_processing{job=\"avalanchego\"}>0",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "Vertices",
+          "legendFormat": "Blocks",
+          "range": true,
           "refId": "B"
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Vertices/Transactions Processing",
+      "title": "Blocks Processing",
       "type": "timeseries"
     },
     {
@@ -329,6 +346,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -390,15 +409,18 @@
             "min"
           ],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "pluginVersion": "8.0.4",
       "targets": [
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "(increase(avalanche_X_handler_chits_count{job=\"avalanchego\"}[5m]) + 1) / (increase(avalanche_X_handler_chits_count{job=\"avalanchego\"}[5m]) + increase(avalanche_X_handler_query_failed_count{job=\"avalanchego\"}[5m]) + 1)",
           "instant": false,
@@ -407,8 +429,6 @@
           "refId": "A"
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "Percentage of Successful Queries",
       "type": "timeseries"
     },
@@ -421,6 +441,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "seconds/second",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -480,15 +502,18 @@
             "max"
           ],
           "displayMode": "table",
-          "placement": "right"
+          "placement": "right",
+          "showLegend": true
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "pluginVersion": "8.0.4",
       "targets": [
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_pull_query_sum{job=\"avalanchego\"}[5m])",
           "interval": "",
@@ -496,6 +521,7 @@
           "refId": "A"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_push_query_sum{job=\"avalanchego\"}[5m])",
           "interval": "",
@@ -503,6 +529,7 @@
           "refId": "B"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_chits_sum{job=\"avalanchego\"}[5m])",
           "interval": "",
@@ -510,6 +537,7 @@
           "refId": "C"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_accepted_sum{job=\"avalanchego\"}[5m])",
           "interval": "",
@@ -517,6 +545,7 @@
           "refId": "D"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_get_sum{job=\"avalanchego\"}[5m])",
           "interval": "",
@@ -524,6 +553,7 @@
           "refId": "E"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_put_sum{job=\"avalanchego\"}[5m])",
           "interval": "",
@@ -531,6 +561,7 @@
           "refId": "F"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_multiput_sum{job=\"avalanchego\"}[5m])",
           "interval": "",
@@ -538,6 +569,7 @@
           "refId": "G"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_get_ancestors_sum{job=\"avalanchego\"}[5m])",
           "interval": "",
@@ -545,6 +577,7 @@
           "refId": "H"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_get_failed_sum{job=\"avalanchego\"}[5m])",
           "interval": "",
@@ -552,6 +585,7 @@
           "refId": "I"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_query_failed_sum{job=\"avalanchego\"}[5m])",
           "interval": "",
@@ -559,6 +593,7 @@
           "refId": "J"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_get_accepted_sum{job=\"avalanchego\"}[5m])",
           "interval": "",
@@ -566,6 +601,7 @@
           "refId": "K"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_get_ancestors_failed_sum{job=\"avalanchego\"}[5m])",
           "interval": "",
@@ -573,6 +609,7 @@
           "refId": "L"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_app_request_sum{job=\"avalanchego\"}[5m])",
           "hide": false,
@@ -581,6 +618,7 @@
           "refId": "M"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_app_request_failed_sum{job=\"avalanchego\"}[5m])",
           "hide": false,
@@ -589,6 +627,7 @@
           "refId": "N"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_app_response_sum{job=\"avalanchego\"}[5m])",
           "hide": false,
@@ -597,6 +636,7 @@
           "refId": "O"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_app_gossip_sum{job=\"avalanchego\"}[5m])",
           "hide": false,
@@ -605,8 +645,6 @@
           "refId": "P"
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "Message Handling Time (Total)",
       "type": "timeseries"
     },
@@ -619,6 +657,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "seconds",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -678,15 +718,18 @@
             "max"
           ],
           "displayMode": "table",
-          "placement": "right"
+          "placement": "right",
+          "showLegend": true
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "pluginVersion": "8.0.4",
       "targets": [
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_pull_query_sum{job=\"avalanchego\"}[5m])/rate(avalanche_X_handler_pull_query_count{job=\"avalanchego\"}[5m])",
           "interval": "",
@@ -694,6 +737,7 @@
           "refId": "A"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_push_query_sum{job=\"avalanchego\"}[5m])/rate(avalanche_X_handler_push_query_count{job=\"avalanchego\"}[5m])",
           "interval": "",
@@ -701,6 +745,7 @@
           "refId": "B"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_chits_sum{job=\"avalanchego\"}[5m])/rate(avalanche_X_handler_chits_count{job=\"avalanchego\"}[5m])",
           "interval": "",
@@ -708,6 +753,7 @@
           "refId": "C"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_accepted_sum{job=\"avalanchego\"}[5m])/rate(avalanche_X_handler_accepted_count{job=\"avalanchego\"}[5m])",
           "interval": "",
@@ -715,6 +761,7 @@
           "refId": "D"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_get_sum{job=\"avalanchego\"}[5m])/rate(avalanche_X_handler_get_count{job=\"avalanchego\"}[5m])",
           "interval": "",
@@ -722,6 +769,7 @@
           "refId": "E"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_put_sum{job=\"avalanchego\"}[5m])/rate(avalanche_X_handler_put_count{job=\"avalanchego\"}[5m])",
           "interval": "",
@@ -729,6 +777,7 @@
           "refId": "F"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_multiput_sum{job=\"avalanchego\"}[5m])/rate(avalanche_X_handler_multi_put_count{job=\"avalanchego\"}[5m])",
           "interval": "",
@@ -736,6 +785,7 @@
           "refId": "G"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_get_ancestors_sum{job=\"avalanchego\"}[5m])/rate(avalanche_X_handler_get_ancestors_count{job=\"avalanchego\"}[5m])",
           "interval": "",
@@ -743,6 +793,7 @@
           "refId": "H"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_get_failed_sum{job=\"avalanchego\"}[5m])/rate(avalanche_X_handler_get_failed_count{job=\"avalanchego\"}[5m])",
           "interval": "",
@@ -750,6 +801,7 @@
           "refId": "I"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_query_failed_sum{job=\"avalanchego\"}[5m])/rate(avalanche_X_handler_query_failed_count{job=\"avalanchego\"}[5m])",
           "interval": "",
@@ -757,6 +809,7 @@
           "refId": "J"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_get_accepted_sum{job=\"avalanchego\"}[5m])/rate(avalanche_X_handler_get_accepted_count{job=\"avalanchego\"}[5m])",
           "interval": "",
@@ -764,6 +817,7 @@
           "refId": "K"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_get_ancestors_failed_sum{job=\"avalanchego\"}[5m])/rate(avalanche_X_handler_get_ancestors_failed_count{job=\"avalanchego\"}[5m])",
           "interval": "",
@@ -771,6 +825,7 @@
           "refId": "L"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_app_request_sum{job=\"avalanchego\"}[5m])/rate(avalanche_X_handler_app_request_count{job=\"avalanchego\"}[5m])",
           "hide": false,
@@ -779,6 +834,7 @@
           "refId": "M"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_app_request_failed_sum{job=\"avalanchego\"}[5m])/rate(avalanche_X_handler_app_request_failed_count{job=\"avalanchego\"}[5m])",
           "hide": false,
@@ -787,6 +843,7 @@
           "refId": "N"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_app_gossip_sum{job=\"avalanchego\"}[5m])/rate(avalanche_X_handler_app_gossip_count{job=\"avalanchego\"}[5m])",
           "hide": false,
@@ -795,6 +852,7 @@
           "refId": "O"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_app_response_sum{job=\"avalanchego\"}[5m])/rate(avalanche_X_handler_app_response_count{job=\"avalanchego\"}[5m])",
           "hide": false,
@@ -803,8 +861,6 @@
           "refId": "P"
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "Message Handling Time",
       "type": "timeseries"
     },
@@ -817,6 +873,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -878,15 +936,18 @@
             "max"
           ],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "pluginVersion": "8.0.4",
       "targets": [
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "avg_over_time(avalanche_X_benchlist_benched_weight{job=\"avalanchego\"}[15m]) / 10^9",
           "interval": "",
@@ -894,8 +955,6 @@
           "refId": "A"
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "AVAX Benched",
       "type": "timeseries"
     },
@@ -908,6 +967,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "Messages / Second",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -967,15 +1028,18 @@
             "max"
           ],
           "displayMode": "table",
-          "placement": "right"
+          "placement": "right",
+          "showLegend": true
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "pluginVersion": "8.0.4",
       "targets": [
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_pull_query_count{job=\"avalanchego\"}[5m])",
           "interval": "",
@@ -983,6 +1047,7 @@
           "refId": "A"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_push_query_count{job=\"avalanchego\"}[5m])",
           "interval": "",
@@ -990,6 +1055,7 @@
           "refId": "B"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_chits_count{job=\"avalanchego\"}[5m])",
           "interval": "",
@@ -997,6 +1063,7 @@
           "refId": "C"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_accepted_count{job=\"avalanchego\"}[5m])",
           "interval": "",
@@ -1004,6 +1071,7 @@
           "refId": "D"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_get_count{job=\"avalanchego\"}[5m])",
           "interval": "",
@@ -1011,6 +1079,7 @@
           "refId": "E"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_put_count{job=\"avalanchego\"}[5m])",
           "interval": "",
@@ -1018,6 +1087,7 @@
           "refId": "F"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_multi_put_count{job=\"avalanchego\"}[5m])",
           "interval": "",
@@ -1025,6 +1095,7 @@
           "refId": "G"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_get_ancestors_count{job=\"avalanchego\"}[5m])",
           "interval": "",
@@ -1032,6 +1103,7 @@
           "refId": "H"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_get_failed_count{job=\"avalanchego\"}[5m])",
           "interval": "",
@@ -1039,6 +1111,7 @@
           "refId": "I"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_query_failed_count{job=\"avalanchego\"}[5m])",
           "interval": "",
@@ -1046,6 +1119,7 @@
           "refId": "J"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_get_accepted_count{job=\"avalanchego\"}[5m])",
           "interval": "",
@@ -1053,6 +1127,7 @@
           "refId": "K"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_get_ancestors_failed_count{job=\"avalanchego\"}[5m])",
           "interval": "",
@@ -1060,6 +1135,7 @@
           "refId": "L"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_chits_count{job=\"avalanchego\"}[5m])",
           "hide": false,
@@ -1068,6 +1144,7 @@
           "refId": "M"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_app_request_count{job=\"avalanchego\"}[5m])",
           "hide": false,
@@ -1076,6 +1153,7 @@
           "refId": "N"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_app_request_failed_count{job=\"avalanchego\"}[5m])",
           "hide": false,
@@ -1084,6 +1162,7 @@
           "refId": "O"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_app_response_count{job=\"avalanchego\"}[5m])",
           "hide": false,
@@ -1092,6 +1171,7 @@
           "refId": "P"
         },
         {
+          "datasource": "Prometheus",
           "exemplar": true,
           "expr": "rate(avalanche_X_handler_app_gossip_count{job=\"avalanchego\"}[5m])",
           "hide": false,
@@ -1100,8 +1180,6 @@
           "refId": "Q"
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "Messages Received per Second",
       "type": "timeseries"
     },
@@ -1113,6 +1191,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -1158,8 +1238,8 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 12,
+        "h": 7,
+        "w": 8,
         "x": 0,
         "y": 34
       },
@@ -1168,18 +1248,23 @@
         "legend": {
           "calcs": [],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "targets": [
         {
+          "datasource": "Prometheus",
+          "editorMode": "code",
           "exemplar": true,
-          "expr": "increase(avalanche_X_vm_utxo_cache_hit[5m])/(increase(avalanche_X_vm_utxo_cache_hit[5m])+increase(avalanche_X_vm_utxo_cache_miss[5m]))",
+          "expr": "increase(avalanche_X_vm_avalanche_utxo_cache_hit[5m])/(increase(avalanche_X_vm_avalanche_utxo_cache_hit[5m])+increase(avalanche_X_vm_avalanche_utxo_cache_miss[5m]))",
           "interval": "",
           "legendFormat": "Hit Rate",
+          "range": true,
           "refId": "A"
         }
       ],
@@ -1194,96 +1279,8 @@
             "mode": "palette-classic"
           },
           "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "bars",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": true,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 8,
-        "x": 0,
-        "y": 42
-      },
-      "id": 43,
-      "options": {
-        "legend": {
-          "calcs": [
-            "mean",
-            "max"
-          ],
-          "displayMode": "list",
-          "placement": "bottom"
-        },
-        "tooltip": {
-          "mode": "single"
-        }
-      },
-      "pluginVersion": "8.0.4",
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "avalanche_X_handler_unprocessed_msgs_len",
-          "interval": "",
-          "legendFormat": "Pending Messages",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Unprocessed Incoming Messages",
-      "type": "timeseries"
-    },
-    {
-      "datasource": "Prometheus",
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -1334,7 +1331,102 @@
         "h": 7,
         "w": 8,
         "x": 8,
-        "y": 42
+        "y": 34
+      },
+      "id": 43,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "max"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "8.0.4",
+      "targets": [
+        {
+          "datasource": "Prometheus",
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "avalanche_X_handler_unprocessed_msgs_len",
+          "interval": "",
+          "legendFormat": "Pending Messages",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Unprocessed Incoming Messages",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "bars",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 16,
+        "y": 34
       },
       "id": 33,
       "options": {
@@ -1344,29 +1436,30 @@
             "max"
           ],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "pluginVersion": "8.0.4",
       "targets": [
         {
+          "datasource": "Prometheus",
           "expr": "increase(avalanche_X_handler_expired[1m])",
           "interval": "",
           "legendFormat": "Expired",
           "refId": "A"
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "Incoming Messages Expired in Last Minute",
       "type": "timeseries"
     }
   ],
   "refresh": "10s",
-  "schemaVersion": 30,
+  "schemaVersion": 37,
   "style": "dark",
   "tags": [
     "Avalanche"
@@ -1395,5 +1488,6 @@
   "timezone": "",
   "title": "X-Chain",
   "uid": "ceRH2Am7z",
-  "version": 32
+  "version": 33,
+  "weekStart": ""
 }

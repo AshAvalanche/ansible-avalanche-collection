@@ -9,7 +9,7 @@
     group: root
   loop:
     - "{{ ash_cli_releases_dir }}"
-    - "{{ ash_cli_bin_dir }}"
+    - "{{ ash_cli_bin_dir }}/ash-{{ ash_cli_version }}"
     - "{{ ash_cli_conf_dir }}"
 
 - name: "Download Ash CLI {{ ash_cli_version }} binary"
@@ -19,11 +19,20 @@
     checksum: "sha512:{{ ash_cli_binary_url }}.sha512"
     owner: root
     group: root
+
+- name: "Unpack Ash CLI {{ ash_cli_version }} binary"
+  unarchive:
+    src: "{{ ash_cli_releases_dir }}/{{ ash_cli_binary_name }}"
+    dest: "{{ ash_cli_bin_dir }}/ash-{{ ash_cli_version }}"
+    remote_src: true
+    owner: root
+    group: root
     mode: 0755
+    creates: "{{ ash_cli_bin_dir }}/ash-{{ ash_cli_version }}/ash"
 
 - name: "Create the symlink to Ash CLI {{ ash_cli_version }} binary"
   file:
-    src: "{{ ash_cli_releases_dir }}/{{ ash_cli_binary_name }}"
+    src: "{{ ash_cli_bin_dir }}/ash-{{ ash_cli_version }}/ash"
     dest: "{{ ash_cli_bin_dir }}/ash"
     state: link
     owner: root

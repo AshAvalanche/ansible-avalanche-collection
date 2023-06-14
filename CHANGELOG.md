@@ -1,8 +1,17 @@
 # Changelog
 
-## [Unreleased](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/HEAD)
+## [v0.8.1](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.8.1) (2023-06-14)
 
-[Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.7.6...HEAD)
+[Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.8.0...v0.8.1)
+
+**Merged pull requests:**
+
+- feat\(ash\_cli\): unpack Ash CLI archive [\#71](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/71) ([Nuttymoon](https://github.com/Nuttymoon))
+- feat: sync dashboards with avalanche-monitoring [\#70](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/70) ([leopaul36](https://github.com/leopaul36))
+
+## [v0.8.0](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.8.0) (2023-06-09)
+
+[Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.7.6...v0.8.0)
 
 **Breaking changes:**
 

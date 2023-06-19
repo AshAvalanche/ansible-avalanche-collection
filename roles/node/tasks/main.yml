@@ -2,32 +2,46 @@
 # Copyright (c) 2022-2023, E36 Knots
 ---
 - name: Install AvalancheGo
-  include_tasks: install-avalanchego.yml
+  import_tasks: install-avalanchego.yml
+  tags:
+    - install
+    - avalanchego
 
 - name: Clean plugins dir
-  include_tasks: clean-plugins-dir.yml
+  import_tasks: clean-plugins-dir.yml
+  tags:
+    - install
+    - vms
 
 - name: Install VMs
-  include_tasks: install-vm.yml
-  vars:
-    vm_name: "{{ vm.split('=')[0] }}"
-    vm_version: "{{ vm.split('=')[1] }}"
-    vm_info: "{{ avalanchego_vms_list[vm.split('=')[0]] }}"
-  loop: "{{ avalanchego_vms_install }}"
-  loop_control:
-    loop_var: vm
+  import_tasks: install-vms.yml
+  tags:
+    - install
+    - vms
 
 - name: Configure AvalancheGo node
-  include_tasks: config-node.yml
+  import_tasks: config-node.yml
+  tags:
+    - config
+    - avalanchego
 
 - name: Configure subnets
-  include_tasks: config-subnets.yml
+  import_tasks: config-subnets.yml
+  tags:
+    - config
+    - subnets
 
 - name: Configure chains
-  include_tasks: config-chains.yml
+  import_tasks: config-chains.yml
+  tags:
+    - config
+    - chains
 
 - name: Start AvalancheGo node
-  include_tasks: start.yml
+  import_tasks: start.yml
+  tags:
+    - start
+    - avalanchego
 
 - name: Generate Ash CLI local network configuration
   set_fact:
@@ -36,13 +50,19 @@
         pchain_rpc_url: "{{ ash_cli_local_endpoint }}/ext/bc/P"
         cchain_rpc_url: "{{ ash_cli_local_endpoint }}/ext/bc/C/rpc"
         xchain_rpc_url: "{{ ash_cli_local_endpoint }}/ext/bc/X"
+  tags:
+    - install
+    - ash_cli
   vars:
     ash_cli_local_endpoint: "{{ 'https' if avalanchego_https_enabled else 'http' }}://{{ '127.0.0.1' if avalanchego_http_host == '0.0.0.0' else avalanchego_http_host }}:{{ avalanchego_http_port }}"
   when: avalanchego_network_id == 'local'
 
 - name: Install and configure Ash CLI
-  include_role:
+  import_role:
     name: ash.avalanche.ash_cli
+  tags:
+    - install
+    - ash_cli
   vars:
     ash_cli_avalanche_network_id: "{{ avalanchego_network_id }}"
   when: ash_cli_install

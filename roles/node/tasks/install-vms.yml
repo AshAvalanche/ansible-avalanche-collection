@@ -1,0 +1,11 @@
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (c) 2022-2023, E36 Knots
+---
+- include_tasks: install-vm.yml
+  vars:
+    vm_name: "{{ vm.split('=')[0] }}"
+    vm_version: "{{ vm.split('=')[1] }}"
+    vm_info: "{{ avalanchego_vms_list[vm.split('=')[0]] }}"
+  loop: "{{ avalanchego_vms_install }}"
+  loop_control:
+    loop_var: vm

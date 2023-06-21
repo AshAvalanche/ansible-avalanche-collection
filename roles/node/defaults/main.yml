@@ -28,6 +28,7 @@ avalanchego_group: avalanche
 ## Change this to public IP to accept API calls from the outside
 avalanchego_http_host: 127.0.0.1
 avalanchego_http_port: 9650
+avalanchego_http_allowed_hosts: "localhost"
 ## If set to `true`, will use existing certificates found in `avalanchego_https_local_certs_dir`
 avalanchego_https_enabled: false
 ## If set to `""`, no file will be uploaded. Certificates are expected to be present on the target host.
@@ -68,6 +69,7 @@ avalanchego_node_json:
   api-admin-enabled: true
   api-keystore-enabled: true
   http-tls-enabled: "{{ avalanchego_https_enabled }}"
+  http-allowed-hosts: "{{ avalanchego_http_allowed_hosts }}"
   # Staking
   staking-enabled: true
   staking-port: "{{ avalanchego_staking_port }}"
@@ -75,7 +77,6 @@ avalanchego_node_json:
   network-id: "{{ avalanchego_network_id }}"
   snow-sample-size: 20
   snow-quorum-size: 15
-  snow-mixed-query-num-push-vdr: 10
   # Paths
   db-dir: "{{ avalanchego_db_dir }}"
   subnet-config-dir: "{{ avalanchego_subnets_conf_dir }}"

@@ -40,13 +40,12 @@
 - name: Construct node.json conf
   set_fact:
     node_conf_json: |
-      {{ avalanchego_node_json |
-         combine(
-           node_conf_public_ip,
-           node_conf_bootstrap,
-           node_conf_staking_tls_files,
-           node_conf_http_tls_files
-         ) }}
+      {{ (
+        node_conf_public_ip,
+        node_conf_bootstrap,
+        node_conf_staking_tls_files,
+        node_conf_http_tls_files
+        ) | combine(avalanchego_node_json) }}
 
 - name: Generate node.json
   copy:

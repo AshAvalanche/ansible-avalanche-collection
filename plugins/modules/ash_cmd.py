@@ -18,7 +18,14 @@ def run_module():
     module_args = dict(
         command=dict(type="list", required=True),
         options=dict(type="dict", required=False, default={}),
-        ash_path=dict(type="str", required=False, default="/usr/local/bin/ash"),
+        ash_path=dict(
+            type="str", required=False, default="/opt/avalanche/ash-cli/bin/ash"
+        ),
+        ash_config=dict(
+            type="str",
+            required=False,
+            default="/etc/avalanche/ash-cli/conf/default.yml",
+        ),
         json=dict(type="bool", required=False, default=True),
     )
 
@@ -46,7 +53,7 @@ def run_module():
         if value is False:
             continue
         command.append("--" + key)
-        # if value is boolean true, then it's a flag:
+        # if value is boolean true, then it's a flag
         if value is True:
             continue
         # if value is int, cast to string
@@ -59,6 +66,10 @@ def run_module():
     # force json output
     if module.params["json"]:
         command.append("--json")
+
+    # add the config flag
+    command.append("--config")
+    command.append(module.params["ash_config"])
 
     # run the command
     run = module.run_command(" ".join(command))

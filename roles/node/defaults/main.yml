@@ -96,21 +96,21 @@ avalanchego_chains_configs:
   C:
     state-sync-enabled: true
 
-# Validator configuration (for the Primary Network)
+# Validator configuration
 ## Private key used to sign the staking transaction
-subnet_txs_private_key: PrivateKey-ewoqjP7PxY4yr3iLTpLisriqt94hdyDFNgchSxGGztUrTXtNN
+validator_txs_private_key: PrivateKey-ewoqjP7PxY4yr3iLTpLisriqt94hdyDFNgchSxGGztUrTXtNN
 ## Private key encoding (cb58 or hex)
-subnet_txs_key_encoding: cb58
+validator_txs_key_encoding: cb58
 
 ## Validation parameters
-subnet_validator_start_time_command_default: 'date -d ''2 minutes'' --rfc-3339=seconds | tr " " T' # in 2 minutes
-subnet_validator_end_time_command_default: 'date -d ''1 week'' --rfc-3339=seconds | tr " " T' # in 1 week
-subnet_validator_start_time_command_darwin: "date -v+2M '+%Y-%m-%dT%H:%M:%SZ'" # in 2 minutes
-subnet_validator_end_time_command_darwin: "date -v+1w '+%Y-%m-%dT%H:%M:%SZ'" # in 1 week
-subnet_validator_start_time: '{{ lookup("pipe", lookup("vars", "subnet_validator_start_time_command_"+ansible_os_family | lower, default=subnet_validator_start_time_command_default)) }}'
-subnet_validator_end_time: '{{ lookup("pipe", lookup("vars", "subnet_validator_end_time_command_"+ansible_os_family | lower, default=subnet_validator_end_time_command_default)) }}'
-subnet_validator_stake_or_weight: 1 # in AVAX
-subnet_validator_delegation_fee: 2 # in percent
+validator_start_time_command_default: 'date -d ''2 minutes'' --rfc-3339=seconds | tr " " T' # in 2 minutes
+validator_end_time_command_default: 'date -d ''1 week'' --rfc-3339=seconds | tr " " T' # in 1 week
+validator_start_time_command_darwin: "date -v+2M '+%Y-%m-%dT%H:%M:%SZ'" # in 2 minutes
+validator_end_time_command_darwin: "date -v+1w '+%Y-%m-%dT%H:%M:%SZ'" # in 1 week
+validator_start_time: '{{ lookup("pipe", lookup("vars", "validator_start_time_command_"+ansible_os_family | lower, default=validator_start_time_command_default)) }}'
+validator_end_time: '{{ lookup("pipe", lookup("vars", "validator_end_time_command_"+ansible_os_family | lower, default=validator_end_time_command_default)) }}'
+validator_stake_or_weight: 1 # in AVAX
+validator_delegation_fee: 2 # in percent
 
 # Ash CLI configuration
 ## Whether to install and configure Ash CLI on the node

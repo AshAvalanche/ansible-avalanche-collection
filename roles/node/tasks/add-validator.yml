@@ -23,4 +23,11 @@
     name: ash.avalanche.subnet
     tasks_from: add-validator
   vars:
+    subnet_avalanche_network_id: "{{ avalanchego_network_id }}"
     node_id: "{{ node_info_res.output.id }}"
+    subnet_txs_private_key: "{{ validator_txs_private_key }}"
+    subnet_txs_key_encoding: "{{ validator_txs_key_encoding }}"
+    subnet_validator_start_time: "{{ validator_start_time }}"
+    subnet_validator_end_time: "{{ validator_end_time }}"
+    subnet_validator_stake_or_weight: "{{ validator_stake_or_weight }}"
+    subnet_validator_delegation_fee: "{{ validator_delegation_fee }}"

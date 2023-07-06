@@ -1,5 +1,32 @@
 # Changelog
 
+## [v0.8.2](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.8.2) (2023-07-06)
+
+[Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.8.1...v0.8.2)
+
+**Breaking changes:**
+
+- Fix add-validator vars propagation [\#82](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/82) ([Nuttymoon](https://github.com/Nuttymoon))
+
+**Implemented enhancements:**
+
+- Let users override computed avalanchego\_node\_json values [\#76](https://github.com/AshAvalanche/ansible-avalanche-collection/issues/76)
+
+**Fixed bugs:**
+
+- Validator variables are not propagated properly in `avalanche.node.add-validator` [\#80](https://github.com/AshAvalanche/ansible-avalanche-collection/issues/80)
+- Validation period start/end time generation doesn't work on MacOS [\#73](https://github.com/AshAvalanche/ansible-avalanche-collection/issues/73)
+
+**Closed issues:**
+
+- Implement v1.10.3 configurations changes [\#72](https://github.com/AshAvalanche/ansible-avalanche-collection/issues/72)
+
+**Merged pull requests:**
+
+- feat: avalanchego\_node\_json precedence in combine [\#77](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/77) ([leopaul36](https://github.com/leopaul36))
+- 73 date command per dist [\#75](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/75) ([leopaul36](https://github.com/leopaul36))
+- feat: adapt config to v1.10.3 [\#74](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/74) ([leopaul36](https://github.com/leopaul36))
+
 ## [v0.8.1](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.8.1) (2023-06-14)
 
 [Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.8.0...v0.8.1)

@@ -6,42 +6,49 @@
   tags:
     - install
     - avalanchego
+    - install-avalanchego
 
 - name: Clean plugins dir
   import_tasks: clean-plugins-dir.yml
   tags:
     - install
     - vms
+    - install-vms
 
 - name: Install VMs
   import_tasks: install-vms.yml
   tags:
     - install
     - vms
+    - install-vms
 
 - name: Configure AvalancheGo node
   import_tasks: config-node.yml
   tags:
     - config
     - avalanchego
+    - config-avalanchego
 
 - name: Configure subnets
   import_tasks: config-subnets.yml
   tags:
     - config
     - subnets
+    - config-subnets
 
 - name: Configure chains
   import_tasks: config-chains.yml
   tags:
     - config
     - chains
+    - config-chains
 
 - name: Start AvalancheGo node
   import_tasks: start.yml
   tags:
     - start
     - avalanchego
+    - start-avalanchego
 
 - name: Generate Ash CLI local network configuration
   set_fact:
@@ -53,16 +60,33 @@
   tags:
     - install
     - ash_cli
+    - install-ash_cli
   vars:
     ash_cli_local_endpoint: "{{ 'https' if avalanchego_https_enabled else 'http' }}://{{ '127.0.0.1' if avalanchego_http_host == '0.0.0.0' else avalanchego_http_host }}:{{ avalanchego_http_port }}"
-  when: avalanchego_network_id == 'local'
+  when:
+    - ash_cli_install
+    - avalanchego_network_id == 'local'
 
-- name: Install and configure Ash CLI
+- name: Install Ash CLI
   import_role:
     name: ash.avalanche.ash_cli
+    tasks_from: install.yml
   tags:
     - install
     - ash_cli
+    - install-ash_cli
+  vars:
+    ash_cli_avalanche_network_id: "{{ avalanchego_network_id }}"
+  when: ash_cli_install
+
+- name: Configure Ash CLI
+  import_role:
+    name: ash.avalanche.ash_cli
+    tasks_from: config.yml
+  tags:
+    - config
+    - ash_cli
+    - config-ash_cli
   vars:
     ash_cli_avalanche_network_id: "{{ avalanchego_network_id }}"
   when: ash_cli_install

@@ -2,7 +2,11 @@
 # Copyright (c) 2022-2023, E36 Knots
 ---
 - name: Install Ash CLI
-  include_tasks: install.yml
+  import_tasks: install.yml
+  tags:
+    - install
 
 - name: Configure Ash CLI
-  include_tasks: config.yml
+  import_tasks: config.yml
+  tags:
+    - config

@@ -1,10 +1,13 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # Copyright (c) 2022-2023, E36 Knots
 ---
-- name: Set bootstrap_ip
+- name: Set bootstrap_ips variable
   set_fact:
-    bootstrap_ip: "{{ hostvars[groups['bootstrap_node'][0]]['ansible_host'] }}"
-  when: avalanchego_network_id == 'local'
+    bootstrap_ips: |
+      {{ (bootstrap_ips | default([]))
+         + [hostvars[item]['ansible_host'] + ':' + (avalanchego_staking_port | string)] }}
+  when: avalanchego_network_id not in ['mainnet', 'fuji']
+  loop: "{{ groups['bootstrap_nodes'] }}"
 
 - name: Construct public-ip conf
   set_fact:
@@ -15,11 +18,11 @@
   set_fact:
     node_conf_bootstrap: |
       {{ {
-           'bootstrap-ips': '' if inventory_hostname == groups['bootstrap_node'][0]
-             else (bootstrap_ip + ':' + (avalanchego_staking_port | string)),
-           'bootstrap-ids': '' if inventory_hostname == groups['bootstrap_node'][0]
-             else (avalanchego_bootstrap_node_id) 
-         } if avalanchego_network_id == 'local' else {} }}
+           'bootstrap-ips': '' if inventory_hostname in groups['bootstrap_nodes']
+             else (bootstrap_ips | join(',')),
+           'bootstrap-ids': '' if inventory_hostname in groups['bootstrap_nodes']
+             else (avalanchego_bootstrap_node_ids | join(','))
+         } if avalanchego_network_id not in ['mainnet', 'fuji'] else {} }}
 
 - name: Construct staking-tls-*-file conf
   set_fact:

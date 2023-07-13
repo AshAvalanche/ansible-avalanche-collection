@@ -1,14 +1,14 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # Copyright (c) 2022-2023, E36 Knots
 ---
-- name: Provision bootstrap node
-  hosts: bootstrap_node
+- name: Provision bootstrap nodes
+  hosts: bootstrap_nodes
   become: true
   roles:
     - role: ash.avalanche.node
 
 - name: Provision other network nodes
-  hosts: avalanche_nodes:!bootstrap_node
+  hosts: avalanche_nodes:!bootstrap_nodes
   become: true
   roles:
     - role: ash.avalanche.node

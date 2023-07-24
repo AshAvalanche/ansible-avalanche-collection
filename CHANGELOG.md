@@ -1,5 +1,21 @@
 # Changelog
 
+## [v0.8.3](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.8.3) (2023-07-24)
+
+[Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.8.2...v0.8.3)
+
+**Breaking changes:**
+
+- Add Ansible tags + allow multiple bootstrap nodes [\#84](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/84) ([Nuttymoon](https://github.com/Nuttymoon))
+
+**Implemented enhancements:**
+
+- Allow to provide multiple bootstrap nodes [\#83](https://github.com/AshAvalanche/ansible-avalanche-collection/issues/83)
+
+**Closed issues:**
+
+- Document the admin and validate features [\#9](https://github.com/AshAvalanche/ansible-avalanche-collection/issues/9)
+
 ## [v0.8.2](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.8.2) (2023-07-06)
 
 [Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.8.1...v0.8.2)

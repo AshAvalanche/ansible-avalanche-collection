@@ -50,23 +50,6 @@
     - avalanchego
     - start-avalanchego
 
-- name: Generate Ash CLI local network configuration
-  set_fact:
-    ash_cli_custom_networks:
-      local:
-        pchain_rpc_url: "{{ ash_cli_local_endpoint }}/ext/bc/P"
-        cchain_rpc_url: "{{ ash_cli_local_endpoint }}/ext/bc/C/rpc"
-        xchain_rpc_url: "{{ ash_cli_local_endpoint }}/ext/bc/X"
-  tags:
-    - install
-    - ash_cli
-    - install-ash_cli
-  vars:
-    ash_cli_local_endpoint: "{{ 'https' if avalanchego_https_enabled else 'http' }}://{{ '127.0.0.1' if avalanchego_http_host == '0.0.0.0' else avalanchego_http_host }}:{{ avalanchego_http_port }}"
-  when:
-    - ash_cli_install
-    - avalanchego_network_id == 'local'
-
 - name: Install Ash CLI
   import_role:
     name: ash.avalanche.ash_cli
@@ -79,6 +62,23 @@
     ash_cli_avalanche_network_id: "{{ avalanchego_network_id }}"
   when: ash_cli_install
 
+- name: Generate Ash CLI local network configuration
+  set_fact:
+    ash_cli_networks:
+      local:
+        pchain_rpc_url: "{{ ash_cli_local_endpoint }}/ext/bc/P"
+        cchain_rpc_url: "{{ ash_cli_local_endpoint }}/ext/bc/C/rpc"
+        xchain_rpc_url: "{{ ash_cli_local_endpoint }}/ext/bc/X"
+  tags:
+    - config
+    - ash_cli
+    - config-ash_cli
+  vars:
+    ash_cli_local_endpoint: "{{ 'https' if avalanchego_https_enabled else 'http' }}://{{ '127.0.0.1' if avalanchego_http_host == '0.0.0.0' else avalanchego_http_host }}:{{ avalanchego_http_port }}"
+  when:
+    - ash_cli_install
+    - avalanchego_network_id == 'local'
+
 - name: Configure Ash CLI
   import_role:
     name: ash.avalanche.ash_cli
@@ -89,4 +89,5 @@
     - config-ash_cli
   vars:
     ash_cli_avalanche_network_id: "{{ avalanchego_network_id }}"
+    ash_cli_custom_networks: "{{ ash_cli_networks }}"
   when: ash_cli_install

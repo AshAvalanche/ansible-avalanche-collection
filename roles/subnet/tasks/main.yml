@@ -4,27 +4,28 @@
 - name: Check that Ash CLI is installed
   shell: ash help
   changed_when: false
+  tags:
+    - create
+    - create-subnet
+    - create-blockchains
 
 - name: Create the Subnet
-  include_tasks: create-subnet.yml
+  import_tasks: create-subnet.yml
+  tags:
+    - create
+    - create-subnet
 
 - name: Create the blockchains
-  include_tasks: create-blockchain.yml
-  vars:
-    subnet_id: "{{ subnet_create_res.output.id }}"
-  loop: "{{ subnet_blockchains_list }}"
-  loop_control:
-    loop_var: blockchain
-    label: "{{ blockchain.name }}"
+  import_tasks: create-blockchains.yml
+  tags:
+    - create
+    - create-blockchains
 
 - name: Add nodes as Subnet validators from node IDs
-  include_tasks: add-validator.yml
-  vars:
-    subnet_id: "{{ subnet_create_res.output.id }}"
-  loop: "{{ subnet_validators_ids_list }}"
-  loop_control:
-    loop_var: node_id
-  when: subnet_validators_add
+  import_tasks: add-validators.yml
+  tags:
+    - validate
+    - add-validators
 
 - name: Get Subnet information
   ash.avalanche.ash_cmd:
@@ -32,3 +33,9 @@
   environment:
     AVALANCHE_NETWORK: "{{ subnet_avalanche_network_id }}"
   register: subnet_info_res
+  tags:
+    - create
+    - create-subnet
+    - create-blockchains
+    - validate
+    - add-validators

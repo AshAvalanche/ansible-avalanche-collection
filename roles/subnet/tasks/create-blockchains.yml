@@ -1,0 +1,10 @@
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (c) 2022-2023, E36 Knots
+---
+- include_tasks: create-blockchain.yml
+  vars:
+    subnet_id: "{{ subnet_create_res.output.id }}"
+  loop: "{{ subnet_blockchains_list }}"
+  loop_control:
+    loop_var: blockchain
+    label: "{{ blockchain.name }}"

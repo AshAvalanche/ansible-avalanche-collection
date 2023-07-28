@@ -13,9 +13,12 @@
   vars:
     subnet_id: "{{ hostvars[groups['subnet_txs_host'][0]].subnet_info_res.output.id }}"
   tasks:
-    - include_role:
+    - import_role:
         name: ash.avalanche.node
         tasks_from: add-validator
+      tags:
+        - validate
+        - add-validators
 
 - name: Subnet creation recap
   hosts: subnet_txs_host[0]

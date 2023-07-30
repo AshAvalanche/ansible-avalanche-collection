@@ -39,3 +39,14 @@
     - create-blockchains
     - validate
     - add-validators
+
+- name: Cache Subnet information
+  set_fact:
+    subnet_info: "{{ subnet_info_res.output }}"
+    cacheable: true
+  tags:
+    - create
+    - create-subnet
+    - create-blockchains
+    - validate
+    - add-validators

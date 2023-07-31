@@ -10,3 +10,4 @@
   loop: "{{ ash_cli_custom_networks | dict2items }}"
   loop_control:
     loop_var: network
+  when: ash_cli_custom_networks is defined

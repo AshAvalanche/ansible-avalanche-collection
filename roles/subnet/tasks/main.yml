@@ -21,11 +21,14 @@
     - create
     - create-blockchains
 
-- name: Add nodes as Subnet validators from node IDs
+- name: Add nodes as Subnet validators
   import_tasks: add-validators.yml
+  vars:
+    subnet_id: "{{ subnet_create_res.output.id }}"
   tags:
     - validate
     - add-validators
+  when: subnet_validators_add
 
 - name: Get Subnet information
   ash.avalanche.ash_cmd:

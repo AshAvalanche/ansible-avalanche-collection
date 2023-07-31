@@ -1,10 +1,20 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # Copyright (c) 2022-2023, E36 Knots
 ---
-- include_tasks: add-validator.yml
+# /!\ Cannot be used on mainnet /!\
+# Parameters
+# - subnet_id: ID of the Subnet to add the validator to
+# - subnet_validators_params: Specs of the validators to add to the Subnet
+
+- name: Add nodes as Subnet validators
+  include_tasks: add-validator.yml
   vars:
-    subnet_id: "{{ subnet_create_res.output.id }}"
-  loop: "{{ subnet_validators_ids_list }}"
+    node_id: "{{ validator.node_id }}"
+    start_time: "{{ validator.start_time }}"
+    end_time: "{{ validator.end_time }}"
+    stake_or_weight: "{{ validator.stake_or_weight }}"
+    delegation_fee: "{{ validator.delegation_fee }}"
+  loop: "{{ subnet_validators_params }}"
   loop_control:
-    loop_var: node_id
-  when: subnet_validators_add
+    loop_var: validator
+    label: "{{ validator.node_id }}"

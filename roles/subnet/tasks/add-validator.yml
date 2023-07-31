@@ -5,6 +5,10 @@
 # Parameters
 # - subnet_id: ID of the Subnet to add the validator to
 # - node_id: ID of the node to add as validator
+# - start_time: Start time of the validation period
+# - end_time: End time of the validation period
+# - stake_or_weight: Stake in AVAX or weight of the validator
+# - delegation_fee: Delegation fee of the validator
 
 - name: Check if the node is already a validator (1/2)
   ash.avalanche.ash_cmd:

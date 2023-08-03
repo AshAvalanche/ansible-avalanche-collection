@@ -41,7 +41,8 @@ avalanchego_https_cert_file: "{{ avalanchego_https_certs_dir }}/{{ inventory_hos
 avalanchego_https_key_file: "{{ avalanchego_https_certs_dir }}/{{ inventory_hostname }}.key"
 
 # Public IP
-avalanchego_static_public_ip: true
+## Set to "" to resolve the public IP automatically using NAT traversal
+avalanchego_public_ip: "{{ ansible_host }}"
 
 # Staking
 avalanchego_staking_port: 9651
@@ -68,6 +69,8 @@ avalanchego_vms_install: []
 
 # node.json
 avalanchego_node_json:
+  # Public IP
+  public-ip: "{{ avalanchego_public_ip }}"
   # HTTP
   http-host: "{{ avalanchego_http_host }}"
   http-port: "{{ avalanchego_http_port }}"

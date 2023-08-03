@@ -5,12 +5,14 @@
   service:
     name: avalanchego
     state: restarted
+  when: avalanchego_auto_restart
 
 - name: Restart avalanchego
   service:
     name: avalanchego
     state: restarted
   listen: New VM
+  when: avalanchego_auto_restart
 # Cannot use admin.loadVMs yet as it does not detect version changes
 # See https://github.com/ava-labs/avalanchego/issues/1030
 # when: avalanchego_version is version('1.7.6', '<')

@@ -24,6 +24,10 @@ avalanchego_log_dir: /var/log/avalanche/avalanchego
 avalanchego_user: avalanche
 avalanchego_group: avalanche
 
+# Auto-restart
+## The restart is triggered by any version or configuration change
+avalanchego_auto_restart: true
+
 # HTTP
 ## Change this to public IP to accept API calls from the outside
 avalanchego_http_host: 127.0.0.1
@@ -37,7 +41,8 @@ avalanchego_https_cert_file: "{{ avalanchego_https_certs_dir }}/{{ inventory_hos
 avalanchego_https_key_file: "{{ avalanchego_https_certs_dir }}/{{ inventory_hostname }}.key"
 
 # Public IP
-avalanchego_static_public_ip: true
+## Set to "" to resolve the public IP automatically using NAT traversal
+avalanchego_public_ip: "{{ ansible_host }}"
 
 # Staking
 avalanchego_staking_port: 9651
@@ -64,15 +69,14 @@ avalanchego_vms_install: []
 
 # node.json
 avalanchego_node_json:
+  # Public IP
+  public-ip: "{{ avalanchego_public_ip }}"
   # HTTP
   http-host: "{{ avalanchego_http_host }}"
   http-port: "{{ avalanchego_http_port }}"
-  api-admin-enabled: true
-  api-keystore-enabled: true
   http-tls-enabled: "{{ avalanchego_https_enabled }}"
   http-allowed-hosts: "{{ avalanchego_http_allowed_hosts }}"
   # Staking
-  staking-enabled: true
   staking-port: "{{ avalanchego_staking_port }}"
   # Consensus
   network-id: "{{ avalanchego_network_id }}"
@@ -82,6 +86,7 @@ avalanchego_node_json:
   db-dir: "{{ avalanchego_db_dir }}"
   subnet-config-dir: "{{ avalanchego_subnets_conf_dir }}"
   chain-config-dir: "{{ avalanchego_chains_conf_dir }}"
+  chain-aliases-file: "{{ avalanchego_chains_conf_dir }}/aliases.json"
   vm-aliases-file: "{{ avalanchego_vms_conf_dir }}/aliases.json"
   log-dir: "{{ avalanchego_log_dir }}"
   # Logging
@@ -93,6 +98,11 @@ avalanchego_node_json:
 avalanchego_subnets_configs: {}
 
 # Chains configurations
+avalanchego_chains_aliases:
+  {}
+  ## Example:
+  ##   q2aTwKuyzgs8pynF7UXBZCU7DejbZbZ6EUyHr3JQzYgwNPUPi:
+  ##     - DFK
 avalanchego_chains_configs:
   C:
     state-sync-enabled: true

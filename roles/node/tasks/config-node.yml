@@ -9,11 +9,6 @@
   when: avalanchego_network_id not in ['mainnet', 'fuji']
   loop: "{{ groups['bootstrap_nodes'] }}"
 
-- name: Construct public-ip conf
-  set_fact:
-    node_conf_public_ip: |
-      {{ {'public-ip': ansible_host} if avalanchego_static_public_ip else {} }}
-
 - name: Construct bootstrap-* conf
   set_fact:
     node_conf_bootstrap: |
@@ -44,7 +39,6 @@
   set_fact:
     node_conf_json: |
       {{ (
-        node_conf_public_ip,
         node_conf_bootstrap,
         node_conf_staking_tls_files,
         node_conf_http_tls_files
@@ -103,9 +97,17 @@
       notify: Restart avalanchego
   when: avalanchego_https_enabled
 
-- name: Template aliases.json file
+- name: Generate chains aliases.json
+  copy:
+    content: "{{ avalanchego_chains_aliases | to_nice_json(indent=2) }}\n"
+    dest: "{{ avalanchego_chains_conf_dir }}/aliases.json"
+    owner: "{{ avalanchego_user }}"
+    group: "{{ avalanchego_group }}"
+  notify: Restart avalanchego
+
+- name: Template VM aliases.json file
   template:
-    src: aliases.json.j2
+    src: vm-aliases.json.j2
     dest: "{{ avalanchego_vms_conf_dir }}/aliases.json"
     lstrip_blocks: true
     owner: "{{ avalanchego_user }}"

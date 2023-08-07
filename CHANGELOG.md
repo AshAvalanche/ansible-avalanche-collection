@@ -1,5 +1,32 @@
 # Changelog
 
+## [v0.8.5](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.8.5) (2023-08-07)
+
+[Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.8.4...v0.8.5)
+
+**Breaking changes:**
+
+- Chain aliases and public ip config [\#89](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/89) ([Nuttymoon](https://github.com/Nuttymoon))
+
+**Implemented enhancements:**
+
+- Allow to specify the validation parameters for each validator [\#87](https://github.com/AshAvalanche/ansible-avalanche-collection/issues/87)
+- Allow to configure the `public-ip` with a role variable instead of `ansible_host` [\#56](https://github.com/AshAvalanche/ansible-avalanche-collection/issues/56)
+- Use `chain-aliases-file` property to create chain aliases [\#39](https://github.com/AshAvalanche/ansible-avalanche-collection/issues/39)
+
+**Closed issues:**
+
+- ash.avalanche.ash\_cli fails when ash\_cli\_custom\_networks = {} [\#85](https://github.com/AshAvalanche/ansible-avalanche-collection/issues/85)
+
+**Merged pull requests:**
+
+- Subnet validators params [\#88](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/88) ([Nuttymoon](https://github.com/Nuttymoon))
+- feat: verify ash\_cli\_custom\_networks is defined [\#86](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/86) ([leopaul36](https://github.com/leopaul36))
+
+## [v0.8.4](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.8.4) (2023-07-26)
+
+[Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.8.3...v0.8.4)
+
 ## [v0.8.3](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.8.3) (2023-07-24)
 
 [Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.8.2...v0.8.3)

@@ -16,7 +16,6 @@ ash_cli_custom_networks:
   {}
   ## Example for the `local` network
   ## local:
-  ##   info_rpc_url: "http://127.0.0.1:9650/ext/info"
   ##   pchain_rpc_url: "http://127.0.0.1:9650/ext/bc/P"
   ##   cchain_rpc_url: "http://127.0.0.1:9650/ext/bc/C/rpc"
   ##   xchain_rpc_url: "http://127.0.0.1:9650/ext/bc/X"

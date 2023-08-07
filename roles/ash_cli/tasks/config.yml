@@ -6,7 +6,8 @@
     cmd: ash conf init --config {{ ash_cli_conf_dir }}/default.yml
     creates: "{{ ash_cli_conf_dir }}/default.yml"
 
-- include_tasks: config-custom-network.yml
+- name: Add custom networks to the Ash CLI configuration
+  include_tasks: config-custom-network.yml
   loop: "{{ ash_cli_custom_networks | dict2items }}"
   loop_control:
     loop_var: network

@@ -58,14 +58,21 @@ subnet_blockchains_list:
 ## Whether to add validator nodes to the Subnet
 ## The nodes are looked up in the `subnet_validators_ids_list` variable
 subnet_validators_add: true
-## List of node IDs to add to the Subnet (useful for third-party nodes)
-subnet_validators_ids_list: []
+## Validation params for each validator to add to the Subnet (see below)
+subnet_validators_params:
+  []
+  ## Example:
+  ##   - node_id: NodeID-7Xhw2mDxuDS44j42TCB6U5579esbSt3Lg
+  ##     start_time: "{{ subnet_validator_start_time }}"
+  ##     end_time: "{{ subnet_validator_end_time }}"
+  ##     stake_or_weight: 100
+  ##     delegation_fee: 2
 
-## Validation parameters
-subnet_validator_start_time_command_default: 'date -d ''2 minutes'' --rfc-3339=seconds | tr " " T' # in 2 minutes
-subnet_validator_end_time_command_default: 'date -d ''1 week'' --rfc-3339=seconds | tr " " T' # in 1 week
+## Default validation parameters
+subnet_validator_start_time_command_default: 'date -d "2 minutes" --rfc-3339=seconds | tr " " T' # in 2 minutes
+subnet_validator_end_time_command_default: 'date -d "1 week 2 minutes" --rfc-3339=seconds | tr " " T' # in 1 week and 2 minutes
 subnet_validator_start_time_command_darwin: "date -v+2M '+%Y-%m-%dT%H:%M:%SZ'" # in 2 minutes
-subnet_validator_end_time_command_darwin: "date -v+1w '+%Y-%m-%dT%H:%M:%SZ'" # in 1 week
+subnet_validator_end_time_command_darwin: "date -v+1w -v+2M '+%Y-%m-%dT%H:%M:%SZ'" # in 1 week and 2 minutes
 subnet_validator_start_time: '{{ lookup("pipe", lookup("vars", "subnet_validator_start_time_command_"+ansible_os_family | lower, default=subnet_validator_start_time_command_default)) }}'
 subnet_validator_end_time: '{{ lookup("pipe", lookup("vars", "subnet_validator_end_time_command_"+ansible_os_family | lower, default=subnet_validator_end_time_command_default)) }}'
 ### Stake in AVAX for the Primary Network or weight for permissioned Subnets

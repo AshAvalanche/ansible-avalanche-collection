@@ -21,6 +21,31 @@ FORBIDDEN_FLAGS = [
 ]
 
 
+# Check if the command is valid for the CLI
+# Also check if the command triggers a transaction
+def check_command(module: AnsibleModule, command: list()) -> (bool, bool):
+    # If the command is valid, then the help command should return 0
+    help_command = command.copy()
+    help_command.append("--help")
+    help_result = module.run_command(" ".join(help_command))
+    if help_result[0] > 0:
+        return False, False
+
+    # If the command triggers a transaction, then the version command contains 'tx_cmd=true'
+    tx_cmd_regex = r"tx_cmd=(true|false)"
+    version_command = command.copy()
+    version_command.append("--version")
+    version_result = module.run_command(" ".join(version_command))
+    tx_cmd = re.search(tx_cmd_regex, version_result[1])
+    if tx_cmd:
+        if tx_cmd.group(1) == "true":
+            return True, True
+        else:
+            return True, False
+
+    return True, False
+
+
 def run_module():
     # Define module arguments
     module_args = dict(
@@ -45,9 +70,8 @@ def run_module():
     module = AnsibleModule(argument_spec=module_args, supports_check_mode=False)
 
     # Fail if there are flags/options in the command variable
-    # Regex to match flags/options
-    regex = r" --?\w+"
-    if re.search(regex, " ".join(module.params["command"])):
+    flag_regex = r" --?\w+"
+    if re.search(flag_regex, " ".join(module.params["command"])):
         module.fail_json(
             msg="The command parameter can not contain options or flags. Please use the 'options' parameter.",
             **result,
@@ -55,6 +79,15 @@ def run_module():
 
     # Build the command
     command = [module.params["ash_path"]] + module.params["command"]
+
+    # Check if the command is valid
+    valid, transaction = check_command(module, command)
+    if not valid:
+        module.fail_json(
+            msg=f"'{command}' is not a valid command.",
+            command=" ".join(command),
+            **result,
+        )
 
     # Add the params
     for key, value in module.params["options"].items():
@@ -105,8 +138,9 @@ def run_module():
             **result,
         )
 
-    # TODO: act on result['changed'] when the cli will perform transactions
-    # Result['changed'] = True
+    # If the command triggered a transaction, then set changed to true
+    if transaction:
+        result['changed'] = True
 
     # Save the command that was executed
     result["command"] = " ".join(command)

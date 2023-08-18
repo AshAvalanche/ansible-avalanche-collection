@@ -7,10 +7,10 @@
     command: avalanche subnet create
     options:
       wait: true
+    avalanche_private_key: "{{ subnet_txs_private_key }}"
   environment:
     AVALANCHE_NETWORK: "{{ subnet_avalanche_network_id }}"
     AVALANCHE_KEY_ENCODING: "{{ subnet_txs_key_encoding }}"
-    AVALANCHE_PRIVATE_KEY: "{{ subnet_txs_private_key }}"
   register: subnet_create_res
 
 - name: Get Subnet information

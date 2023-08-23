@@ -60,10 +60,10 @@
       vm-id: "{{ avalanchego_vms_list[blockchain.vm].id }}"
       genesis-str: "{{ blockchain_genesis_bytes_res.output.genesisBytes }}"
       wait: true
+    avalanche_private_key: "{{ subnet_txs_private_key }}"
   environment:
     AVALANCHE_NETWORK: "{{ subnet_avalanche_network_id }}"
     AVALANCHE_KEY_ENCODING: "{{ subnet_txs_key_encoding }}"
-    AVALANCHE_PRIVATE_KEY: "{{ subnet_txs_private_key }}"
   register: blockchain_create_res
 
 - name: Get Subnet information

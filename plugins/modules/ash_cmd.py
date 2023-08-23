@@ -12,9 +12,42 @@ import re
 
 from ansible.module_utils.basic import AnsibleModule
 
+FORBIDDEN_FLAGS = [
+    "config",
+    "json",
+    "private-key",
+    "help",
+    "version",
+]
+
+
+# Check if the command is valid for the CLI
+# Also check if the command triggers a transaction
+def check_command(module: AnsibleModule, command: list()) -> (bool, bool):
+    # If the command is valid, then the help command should return 0
+    help_command = command.copy()
+    help_command.append("--help")
+    help_result = module.run_command(" ".join(help_command))
+    if help_result[0] > 0:
+        return False, False
+
+    # If the command triggers a transaction, then the version command contains 'tx_cmd=true'
+    tx_cmd_regex = r"tx_cmd=(true|false)"
+    version_command = command.copy()
+    version_command.append("--version")
+    version_result = module.run_command(" ".join(version_command))
+    tx_cmd = re.search(tx_cmd_regex, version_result[1])
+    if tx_cmd:
+        if tx_cmd.group(1) == "true":
+            return True, True
+        else:
+            return True, False
+
+    return True, False
+
 
 def run_module():
-    # define module arguments
+    # Define module arguments
     module_args = dict(
         command=dict(type="list", required=True),
         options=dict(type="dict", required=False, default={}),
@@ -26,55 +59,78 @@ def run_module():
             required=False,
             default="/etc/avalanche/ash-cli/conf/default.yml",
         ),
+        avalanche_private_key=dict(type="str", required=False, no_log=True),
         json=dict(type="bool", required=False, default=True),
     )
 
-    # define result argument
+    # Define result argument
     result = dict(changed=False)
 
-    # create the module instance
+    # Create the module instance
     module = AnsibleModule(argument_spec=module_args, supports_check_mode=False)
 
-    # stop here if there are flags/options in the command variable
-    # regex to match flags/options
-    regex = r" --?\w+"
-    if re.search(regex, " ".join(module.params["command"])):
+    # Fail if there are flags/options in the command variable
+    flag_regex = r" --?\w+"
+    if re.search(flag_regex, " ".join(module.params["command"])):
         module.fail_json(
-            msg="The command parameter can not contain options or flags. Please use the options parameter.",
+            msg="The command parameter can not contain options or flags. Please use the 'options' parameter.",
             **result,
         )
 
-    # build the command
+    # Build the command
     command = [module.params["ash_path"]] + module.params["command"]
 
-    # add the params
+    # Check if the command is valid
+    valid, transaction = check_command(module, command)
+    if not valid:
+        module.fail_json(
+            msg=f"'{command}' is not a valid command.",
+            command=" ".join(command),
+            **result,
+        )
+
+    # Add the params
     for key, value in module.params["options"].items():
-        # if value is boolean false, then skip
+        # If key is in FORBIDDEN_FLAGS, then fail
+        if key in FORBIDDEN_FLAGS:
+            module.fail_json(
+                msg="Passing '{}' as an option is not allowed. Please use the appropriate parameter.".format(
+                    key
+                ),
+                **result,
+            )
+        # If value is boolean false, then skip
         if value is False:
             continue
         command.append("--" + key)
-        # if value is boolean true, then it's a flag
+        # If value is boolean true, then it's a flag
         if value is True:
             continue
-        # if value is int, cast to string
+        # If value is int, cast to string
         if isinstance(value, int):
             value = str(value)
-        # if value is float, cast to string
+        # If value is float, cast to string
         if isinstance(value, float):
             value = str(value)
         command.append(value)
-    # force json output
+
+    # Add the private key
+    if module.params["avalanche_private_key"]:
+        command.append("--private-key")
+        command.append(module.params["avalanche_private_key"])
+
+    # Force json output
     if module.params["json"]:
         command.append("--json")
 
-    # add the config flag
+    # Add the config flag
     command.append("--config")
     command.append(module.params["ash_config"])
 
-    # run the command
+    # Run the command
     run = module.run_command(" ".join(command))
 
-    # exit with failure if rc is not 0
+    # Exit with failure if rc is not 0
     if run[0] > 0:
         module.fail_json(
             msg=run[2],
@@ -82,16 +138,17 @@ def run_module():
             **result,
         )
 
-    # TODO: act on result['changed'] when the cli will perform transactions
-    # result['changed'] = True
+    # If the command triggered a transaction, then set changed to true
+    if transaction:
+        result['changed'] = True
 
-    # save the command that was executed
+    # Save the command that was executed
     result["command"] = " ".join(command)
 
-    # save the json output from stdout
+    # Save the json output from stdout
     result["output"] = json.loads(run[1])
 
-    # exit with the result if there was no error
+    # Exit with the result if there was no error
     module.exit_json(**result)
 
 

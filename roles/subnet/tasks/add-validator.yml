@@ -45,10 +45,10 @@
       start-time: "{{ start_time }}"
       end-time: "{{ end_time }}"
       delegation-fee: "{{ delegation_fee }}"
+    avalanche_private_key: "{{ subnet_txs_private_key }}"
   environment:
     AVALANCHE_NETWORK: "{{ subnet_avalanche_network_id }}"
     AVALANCHE_KEY_ENCODING: "{{ subnet_txs_key_encoding }}"
-    AVALANCHE_PRIVATE_KEY: "{{ subnet_txs_private_key }}"
   when:
     - not node_is_validator
     - not node_is_pending_validator

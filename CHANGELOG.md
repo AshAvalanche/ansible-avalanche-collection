@@ -1,5 +1,21 @@
 # Changelog
 
+## [v0.8.6](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.8.6) (2023-08-23)
+
+[Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.8.5...v0.8.6)
+
+**Implemented enhancements:**
+
+- The `ash_cmd` module should be in status `changed` if modifications were made [\#81](https://github.com/AshAvalanche/ansible-avalanche-collection/issues/81)
+
+**Security fixes:**
+
+- Use an argument to pass the private key in `ash_cmd` module [\#79](https://github.com/AshAvalanche/ansible-avalanche-collection/issues/79)
+
+**Merged pull requests:**
+
+- feat\(ash\_cmd\): improve mod security + output [\#91](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/91) ([Nuttymoon](https://github.com/Nuttymoon))
+
 ## [v0.8.5](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.8.5) (2023-08-07)
 
 [Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.8.4...v0.8.5)

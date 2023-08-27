@@ -1,0 +1,13 @@
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (c) 2022-2023, E36 Knots
+---
+# Add nodes as Subnet validators (to `add_validators_subnet_id` Subnet)
+- name: Add Subnet validators
+  hosts: subnet_txs_host[0]
+  tasks:
+    - name: Add Subnet validators
+      include_role:
+        name: ash.avalanche.subnet
+        tasks_from: add-validators
+      vars:
+        subnet_id: "{{ add_validators_subnet_id }}"

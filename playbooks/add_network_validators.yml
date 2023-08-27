@@ -1,12 +1,12 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # Copyright (c) 2022-2023, E36 Knots
 ---
-# Add nodes as network validator (on the Primary Network)
-- name: Add network validator
+# Add nodes as network validators (on the Primary Network)
+- name: Add network validators
   hosts: avalanche_nodes
   serial: 1
   tasks:
-    - name: Add network validator
+    - name: Add network validators
       include_role:
         name: ash.avalanche.node
         tasks_from: add-validator

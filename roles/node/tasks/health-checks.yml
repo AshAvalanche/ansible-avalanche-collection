@@ -8,6 +8,7 @@
 # - avalanchego_health_checks_retries: Number of retries for health checks (default: 60)
 # - avalanchego_health_checks_delay: Delay between retries for health checks in seconds (default: 10)
 # Outputs:
+# - avalanchego_state: State of the avalanchego.service (running/stopped/failed/unknown)
 # - avalanchego_is_bootstrapped: Dictionary of bootstrap status on each chain (true/false)
 # - avalanchego_is_healthy: Dictionary of healthy status on each Subnet (true/false)
 

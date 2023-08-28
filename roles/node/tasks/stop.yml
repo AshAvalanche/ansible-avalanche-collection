@@ -1,8 +1,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # Copyright (c) 2022-2023, E36 Knots
 ---
-- name: Start and enable avalanchego.service
+- name: Stop avalanchego.service
   service:
     name: avalanchego
-    state: started
-    enabled: true
+    state: stopped

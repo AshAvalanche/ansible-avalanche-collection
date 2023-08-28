@@ -43,6 +43,9 @@
     - chains
     - config-chains
 
+- name: Restart AvalancheGo and reload VMs if needed
+  meta: flush_handlers
+
 - name: Start AvalancheGo node
   import_tasks: start.yml
   tags:

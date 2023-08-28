@@ -1,5 +1,13 @@
 # Changelog
 
+## [v0.8.7](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.8.7) (2023-08-28)
+
+[Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.8.6...v0.8.7)
+
+**Breaking changes:**
+
+- feat\(playbooks\): add add\_subnet\_validators [\#93](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/93) ([Nuttymoon](https://github.com/Nuttymoon))
+
 ## [v0.8.6](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.8.6) (2023-08-23)
 
 [Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.8.5...v0.8.6)

@@ -5,10 +5,30 @@
 # Parameters
 # - subnet_id: ID of the Subnet to add the validator to
 # - node_id: ID of the node to add as validator
-# - start_time: Start time of the validation period
-# - end_time: End time of the validation period
+# - start_time_command: Command to generate the start time of the validation period
+# - start_time: Start time of the validation period. Will be resolved if set to 'start_time_command_output'
+# - end_time_command: Command to generate the end time of the validation period
+# - end_time: End time of the validation period. Will be resolved if set to 'end_time_command_output'
 # - stake_or_weight: Stake in AVAX or weight of the validator
 # - delegation_fee: Delegation fee of the validator
+
+- name: Resolve start_time_command
+  shell: "{{ start_time_command | default(subnet_validator_start_time_command) }}"
+  register: start_time_res
+  changed_when: false
+
+- name: Set start_time_command_output
+  set_fact:
+    start_time_command_output: "{{ start_time_res.stdout }}"
+
+- name: Resolve end_time_command
+  shell: "{{ end_time_command | default(subnet_validator_end_time_command) }}"
+  register: end_time_res
+  changed_when: false
+
+- name: Set end_time_command_output
+  set_fact:
+    end_time_command_output: "{{ end_time_res.stdout }}"
 
 - name: Check if the node is already a validator (1/2)
   ash.avalanche.ash_cmd:
@@ -42,8 +62,8 @@
     command: "avalanche validator add {{ node_id }} {{ stake_or_weight }}"
     options:
       subnet-id: "{{ subnet_id }}"
-      start-time: "{{ start_time }}"
-      end-time: "{{ end_time }}"
+      start-time: "{{ start_time if start_time != 'start_time_command_output' else start_time_command_output }}"
+      end-time: "{{ end_time if end_time != 'end_time_command_output' else end_time_command_output }}"
       delegation-fee: "{{ delegation_fee }}"
     avalanche_private_key: "{{ subnet_txs_private_key }}"
   environment:

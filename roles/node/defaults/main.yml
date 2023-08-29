@@ -114,12 +114,10 @@ validator_txs_private_key: PrivateKey-ewoqjP7PxY4yr3iLTpLisriqt94hdyDFNgchSxGGzt
 validator_txs_key_encoding: cb58
 
 ## Validation parameters
-validator_start_time_command_default: 'date -d "2 minutes" --rfc-3339=seconds | tr " " T' # in 2 minutes
-validator_end_time_command_default: 'date -d "1 week 2 minutes" --rfc-3339=seconds | tr " " T' # in 1 week and 2 minutes
-validator_start_time_command_darwin: "date -v+2M '+%Y-%m-%dT%H:%M:%SZ'" # in 2 minutes
-validator_end_time_command_darwin: "date -v+1w -v+2M '+%Y-%m-%dT%H:%M:%SZ'" # in 1 week and 2 minutes
-validator_start_time: '{{ lookup("pipe", lookup("vars", "validator_start_time_command_"+ansible_os_family | lower, default=validator_start_time_command_default)) }}'
-validator_end_time: '{{ lookup("pipe", lookup("vars", "validator_end_time_command_"+ansible_os_family | lower, default=validator_end_time_command_default)) }}'
+validator_start_time_command: 'date -d "2 minutes" --rfc-3339=seconds | tr " " T' # in 2 minutes
+validator_start_time: "{{ validator_start_time_command_output }}"
+validator_end_time_command: 'date -d "1 week 2 minutes" --rfc-3339=seconds | tr " " T' # in 1 week and 2 minutes
+validator_end_time: "{{ validator_end_time_command_output }}"
 ### Stake in AVAX for the Primary Network or weight for permissioned Subnets
 validator_stake_or_weight: 1
 ### In percent. Only used for the Primary Network

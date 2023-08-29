@@ -18,26 +18,6 @@
       https: "{{ avalanchego_https_enabled }}"
   register: node_info_res
 
-- name: Resolve validator_start_time_command if validator_start_time is undefined
-  shell: "{{ validator_start_time_command }}"
-  register: validator_start_time_res
-  when: validator_start_time is undefined
-
-- name: Set validator_start_time_command_output to the result of validator_start_time_command
-  set_fact:
-    validator_start_time_command_output: "{{ validator_start_time_res.stdout }}"
-  when: validator_start_time is undefined
-
-- name: Resolve validator_end_time_command if validator_end_time is undefined
-  shell: "{{ validator_end_time_command }}"
-  register: validator_end_time_res
-  when: validator_end_time is undefined
-
-- name: Set validator_end_time_command_output to the result of validator_end_time_command
-  set_fact:
-    validator_end_time_command_output: "{{ validator_end_time_res.stdout }}"
-  when: validator_end_time is undefined
-
 - name: Add the node as validator
   include_role:
     name: ash.avalanche.subnet
@@ -47,7 +27,9 @@
     node_id: "{{ node_info_res.output.id }}"
     subnet_txs_private_key: "{{ validator_txs_private_key }}"
     subnet_txs_key_encoding: "{{ validator_txs_key_encoding }}"
+    start_time_command: "{{ validator_start_time_command }}"
     start_time: "{{ validator_start_time }}"
+    end_time_command: "{{ validator_end_time_command }}"
     end_time: "{{ validator_end_time }}"
     stake_or_weight: "{{ validator_stake_or_weight }}"
     delegation_fee: "{{ validator_delegation_fee }}"

@@ -1,5 +1,23 @@
 # Changelog
 
+## [v0.8.8](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.8.8) (2023-08-31)
+
+[Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.8.7...v0.8.8)
+
+**Implemented enhancements:**
+
+- Add retries to the downloads tasks [\#90](https://github.com/AshAvalanche/ansible-avalanche-collection/issues/90)
+- Implement rolling restart mechanism [\#78](https://github.com/AshAvalanche/ansible-avalanche-collection/issues/78)
+
+**Fixed bugs:**
+
+- The validation start/end times generation is broken on other OSs than Linux [\#92](https://github.com/AshAvalanche/ansible-avalanche-collection/issues/92)
+
+**Merged pull requests:**
+
+- Nodes rolling restart [\#95](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/95) ([Nuttymoon](https://github.com/Nuttymoon))
+- fix: register ansible's localhost for date command [\#94](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/94) ([leopaul36](https://github.com/leopaul36))
+
 ## [v0.8.7](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.8.7) (2023-08-28)
 
 [Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.8.6...v0.8.7)

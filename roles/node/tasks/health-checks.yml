@@ -1,0 +1,123 @@
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (c) 2022-2023, E36 Knots
+---
+# Run health checks on the node
+# Parameters:
+# - wait_bootstrapped: Wait for the node to be bootstrapped on all chains (default: false)
+# - wait_healthy: Wait for the node to be healthy on all Subnets (default: false)
+# - avalanchego_health_checks_retries: Number of retries for health checks (default: 60)
+# - avalanchego_health_checks_delay: Delay between retries for health checks in seconds (default: 10)
+# Outputs:
+# - avalanchego_state: State of the avalanchego.service (running/stopped/failed/unknown)
+# - avalanchego_is_bootstrapped: Dictionary of bootstrap status on each chain (true/false)
+# - avalanchego_is_healthy: Dictionary of healthy status on each Subnet (true/false)
+
+- name: Get avalanchego.service state (1/2)
+  service_facts:
+
+- name: Get avalanchego.service state (2/2)
+  set_fact:
+    avalanchego_state: "{{ ansible_facts.services['avalanchego.service'].state }}"
+
+- block:
+    - name: Set the retries variable
+      set_fact:
+        retries: "{{ 0 if (retries is undefined) else (retries | int) + 1 }}"
+
+    - name: Get the list of blockchains tracked by the node (1/2)
+      ash_cmd:
+        command: "avalanche subnet info {{ item }}"
+      environment:
+        AVALANCHE_NETWORK: "{{ avalanchego_network_id }}"
+      register: tracked_subnets_info_res
+      loop: "{{ [avalanche_primary_network_id] + avalanchego_track_subnets }}"
+      until:
+        - tracked_subnets_info_res is succeeded
+      retries: 60
+      delay: 1
+
+    - name: Get the list of blockchains tracked by the node (2/2)
+      set_fact:
+        tracked_chains_ids: "{{ tracked_subnets_info_res | json_query('results[*].output.blockchains[*].id') | flatten }}"
+
+    - name: Check if the node is bootstrapped (1/2)
+      ash_cmd:
+        command: "avalanche node is-bootstrapped {{ item }}"
+        options:
+          http-host: "{{ avalanchego_http_host }}"
+          http-port: "{{ avalanchego_http_port }}"
+          https: "{{ avalanchego_https_enabled }}"
+      environment:
+        AVALANCHE_NETWORK: "{{ avalanchego_network_id }}"
+      register: avalanchego_is_bootstrapped_res
+      loop: "{{ tracked_chains_ids }}"
+      until: avalanchego_is_bootstrapped_res is succeeded
+      retries: 60
+      delay: 1
+
+    - name: Check if the node is bootstrapped (2/2)
+      set_fact:
+        avalanchego_is_bootstrapped: "{{ avalanchego_is_bootstrapped_res | json_query('results[*].{key: item, value: output.isBootstrapped}') | items2dict }}"
+
+    - name: Fail if node is not bootstrapped
+      fail:
+        msg: |
+          Node is not bootstrapped on chains:
+          {{ avalanchego_is_bootstrapped | dict2items | json_query('[?!value].key') | to_nice_yaml }}
+      when:
+        - wait_bootstrapped | default(false)
+        - false in avalanchego_is_bootstrapped.values()
+
+    - name: Check if the node is healthy (1/2)
+      uri:
+        url: "{{ avalanchego_http_protocol }}://{{ avalanchego_http_host }}:{{ avalanchego_http_port }}/ext/health"
+        method: POST
+        body_format: json
+        body:
+          jsonrpc: "2.0"
+          method: health.health
+          params:
+            tags: "{{ [item] }}"
+          id: 1
+      register: health_res
+      failed_when: health_res.json.error is defined
+      loop: "{{ [avalanche_primary_network_id] + avalanchego_track_subnets }}"
+
+    - name: Check if the node is healthy (2/2)
+      set_fact:
+        avalanchego_is_healthy: "{{ health_res | json_query('results[*].{key: item, value: json.result.healthy}') | items2dict }}"
+
+    - name: Fail if node is not healthy
+      fail:
+        msg: |
+          Node is not healthy on Subnets:
+          {{ avalanchego_is_healthy | dict2items | json_query('[?!value].key') | to_nice_yaml }}
+      when:
+        - wait_healthy | default(false)
+        - false in avalanchego_is_healthy.values()
+
+  when: avalanchego_state == 'running'
+  rescue:
+    - debug:
+        msg: "Node health checks failed ({{ (avalanchego_health_checks_retries | default(60)) - (retries | int) }} retries left)"
+
+    - fail:
+        msg: "Node health checks failed after {{ retries }} retries"
+      when: (retries | int) == (avalanchego_health_checks_retries | default(60))
+
+    - pause:
+        seconds: "{{ avalanchego_health_checks_delay | default(10) }}"
+
+    - include_tasks: health-checks.yml
+
+- block:
+    - name: Set avalanchego_is_bootstrapped to false
+      set_fact:
+        avalanchego_is_bootstrapped:
+          all: false
+
+    - name: Set avalanchego_is_healthy to false
+      set_fact:
+        avalanchego_is_healthy:
+          all: false
+  when: avalanchego_state != 'running'

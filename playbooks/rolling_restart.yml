@@ -1,0 +1,19 @@
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (c) 2022-2023, E36 Knots
+---
+- name: Rolling restart nodes
+  hosts: avalanche_nodes
+  serial: 1
+  become: true
+  tasks:
+    - include_role:
+        name: ash.avalanche.node
+        tasks_from: restart
+
+    - name: Wait for the node to be bootstrapped and healthy
+      import_role:
+        name: ash.avalanche.node
+        tasks_from: health-checks
+      vars:
+        wait_bootstrapped: true
+        wait_healthy: true

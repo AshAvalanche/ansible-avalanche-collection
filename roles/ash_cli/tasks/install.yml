@@ -12,6 +12,10 @@
     - "{{ ash_cli_bin_dir }}/ash-{{ ash_cli_version }}"
     - "{{ ash_cli_conf_dir }}"
 
+- name: Set ash_cli_binary_arch according to ansible_architecture
+  set_fact:
+    ash_cli_binary_arch: "{{ 'amd64' if ansible_architecture == 'x86_64' else 'arm64' if ansible_architecture == 'aarch64' else ash_cli_binary_arch }}"
+
 - name: "Download Ash CLI {{ ash_cli_version }} binary"
   get_url:
     url: "{{ ash_cli_binary_url }}"

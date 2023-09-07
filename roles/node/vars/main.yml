@@ -3,7 +3,8 @@
 ---
 # AvalancheGo version
 avalanchego_min_version: 1.9.6
-avalanchego_binary_name: "avalanchego-linux-amd64-v{{ avalanchego_version }}.tar.gz"
+avalanchego_binary_arch: amd64
+avalanchego_binary_name: "avalanchego-linux-{{ avalanchego_binary_arch }}-v{{ avalanchego_version }}.tar.gz"
 avalanchego_binary_url: "https://github.com/ava-labs/avalanchego/releases/download/v{{ avalanchego_version }}/{{ avalanchego_binary_name }}"
 
 # AvalancheGo GPG key

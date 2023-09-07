@@ -50,6 +50,10 @@
   register: avalanchego_gpg_import
   changed_when: "'imported: 1' in avalanchego_gpg_import.stderr"
 
+- name: Set avalanchego_binary_arch according to ansible_architecture
+  set_fact:
+    avalanchego_binary_arch: "{{ 'amd64' if ansible_architecture == 'x86_64' else 'arm64' if ansible_architecture == 'aarch64' else avalanchego_binary_arch }}"
+
 - name: "Download AvalancheGo {{ avalanchego_version }} binary"
   get_url:
     url: "{{ avalanchego_binary_url }}"

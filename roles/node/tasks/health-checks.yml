@@ -18,6 +18,7 @@
 - name: Get avalanchego.service state (2/2)
   set_fact:
     avalanchego_state: "{{ ansible_facts.services['avalanchego.service'].state }}"
+    cacheable: true
 
 - block:
     - name: Set the retries variable
@@ -33,7 +34,7 @@
       loop: "{{ [avalanche_primary_network_id] + avalanchego_track_subnets }}"
       until:
         - tracked_subnets_info_res is succeeded
-      retries: 60
+      retries: 10
       delay: 1
 
     - name: Get the list of blockchains tracked by the node (2/2)
@@ -52,12 +53,13 @@
       register: avalanchego_is_bootstrapped_res
       loop: "{{ tracked_chains_ids }}"
       until: avalanchego_is_bootstrapped_res is succeeded
-      retries: 60
+      retries: 10
       delay: 1
 
     - name: Check if the node is bootstrapped (2/2)
       set_fact:
         avalanchego_is_bootstrapped: "{{ avalanchego_is_bootstrapped_res | json_query('results[*].{key: item, value: output.isBootstrapped}') | items2dict }}"
+        cacheable: true
 
     - name: Fail if node is not bootstrapped
       fail:
@@ -86,6 +88,7 @@
     - name: Check if the node is healthy (2/2)
       set_fact:
         avalanchego_is_healthy: "{{ health_res | json_query('results[*].{key: item, value: json.result.healthy}') | items2dict }}"
+        cacheable: true
 
     - name: Fail if node is not healthy
       fail:
@@ -99,11 +102,11 @@
   when: avalanchego_state == 'running'
   rescue:
     - debug:
-        msg: "Node health checks failed ({{ (avalanchego_health_checks_retries | default(60)) - (retries | int) }} retries left)"
+        msg: "Node health checks failed ({{ (avalanchego_health_checks_retries | default(60) | int) - (retries | int) }} retries left)"
 
     - fail:
         msg: "Node health checks failed after {{ retries }} retries"
-      when: (retries | int) == (avalanchego_health_checks_retries | default(60))
+      when: (retries | int) == (avalanchego_health_checks_retries| default(60) | int )
 
     - pause:
         seconds: "{{ avalanchego_health_checks_delay | default(10) }}"
@@ -115,9 +118,11 @@
       set_fact:
         avalanchego_is_bootstrapped:
           all: false
+        cacheable: true
 
     - name: Set avalanchego_is_healthy to false
       set_fact:
         avalanchego_is_healthy:
           all: false
+        cacheable: true
   when: avalanchego_state != 'running'

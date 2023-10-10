@@ -1,0 +1,20 @@
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (c) 2022-2023, E36 Knots
+---
+- name: Run health checks on the nodes
+  hosts: avalanche_nodes
+  tasks:
+    - include_role:
+        name: ash.avalanche.node
+        tasks_from: health-checks
+
+    - name: Display health checks results
+      debug:
+        msg: |
+          {{
+            {
+              'avalanchego_state': avalanchego_state,
+              'avalanchego_is_bootstrapped': (avalanchego_is_bootstrapped | default({'all': false})),
+              'avalanchego_is_healthy': (avalanchego_is_healthy | default({'all': false}))
+            }
+          }}

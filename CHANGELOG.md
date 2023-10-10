@@ -1,5 +1,13 @@
 # Changelog
 
+## [v0.8.9](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.8.9) (2023-10-10)
+
+[Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.8.8...v0.8.9)
+
+**Closed issues:**
+
+- Multipass simulates a Ubuntu ARM on a Mac M1  [\#96](https://github.com/AshAvalanche/ansible-avalanche-collection/issues/96)
+
 ## [v0.8.8](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.8.8) (2023-08-31)
 
 [Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.8.7...v0.8.8)

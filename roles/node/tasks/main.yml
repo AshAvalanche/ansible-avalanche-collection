@@ -45,6 +45,10 @@
 
 - name: Restart AvalancheGo and reload VMs if needed
   meta: flush_handlers
+  tags:
+    - start
+    - avalanchego
+    - start-avalanchego
 
 - name: Start AvalancheGo node
   import_tasks: start.yml

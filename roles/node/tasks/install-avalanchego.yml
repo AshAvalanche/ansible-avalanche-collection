@@ -96,6 +96,12 @@
     dest: /etc/systemd/system/avalanchego.service
   notify: Restart avalanchego
 
+- name: Check if running in a Docker container
+  stat:
+    path: /.dockerenv
+  register: dockerenv_stat
+
 - name: Reload systemctl daemons
   systemd:
     daemon_reload: true
+  when: not dockerenv_stat.stat.exists

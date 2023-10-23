@@ -23,8 +23,8 @@
   set_fact:
     node_conf_staking_tls_files: |
       {{ {
-           'staking-tls-cert-file': avalanchego_staking_certs_dir + '/' + inventory_hostname + '.crt',
-           'staking-tls-key-file': avalanchego_staking_certs_dir + '/' + inventory_hostname + '.key'
+           'staking-tls-cert-file': avalanchego_staking_certs_dir + '/node.crt',
+           'staking-tls-key-file': avalanchego_staking_certs_dir + '/node.key'
          } if avalanchego_staking_use_local_certs else {} }}
 
 - name: Construct http-tls-*-file conf
@@ -55,7 +55,7 @@
 - name: Upload node staking certificates
   copy:
     src: "{{ avalanchego_staking_local_certs_dir }}/{{ inventory_hostname }}.{{ item }}"
-    dest: "{{ avalanchego_staking_certs_dir }}/{{ inventory_hostname }}.{{ item }}"
+    dest: "{{ avalanchego_staking_certs_dir }}/node.{{ item }}"
     owner: "{{ avalanchego_user }}"
     group: "{{ avalanchego_group }}"
     mode: 0400

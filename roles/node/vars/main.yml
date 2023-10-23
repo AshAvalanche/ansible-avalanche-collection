@@ -25,7 +25,8 @@ avalanchego_vms_conf_dir: "{{ avalanchego_conf_dir }}/vms"
 avalanchego_http_protocol: "{{ 'https' if avalanchego_https_enabled else 'http' }}"
 
 # String templates for VM files to download
-avalanchego_vm_binary_filename: "{{ vm_name }}_{{ vm_version }}_linux_amd64.tar.gz"
+avalanchego_vm_binary_arch: amd64
+avalanchego_vm_binary_filename: "{{ vm_name }}_{{ vm_version }}_linux_{{ avalanchego_vm_binary_arch }}.tar.gz"
 avalanchego_vm_checksum_filename: "{{ vm_name }}_{{ vm_version }}_checksums.txt"
 
 # Avalanche constants

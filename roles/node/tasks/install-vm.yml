@@ -1,6 +1,10 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # Copyright (c) 2022-2023, E36 Knots
 ---
+- name: Set avalanchego_vm_binary_arch according to ansible_architecture
+  set_fact:
+    avalanchego_vm_binary_arch: "{{ 'amd64' if ansible_architecture == 'x86_64' else 'arm64' if ansible_architecture == 'aarch64' else avalanchego_vm_binary_arch }}"
+
 - name: "Check that {{ vm_name }}={{ vm_version }} is compatible with avalanchego={{ avalanchego_version }}"
   debug:
     msg: "AvalancheGo version {{ item.key }} {{ item.value }}: {{ avalanchego_version is version(item.value, item.key) }}"

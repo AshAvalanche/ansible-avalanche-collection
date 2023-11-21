@@ -9,7 +9,7 @@ avalanchego_install_dir: /opt/avalanche/avalanchego
 avalanchego_vms_dir: /opt/avalanche/vms
 
 # DB directory
-avalanchego_db_dir: /var/lib/avalanchego/db
+avalanchego_db_dir: /var/lib/avalanche/avalanchego/db
 
 # Configuration directories
 avalanchego_conf_dir: /etc/avalanche/avalanchego/conf

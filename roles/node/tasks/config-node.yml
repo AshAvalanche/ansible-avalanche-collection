@@ -6,7 +6,7 @@
     bootstrap_ips: |
       {{ (bootstrap_ips | default([]))
          + [hostvars[item]['ansible_host'] + ':' + (avalanchego_staking_port | string)] }}
-  when: avalanchego_network_id not in ['mainnet', 'fuji']
+  when: avalanchego_network_id not in ['mainnet', 'testnet', 'fuji']
   loop: "{{ groups['bootstrap_nodes'] }}"
 
 - name: Construct bootstrap-* conf
@@ -17,7 +17,7 @@
              else (bootstrap_ips | join(',')),
            'bootstrap-ids': '' if inventory_hostname in groups['bootstrap_nodes']
              else (avalanchego_bootstrap_node_ids | join(','))
-         } if avalanchego_network_id not in ['mainnet', 'fuji'] else {} }}
+         } if avalanchego_network_id not in ['mainnet', 'testnet', 'fuji'] else {} }}
 
 - name: Construct staking-tls-*-file conf
   set_fact:

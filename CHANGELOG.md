@@ -1,5 +1,20 @@
 # Changelog
 
+## [v0.9.0](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.9.0) (2023-11-21)
+
+[Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.8.10...v0.9.0)
+
+**Closed issues:**
+
+- Rename node staking TLS cert + key to a generic name [\#100](https://github.com/AshAvalanche/ansible-avalanche-collection/issues/100)
+- Select the VM arch based on the Ansible architecture value [\#98](https://github.com/AshAvalanche/ansible-avalanche-collection/issues/98)
+
+**Merged pull requests:**
+
+- feat\(node\): create a parent directory in /var/lib [\#102](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/102) ([Nuttymoon](https://github.com/Nuttymoon))
+- fix: VM binary arch [\#101](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/101) ([Nuttymoon](https://github.com/Nuttymoon))
+- feat\(node\): support Docker image build [\#99](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/99) ([Nuttymoon](https://github.com/Nuttymoon))
+
 ## [v0.8.10](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.8.10) (2023-10-16)
 
 [Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.8.9...v0.8.10)

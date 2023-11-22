@@ -52,7 +52,7 @@ avalanchego_staking_local_certs_dir: "{{ playbook_dir }}/files/staking"
 
 # Bootstrapping
 avalanchego_network_id: fuji
-## Node IDs of the bootstrap nodes on networks other than `mainnet` and `fuji`
+## Node IDs of the bootstrap nodes on networks other than `mainnet`, `testnet` and `fuji`
 avalanchego_bootstrap_node_ids:
   - NodeID-7Xhw2mDxuDS44j42TCB6U5579esbSt3Lg
 avalanchego_bootstrap_db: ""

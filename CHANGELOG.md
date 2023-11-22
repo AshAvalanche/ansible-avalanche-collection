@@ -1,5 +1,13 @@
 # Changelog
 
+## [v0.9.1](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.9.1) (2023-11-22)
+
+[Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.9.0...v0.9.1)
+
+**Merged pull requests:**
+
+- fix\(node\): add 'testnet' as a public networks [\#103](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/103) ([Nuttymoon](https://github.com/Nuttymoon))
+
 ## [v0.9.0](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.9.0) (2023-11-21)
 
 [Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.8.10...v0.9.0)

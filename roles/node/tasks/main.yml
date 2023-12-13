@@ -96,5 +96,5 @@
     - config-ash_cli
   vars:
     ash_cli_avalanche_network_id: "{{ avalanchego_network_id }}"
-    ash_cli_custom_networks: "{{ ash_cli_networks }}"
+    ash_cli_custom_networks: "{{ ash_cli_networks | default({}) }}"
   when: ash_cli_install

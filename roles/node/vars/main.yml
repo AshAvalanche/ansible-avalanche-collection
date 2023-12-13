@@ -42,36 +42,57 @@ avalanchego_vms_list:
     aliases:
       - subnet-evm
     versions_comp:
+      # Protocol version: 22
       0.4.8:
         ge: 1.9.6
         le: 1.9.8
+      # Protocol version: 23
       0.4.9:
         ge: 1.9.9
         le: 1.9.9
       0.4.10:
         ge: 1.9.9
         le: 1.9.9
+      # Protocol version: 24
       0.4.11:
         ge: 1.9.10
         le: 1.9.16
       0.4.12:
         ge: 1.9.10
         le: 1.9.16
+      # Protocol version: 25
       0.5.0:
         ge: 1.10.0
         le: 1.10.0
+      # Protocol version: 26
       0.5.1:
         ge: 1.10.1
         le: 1.10.4
       0.5.2:
         ge: 1.10.1
         le: 1.10.4
+      # Protocol version: 27
       0.5.3:
         ge: 1.10.5
         le: 1.10.8
+      # Protocol version: 28
       0.5.5:
         ge: 1.10.9
         le: 1.10.12
       0.5.6:
         ge: 1.10.9
         le: 1.10.12
+      # Protocol version: 29
+      0.5.7:
+        ge: 1.10.13
+        le: 1.10.14
+      0.5.8:
+        ge: 1.10.13
+        le: 1.10.14
+      # Protocol version: 30
+      0.5.9:
+        ge: 1.10.15
+        le: 1.10.17
+      0.5.10:
+        ge: 1.10.15
+        le: 1.10.17

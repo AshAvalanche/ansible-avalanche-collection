@@ -1,5 +1,18 @@
 # Changelog
 
+## [v0.9.2](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.9.2) (2023-12-14)
+
+[Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.9.1...v0.9.2)
+
+**Closed issues:**
+
+- Ash CLI configuration fails on Fuji nodes [\#104](https://github.com/AshAvalanche/ansible-avalanche-collection/issues/104)
+
+**Merged pull requests:**
+
+- parametrized the owner and group for ash\_cli [\#108](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/108) ([ngurmen](https://github.com/ngurmen))
+- fix\(node\): default value for ash\_cli\_networks [\#105](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/105) ([Nuttymoon](https://github.com/Nuttymoon))
+
 ## [v0.9.1](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.9.1) (2023-11-22)
 
 [Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.9.0...v0.9.1)

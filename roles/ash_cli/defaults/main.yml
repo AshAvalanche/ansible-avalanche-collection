@@ -8,6 +8,10 @@ ash_cli_version: 0.2.3
 ash_cli_install_dir: /opt/avalanche/ash-cli
 ash_cli_conf_dir: /etc/avalanche/ash-cli/conf
 
+# User and group
+ash_cli_owner: root
+ash_cli_group: root
+
 # Avalanche context
 ash_cli_avalanche_network_id: fuji
 

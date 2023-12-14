@@ -5,8 +5,8 @@
   file:
     path: "{{ item }}"
     state: directory
-    owner: root
-    group: root
+    owner: "{{ ash_cli_owner }}"
+    group: "{{ ash_cli_group }}"
   loop:
     - "{{ ash_cli_releases_dir }}"
     - "{{ ash_cli_bin_dir }}/ash-{{ ash_cli_version }}"
@@ -21,16 +21,16 @@
     url: "{{ ash_cli_binary_url }}"
     dest: "{{ ash_cli_releases_dir }}/{{ ash_cli_binary_name }}"
     checksum: "sha512:{{ ash_cli_binary_url }}.sha512"
-    owner: root
-    group: root
+    owner: "{{ ash_cli_owner }}"
+    group: "{{ ash_cli_group }}"
 
 - name: "Unpack Ash CLI {{ ash_cli_version }} binary"
   unarchive:
     src: "{{ ash_cli_releases_dir }}/{{ ash_cli_binary_name }}"
     dest: "{{ ash_cli_bin_dir }}/ash-{{ ash_cli_version }}"
     remote_src: true
-    owner: root
-    group: root
+    owner: "{{ ash_cli_owner }}"
+    group: "{{ ash_cli_group }}"
     mode: 0755
     creates: "{{ ash_cli_bin_dir }}/ash-{{ ash_cli_version }}/ash"
 
@@ -39,13 +39,13 @@
     src: "{{ ash_cli_bin_dir }}/ash-{{ ash_cli_version }}/ash"
     dest: "{{ ash_cli_bin_dir }}/ash"
     state: link
-    owner: root
-    group: root
+    owner: "{{ ash_cli_owner }}"
+    group: "{{ ash_cli_group }}"
 
 - name: Template ash command
   template:
     src: ash-command.j2
     dest: /usr/local/bin/ash
-    owner: root
-    group: root
+    owner: "{{ ash_cli_owner }}"
+    group: "{{ ash_cli_group }}"
     mode: 0755

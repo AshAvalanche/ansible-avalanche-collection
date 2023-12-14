@@ -87,7 +87,6 @@ avalanchego_node_json:
   subnet-config-dir: "{{ avalanchego_subnets_conf_dir }}"
   chain-config-dir: "{{ avalanchego_chains_conf_dir }}"
   chain-aliases-file: "{{ avalanchego_chains_conf_dir }}/aliases.json"
-  vm-aliases-file: "{{ avalanchego_vms_conf_dir }}/aliases.json"
   log-dir: "{{ avalanchego_log_dir }}"
   # Logging
   log-level: info

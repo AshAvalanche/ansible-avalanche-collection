@@ -41,12 +41,12 @@
     remote_src: true
     owner: "{{ avalanchego_user }}"
     group: "{{ avalanchego_group }}"
-    creates: "{{ avalanchego_vms_dir }}/{{ vm_name}}/{{ vm_name }}-v{{ vm_version }}/{{ vm_name }}"
+    creates: "{{ avalanchego_vms_dir }}/{{ vm_name}}/{{ vm_name }}-v{{ vm_version }}/{{ vm_info.binary_filename }}"
 
 - name: "Create the symlink to {{ vm_name }} binary in plugins dir"
   file:
-    src: "{{ avalanchego_vms_dir }}/{{ vm_name }}/{{ vm_name }}-v{{ vm_version }}/{{ vm_name }}"
-    dest: "{{ avalanchego_plugins_dir }}/{{ vm_name }}"
+    src: "{{ avalanchego_vms_dir }}/{{ vm_name }}/{{ vm_name }}-v{{ vm_version }}/{{ vm_info.binary_filename }}"
+    dest: "{{ avalanchego_plugins_dir }}/{{ vm_info.id }}"
     state: link
     owner: "{{ avalanchego_user }}"
     group: "{{ avalanchego_group }}"

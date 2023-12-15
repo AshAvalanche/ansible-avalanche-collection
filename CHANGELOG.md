@@ -1,5 +1,17 @@
 # Changelog
 
+## [v0.10.0](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.10.0) (2023-12-15)
+
+[Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.9.2...v0.10.0)
+
+**Implemented enhancements:**
+
+- Support for multiple subnets with same subnet binary with different VM IDs [\#106](https://github.com/AshAvalanche/ansible-avalanche-collection/issues/106)
+
+**Merged pull requests:**
+
+- feat\(node\): use VM ID for symlinks to VM binary [\#109](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/109) ([Nuttymoon](https://github.com/Nuttymoon))
+
 ## [v0.9.2](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.9.2) (2023-12-14)
 
 [Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.9.1...v0.9.2)

@@ -26,8 +26,8 @@ avalanchego_http_protocol: "{{ 'https' if avalanchego_https_enabled else 'http' 
 
 # String templates for VM files to download
 avalanchego_vm_binary_arch: amd64
-avalanchego_vm_binary_filename: "{{ vm_name }}_{{ vm_version }}_linux_{{ avalanchego_vm_binary_arch }}.tar.gz"
-avalanchego_vm_checksum_filename: "{{ vm_name }}_{{ vm_version }}_checksums.txt"
+avalanchego_vm_binary_filename: "{{ vm_info.binary_filename }}_{{ vm_version }}_linux_{{ avalanchego_vm_binary_arch }}.tar.gz"
+avalanchego_vm_checksum_filename: "{{ vm_info.binary_filename }}_{{ vm_version }}_checksums.txt"
 
 # Avalanche constants
 avalanche_primary_network_id: 11111111111111111111111111111111LpoYY
@@ -39,8 +39,8 @@ avalanchego_vms_list:
     id: srEXiWaHuhNyGwPUi444Tu47ZEDwxTWrbQiuD7FmgSAQ6X7Dy
     # Used in Ash CLI
     ash_vm_type: SubnetEVM
-    aliases:
-      - subnet-evm
+    # The VM binary filename
+    binary_filename: subnet-evm
     versions_comp:
       # Protocol version: 22
       0.4.8:

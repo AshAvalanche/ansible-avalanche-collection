@@ -17,3 +17,15 @@
     group: "{{ avalanchego_group }}"
   loop: "{{ avalanchego_chains_configs | dict2items }}"
   notify: Restart avalanchego
+
+- name: Generate chains upgrade.json
+  copy:
+    src: "{{ files_path }}/{{ avalanchego_network_id }}/vms/{{ item }}/upgrades.json"
+    dest: "{{ avalanchego_chains_conf_dir }}/{{ item }}/upgrade.json"
+    owner: "{{ avalanchego_user }}"
+    group: "{{ avalanchego_group }}"
+  loop: "{{ avalanchego_chains_configs.keys() }}"
+  vars:
+    _file: "{{ files_path }}/{{ avalanchego_network_id }}/vms/{{ item }}/upgrades.json"
+  when: _file is exists
+  notify: Restart avalanchego

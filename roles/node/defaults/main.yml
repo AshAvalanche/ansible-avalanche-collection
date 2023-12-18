@@ -99,12 +99,31 @@ avalanchego_subnets_configs: {}
 # Chains configurations
 avalanchego_chains_aliases:
   {}
+
   ## Example:
   ##   q2aTwKuyzgs8pynF7UXBZCU7DejbZbZ6EUyHr3JQzYgwNPUPi:
   ##     - DFK
 avalanchego_chains_configs:
   C:
     state-sync-enabled: true
+
+# Chains updates
+  ## Example:
+  ##  a-valid-chain-id:
+  ##    precompileUpgrades:
+  ##      - feeManagerConfig:
+  ##          blockTimestamp: 1668950000
+  ##          adminAddresses:
+  ##            - "0x8db97C7cEcE249c2b98bDC0226Cc4C2A57BF52FC"
+  ##      - txAllowListConfig:
+  ##          blockTimestamp: 1668960000
+  ##          adminAddresses:
+  ##            - "0x8db97C7cEcE249c2b98bDC0226Cc4C2A57BF52FC"
+  ##      - feeManagerConfig:
+  ##          blockTimestamp: 1668970000
+  ##          disable: true
+avalanchego_chains_updates:
+  {}
 
 # Validator configuration
 ## Private key used to sign the staking transaction

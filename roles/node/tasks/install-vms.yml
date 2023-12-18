@@ -10,9 +10,3 @@
   loop: "{{ avalanchego_vms_install }}"
   loop_control:
     loop_var: vm
-
-- name: Template aliases.json file for vms
-  template:
-    src: vm-aliases.json.j2
-    dest: "{{ avalanchego_vms_conf_dir }}/aliases.json"
-  notify: Restart avalanchego

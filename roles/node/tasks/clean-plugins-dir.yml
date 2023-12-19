@@ -10,7 +10,7 @@
 - name: Set expected_plugins variable
   set_fact:
     expected_plugins: "{{ expected_plugins | default([]) + [avalanchego_vms_list[item].id] }}"
-  loop: "{{ avalanchego_vms_install | map('regex_replace', '=.*$', '') }}"
+  loop: "{{ avalanchego_vms_install.keys() }}"
 
 - name: "Remove outdated links in {{ avalanchego_plugins_dir }}"
   file:

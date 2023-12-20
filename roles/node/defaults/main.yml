@@ -99,7 +99,6 @@ avalanchego_subnets_configs: {}
 # Chains configurations
 avalanchego_chains_aliases:
   {}
-
   ## Example:
   ##   q2aTwKuyzgs8pynF7UXBZCU7DejbZbZ6EUyHr3JQzYgwNPUPi:
   ##     - DFK

@@ -107,7 +107,7 @@ avalanchego_chains_configs:
     state-sync-enabled: true
 
 # Chains updates
-avalanchego_chains_updates:
+avalanchego_chains_upgrades:
   {}
   ## Example:
   ##   a-valid-chain-id:

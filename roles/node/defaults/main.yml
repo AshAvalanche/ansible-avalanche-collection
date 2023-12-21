@@ -106,6 +106,20 @@ avalanchego_chains_configs:
   C:
     state-sync-enabled: true
 
+# Chains updates
+avalanchego_chains_upgrades:
+  {}
+  ## Example:
+  ##   a-valid-chain-id:
+  ##     precompileUpgrades:
+  ##       - feeManagerConfig:
+  ##           blockTimestamp: 1668950000
+  ##           adminAddresses:
+  ##             - "0x8db97C7cEcE249c2b98bDC0226Cc4C2A57BF52FC"
+  ##       - feeManagerConfig:
+  ##           blockTimestamp: 1668970000
+  ##           disable: true
+
 # Validator configuration
 ## Private key used to sign the staking transaction
 validator_txs_private_key: PrivateKey-ewoqjP7PxY4yr3iLTpLisriqt94hdyDFNgchSxGGztUrTXtNN

@@ -1,5 +1,26 @@
 # Changelog
 
+## [v0.11.0](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.11.0) (2023-12-21)
+
+[Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.10.0...v0.11.0)
+
+**Breaking changes:**
+
+- feat\(node\): use a dict for avalanchego\_vms\_install [\#114](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/114) ([Nuttymoon](https://github.com/Nuttymoon))
+
+**Implemented enhancements:**
+
+- Use a dictionary instead of a list for `avalanchego_vms_install` [\#113](https://github.com/AshAvalanche/ansible-avalanche-collection/issues/113)
+
+**Closed issues:**
+
+- Comment out `subnet_blockchains_list` in Subnet role's defaults [\#111](https://github.com/AshAvalanche/ansible-avalanche-collection/issues/111)
+
+**Merged pull requests:**
+
+- feat: comment subnet\_blockchains\_list [\#112](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/112) ([leopaul36](https://github.com/leopaul36))
+- mng/vm aliases and chain upgrades [\#110](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/110) ([ngurmen](https://github.com/ngurmen))
+
 ## [v0.10.0](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.10.0) (2023-12-15)
 
 [Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.9.2...v0.10.0)

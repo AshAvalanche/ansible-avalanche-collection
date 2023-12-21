@@ -61,11 +61,11 @@ avalanchego_bootstrap_db: ""
 avalanchego_track_subnets: []
 
 # VMs
-avalanchego_vms_install: []
+avalanchego_vms_install: {}
 ## Example
-##  - subnet-evm=0.4.10
-##  - timestampvm=1.3.0
-##  - spacesvm=0.0.15
+##  subnet-evm: 0.4.10
+##  timestampvm: 1.3.0
+##  spacesvm: 0.0.15
 
 # node.json
 avalanchego_node_json:
@@ -102,11 +102,12 @@ avalanchego_chains_aliases:
   ## Example:
   ##   q2aTwKuyzgs8pynF7UXBZCU7DejbZbZ6EUyHr3JQzYgwNPUPi:
   ##     - DFK
+
 avalanchego_chains_configs:
   C:
     state-sync-enabled: true
 
-# Chains updates
+# Chains upgrades
 avalanchego_chains_upgrades:
   {}
   ## Example:

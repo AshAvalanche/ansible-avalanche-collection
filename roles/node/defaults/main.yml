@@ -142,3 +142,5 @@ validator_delegation_fee: 2
 # Ash CLI configuration
 ## Whether to install and configure Ash CLI on the node
 ash_cli_install: true
+## The avalanche network name to be used in ash_cmd
+ash_cli_network_id: fuji

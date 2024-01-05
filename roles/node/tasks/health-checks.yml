@@ -29,7 +29,7 @@
       ash_cmd:
         command: "avalanche subnet info {{ item }}"
       environment:
-        AVALANCHE_NETWORK: "{{ avalanchego_network_id }}"
+        AVALANCHE_NETWORK: "{{ ash_cli_network_id }}"
       register: tracked_subnets_info_res
       loop: "{{ [avalanche_primary_network_id] + avalanchego_track_subnets }}"
       until:
@@ -49,7 +49,7 @@
           http-port: "{{ avalanchego_http_port }}"
           https: "{{ avalanchego_https_enabled }}"
       environment:
-        AVALANCHE_NETWORK: "{{ avalanchego_network_id }}"
+        AVALANCHE_NETWORK: "{{ ash_cli_network_id }}"
       register: avalanchego_is_bootstrapped_res
       loop: "{{ tracked_chains_ids }}"
       until: avalanchego_is_bootstrapped_res is succeeded

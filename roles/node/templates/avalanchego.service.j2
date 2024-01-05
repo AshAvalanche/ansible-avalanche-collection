@@ -2,13 +2,28 @@
 Copyright (c) 2022-2023, E36 Knots #}
 [Unit]
 Description=AvalancheGo systemd service
+After=network.target
 StartLimitIntervalSec=0
 
 [Service]
 Type=simple
 User={{ avalanchego_user }}
 WorkingDirectory={{ avalanchego_install_dir }}
+{% if ExecStartPre is defined and ExecStartPre -%}
+ExecStartPre={{ ExecStartPre }}
+{% endif -%}
 ExecStart={{ avalanchego_install_dir }}/current/avalanchego --plugin-dir={{ avalanchego_install_dir }}/current/plugins --config-file={{ avalanchego_conf_dir }}/node.json
+{% if ExecStartPost is defined and ExecStartPost -%}
+ExecStartPost={{ ExecStartPost }}
+{% endif -%}
+{% if ExecStop is defined and ExecStop | length > 0 -%}
+{% for ES in ExecStop -%}
+ExecStop={{ ES }}
+{% endfor -%}
+{% endif -%}
+{%- if ExecStopPost is defined and ExecStopPost -%}
+ExecStopPost={{ ExecStopPost }}
+{% endif -%}
 Restart=no
 
 [Install]

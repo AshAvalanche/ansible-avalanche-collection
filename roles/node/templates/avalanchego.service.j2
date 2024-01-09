@@ -2,6 +2,7 @@
 Copyright (c) 2022-2023, E36 Knots #}
 [Unit]
 Description=AvalancheGo systemd service
+After=network.target
 StartLimitIntervalSec=0
 
 [Service]
@@ -10,6 +11,7 @@ User={{ avalanchego_user }}
 WorkingDirectory={{ avalanchego_install_dir }}
 ExecStart={{ avalanchego_install_dir }}/current/avalanchego --plugin-dir={{ avalanchego_install_dir }}/current/plugins --config-file={{ avalanchego_conf_dir }}/node.json
 Restart=no
+{{ avalanchego_service_options }}
 
 [Install]
 WantedBy=multi-user.target

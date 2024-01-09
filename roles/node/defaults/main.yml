@@ -139,6 +139,14 @@ validator_stake_or_weight: 1
 ### In percent. Only used for the Primary Network
 validator_delegation_fee: 2
 
+# Systemd
+## Additional systemd avalanchego.service options
+## Only modify this variable if you are absolutely sure about what you are doing
+## Please refer to Ubuntu man pages for the usage of these options
+## https://manpages.ubuntu.com/manpages/focal/en/man5/systemd.service.5.html
+avalanchego_service_options: |
+  # ExecStartPost=/bin/echo "Example ExecStartPost option"
+
 # Ash CLI configuration
 ## Whether to install and configure Ash CLI on the node
 ash_cli_install: true

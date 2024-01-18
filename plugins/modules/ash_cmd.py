@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 # SPDX-License-Identifier: BSD-3-Clause
-# Copyright (c) 2022-2023, E36 Knots
+# Copyright (c) 2022-2024, E36 Knots
 
 from __future__ import absolute_import, division, print_function
 
@@ -140,7 +140,7 @@ def run_module():
 
     # If the command triggered a transaction, then set changed to true
     if transaction:
-        result['changed'] = True
+        result["changed"] = True
 
     # Save the command that was executed
     result["command"] = " ".join(command)

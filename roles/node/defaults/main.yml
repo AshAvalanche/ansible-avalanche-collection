@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: BSD-3-Clause
-# Copyright (c) 2022-2023, E36 Knots
+# Copyright (c) 2022-2024, E36 Knots
 ---
 # Avalanchego version
 avalanchego_version: 1.10.0
@@ -13,7 +13,7 @@ avalanchego_db_dir: /var/lib/avalanche/avalanchego/db
 
 # Configuration directories
 avalanchego_conf_dir: /etc/avalanche/avalanchego/conf
-avalanchego_staking_certs_dir: /etc/avalanche/avalanchego/staking
+avalanchego_staking_dir: /etc/avalanche/avalanchego/staking
 avalanchego_https_certs_dir: /etc/ssl/certs/avalanche/avalanchego
 avalanchego_gpg_dir: /etc/avalanche/avalanchego/gnupg
 
@@ -49,6 +49,14 @@ avalanchego_staking_port: 9651
 ## If set to `true`, will use existing certificates found in `avalanchego_staking_local_certs_dir`
 avalanchego_staking_use_local_certs: false
 avalanchego_staking_local_certs_dir: "{{ playbook_dir }}/files/staking"
+## If set to `true`, will use existing BLS keys found in `avalanchego_staking_local_bls_keys_dir`
+avalanchego_staking_use_local_bls_keys: false
+avalanchego_staking_local_bls_keys_dir: "{{ playbook_dir }}/files/staking"
+
+# Genesis
+## If set to `true`, will use existing genesis file at `avalanchego_custom_genesis_local_file`
+avalanchego_custom_genesis: false
+avalanchego_custom_genesis_local_file: "{{ playbook_dir }}/files/genesis.json"
 
 # Bootstrapping
 avalanchego_network_id: fuji
@@ -151,4 +159,4 @@ avalanchego_service_options: |
 ## Whether to install and configure Ash CLI on the node
 ash_cli_install: true
 ## The avalanche network to be used in the Ash CLI (sets the RPC endpoints to use)
-ash_cli_network_id: fuji
+ash_cli_network_id: "{{ avalanchego_network_id }}"

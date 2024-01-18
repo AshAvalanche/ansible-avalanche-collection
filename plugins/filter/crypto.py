@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # SPDX-License-Identifier: BSD-3-Clause
-# Copyright (c) 2022-2023, E36 Knots
+# Copyright (c) 2022-2024, E36 Knots
 
 from ansible.errors import AnsibleError
 
@@ -11,10 +11,10 @@ from web3 import Web3
 class FilterModule(object):
     def filters(self):
         return {
-            'cb58_to_hex': self.cb58_to_hex,
-            'cb58_to_bytes': self.cb58_to_bytes,
-            'hex_to_cb58': self.hex_to_cb58,
-            'hex_to_bytes': self.hex_to_bytes,
+            "cb58_to_hex": self.cb58_to_hex,
+            "cb58_to_bytes": self.cb58_to_bytes,
+            "hex_to_cb58": self.hex_to_cb58,
+            "hex_to_bytes": self.hex_to_bytes,
         }
 
     def cb58_to_hex(self, string):

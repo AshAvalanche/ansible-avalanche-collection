@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: BSD-3-Clause
-# Copyright (c) 2022-2023, E36 Knots
+# Copyright (c) 2022-2024, E36 Knots
 ---
 # Subnet configuration
 subnet_avalanche_network_id: local
@@ -43,7 +43,7 @@ subnet_blockchains_list:
   ##         targetBlockRate: 2
   ##         blockGasCostStep: 200000
   ##     alloc:
-  ##       8db97C7cEcE249c2b98bDC0226Cc4C2A57BF52FC:
+  ##       "0x8db97C7cEcE249c2b98bDC0226Cc4C2A57BF52FC":
   ##         balance: "0x295BE96E64066972000000"
   ##     nonce: "0x0"
   ##     timestamp: "0x0"

@@ -1,21 +1,21 @@
 #!/usr/bin/python
 # SPDX-License-Identifier: BSD-3-Clause
-# Copyright (c) 2022-2023, E36 Knots
+# Copyright (c) 2022-2024, E36 Knots
 
 from ansible.errors import AnsibleError
 
 
 class FilterModule(object):
     def filters(self):
-        return {'convert': self.convert}
+        return {"convert": self.convert}
 
     def convert(self, amount, from_unit, to_unit):
         units = {
-            'wei': 1,
-            'gwei': 1e9,
-            'navax': 1e9,
-            'avax': 1e18,
-            'eth': 1e18,
+            "wei": 1,
+            "gwei": 1e9,
+            "navax": 1e9,
+            "avax": 1e18,
+            "eth": 1e18,
         }
 
         from_unit_lower = from_unit.lower()

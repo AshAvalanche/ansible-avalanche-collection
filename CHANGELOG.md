@@ -1,5 +1,18 @@
 # Changelog
 
+## [v0.11.1](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.11.1) (2024-01-18)
+
+[Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.11.0...v0.11.1)
+
+**Closed issues:**
+
+- Allow to specify different network\_ids for AvalancheGo and the Ash CLI [\#115](https://github.com/AshAvalanche/ansible-avalanche-collection/issues/115)
+
+**Merged pull requests:**
+
+- added optional parameters to customize  the avalanchego.service file [\#117](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/117) ([ngurmen](https://github.com/ngurmen))
+- fix to allow different network ids between ash\_cli and avalanchego [\#116](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/116) ([ngurmen](https://github.com/ngurmen))
+
 ## [v0.11.0](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.11.0) (2023-12-21)
 
 [Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.10.0...v0.11.0)

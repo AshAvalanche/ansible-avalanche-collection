@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: BSD-3-Clause
-# Copyright (c) 2022-2023, E36 Knots
+# Copyright (c) 2022-2024, E36 Knots
 ---
 - name: Set bootstrap_ips variable
   set_fact:
@@ -19,13 +19,27 @@
              else (avalanchego_bootstrap_node_ids | join(','))
          } if avalanchego_network_id not in ['mainnet', 'testnet', 'fuji'] else {} }}
 
+- name: Construct genesis-file conf
+  set_fact:
+    node_conf_genesis_file: |
+      {{ {
+           'genesis-file': avalanchego_conf_dir + '/genesis.json'
+         } if avalanchego_custom_genesis else {} }}
+
 - name: Construct staking-tls-*-file conf
   set_fact:
     node_conf_staking_tls_files: |
       {{ {
-           'staking-tls-cert-file': avalanchego_staking_certs_dir + '/node.crt',
-           'staking-tls-key-file': avalanchego_staking_certs_dir + '/node.key'
+           'staking-tls-cert-file': avalanchego_staking_dir + '/staker.crt',
+           'staking-tls-key-file': avalanchego_staking_dir + '/staker.key'
          } if avalanchego_staking_use_local_certs else {} }}
+
+- name: Construct staking-signer-key-file conf
+  set_fact:
+    node_conf_staking_signer_key_file: |
+      {{ {
+           'staking-signer-key-file': avalanchego_staking_dir + '/signer.key'
+         } if avalanchego_staking_use_local_bls_keys else {} }}
 
 - name: Construct http-tls-*-file conf
   set_fact:
@@ -40,7 +54,9 @@
     node_conf_json: |
       {{ (
         node_conf_bootstrap,
+        node_conf_genesis_file,
         node_conf_staking_tls_files,
+        node_conf_staking_signer_key_file,
         node_conf_http_tls_files
         ) | combine(avalanchego_node_json) }}
 
@@ -52,10 +68,18 @@
     group: "{{ avalanchego_group }}"
   notify: Restart avalanchego
 
+- name: Upload genesis.json
+  copy:
+    src: "{{ avalanchego_custom_genesis_local_file }}"
+    dest: "{{ avalanchego_conf_dir }}/genesis.json"
+    owner: "{{ avalanchego_user }}"
+    group: "{{ avalanchego_group }}"
+  when: avalanchego_custom_genesis
+
 - name: Upload node staking certificates
   copy:
     src: "{{ avalanchego_staking_local_certs_dir }}/{{ inventory_hostname }}.{{ item }}"
-    dest: "{{ avalanchego_staking_certs_dir }}/node.{{ item }}"
+    dest: "{{ avalanchego_staking_dir }}/staker.{{ item }}"
     owner: "{{ avalanchego_user }}"
     group: "{{ avalanchego_group }}"
     mode: 0400
@@ -63,6 +87,16 @@
     - crt
     - key
   when: avalanchego_staking_use_local_certs
+  notify: Restart avalanchego
+
+- name: Upload node staking BLS keys
+  copy:
+    src: "{{ avalanchego_staking_local_bls_keys_dir }}/{{ inventory_hostname }}.bls.key"
+    dest: "{{ avalanchego_staking_dir }}/signer.key"
+    owner: "{{ avalanchego_user }}"
+    group: "{{ avalanchego_group }}"
+    mode: 0400
+  when: avalanchego_staking_use_local_bls_keys
   notify: Restart avalanchego
 
 # Handle TLS certificates for HTTPS

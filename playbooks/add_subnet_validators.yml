@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: BSD-3-Clause
-# Copyright (c) 2022-2023, E36 Knots
+# Copyright (c) 2022-2024, E36 Knots
 ---
 # Add nodes as Subnet validators (to `add_validators_subnet_id` Subnet)
 - name: Add Subnet validators

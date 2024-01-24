@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: BSD-3-Clause
-# Copyright (c) 2022-2023, E36 Knots
+# Copyright (c) 2022-2024, E36 Knots
 ---
 - name: Install AvalancheGo
   import_tasks: install-avalanchego.yml
@@ -66,13 +66,13 @@
     - ash_cli
     - install-ash_cli
   vars:
-    ash_cli_avalanche_network_id: "{{ avalanchego_network_id }}"
+    ash_cli_avalanche_network_id: "{{ ash_cli_network_id }}"
   when: ash_cli_install
 
-- name: Generate Ash CLI local network configuration
+- name: Generate Ash CLI local network configuration (1/2)
   set_fact:
-    ash_cli_networks:
-      local:
+    ash_cli_networks: |
+      {{ avalanchego_network_id }}:
         pchain_rpc_url: "{{ ash_cli_local_endpoint }}/ext/bc/P"
         cchain_rpc_url: "{{ ash_cli_local_endpoint }}/ext/bc/C/rpc"
         xchain_rpc_url: "{{ ash_cli_local_endpoint }}/ext/bc/X"
@@ -84,7 +84,18 @@
     ash_cli_local_endpoint: "{{ 'https' if avalanchego_https_enabled else 'http' }}://{{ '127.0.0.1' if avalanchego_http_host == '0.0.0.0' else avalanchego_http_host }}:{{ avalanchego_http_port }}"
   when:
     - ash_cli_install
-    - avalanchego_network_id == 'local'
+    - avalanchego_network_id not in ['mainnet', 'testnet', 'fuji']
+
+- name: Generate Ash CLI local network configuration (2/2)
+  set_fact:
+    ash_cli_networks: "{{ ash_cli_networks | from_yaml }}"
+  tags:
+    - config
+    - ash_cli
+    - config-ash_cli
+  when:
+    - ash_cli_install
+    - avalanchego_network_id not in ['mainnet', 'testnet', 'fuji']
 
 - name: Configure Ash CLI
   import_role:

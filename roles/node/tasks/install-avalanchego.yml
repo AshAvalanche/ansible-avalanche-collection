@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: BSD-3-Clause
-# Copyright (c) 2022-2023, E36 Knots
+# Copyright (c) 2022-2024, E36 Knots
 ---
 - name: "Check that AvalancheGo {{ avalanchego_version }} is supported"
   debug:
@@ -29,7 +29,7 @@
     - "{{ avalanchego_subnets_conf_dir }}"
     - "{{ avalanchego_chains_conf_dir }}"
     - "{{ avalanchego_vms_conf_dir }}"
-    - "{{ avalanchego_staking_certs_dir }}"
+    - "{{ avalanchego_staking_dir }}"
     - "{{ avalanchego_https_certs_dir }}"
     - "{{ avalanchego_log_dir }}"
     - "{{ avalanchego_gpg_dir }}"

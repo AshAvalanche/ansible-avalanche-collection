@@ -1,5 +1,13 @@
 # Changelog
 
+## [v0.12.0](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.12.0) (2024-01-24)
+
+[Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.11.1...v0.12.0)
+
+**Breaking changes:**
+
+- feat\(node\): support BLS staking key + custom network genesis [\#118](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/118) ([Nuttymoon](https://github.com/Nuttymoon))
+
 ## [v0.11.1](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.11.1) (2024-01-18)
 
 [Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.11.0...v0.11.1)

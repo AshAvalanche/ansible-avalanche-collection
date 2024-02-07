@@ -16,7 +16,7 @@
   file:
     path: "{{ item.path }}"
     state: absent
-  when: (item.path | basename) not in expected_plugins
+  when: (item.path | basename) not in (expected_plugins | default([]))
   loop: "{{ links.files }}"
   loop_control:
     label: "{{ item.path }}"

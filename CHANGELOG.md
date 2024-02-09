@@ -1,5 +1,13 @@
 # Changelog
 
+## [v0.12.1](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.12.1) (2024-02-09)
+
+[Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.12.0...v0.12.1)
+
+**Merged pull requests:**
+
+- fix: allow the removing of outdated links when emptying avalanchego\_p… [\#121](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/121) ([Al3xGROS](https://github.com/Al3xGROS))
+
 ## [v0.12.0](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.12.0) (2024-01-24)
 
 [Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.11.1...v0.12.0)

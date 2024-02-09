@@ -96,3 +96,9 @@ avalanchego_vms_list:
       0.5.10:
         ge: 1.10.15
         le: 1.10.17
+      0.5.11:
+        ge: 1.10.18
+        le: 1.10.19
+      0.6.0-fuji:
+        ge: 1.11.0-fuji
+        le: 1.11.0-fuji

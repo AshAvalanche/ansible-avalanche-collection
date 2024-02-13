@@ -33,3 +33,4 @@
     end_time: "{{ validator_end_time }}"
     stake_or_weight: "{{ validator_stake_or_weight }}"
     delegation_fee: "{{ validator_delegation_fee }}"
+    signer: "{{ node_info_res.output.signer.publicKey }}:{{ node_info_res.output.signer.proofOfPossession }}"

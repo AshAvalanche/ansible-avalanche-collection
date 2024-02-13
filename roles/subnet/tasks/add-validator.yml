@@ -11,6 +11,7 @@
 # - end_time: End time of the validation period. Will be resolved if set to 'end_time_command_output'
 # - stake_or_weight: Stake in AVAX or weight of the validator
 # - delegation_fee: Delegation fee of the validator
+# - signer: Signer (BLS public key and PoP) in "publicKey:PoP" format
 
 - name: Resolve start_time_command
   shell: "{{ start_time_command | default(subnet_validator_start_time_command) }}"
@@ -57,7 +58,27 @@
   set_fact:
     node_is_pending_validator: "{{ pending_validators_list_res.output | json_query('[?nodeID==`' + node_id + '`]') | length > 0 }}"
 
-- name: "Add '{{ node_id }}' as validator if it is not already"
+# Primary Network (requires `signer`)
+- name: "Add '{{ node_id }}' as validator if it is not already (Primary Network)"
+  ash.avalanche.ash_cmd:
+    command: "avalanche validator add {{ node_id }} {{ stake_or_weight }}"
+    options:
+      subnet-id: "{{ subnet_id }}"
+      start-time: "{{ start_time if start_time != 'start_time_command_output' else start_time_command_output }}"
+      end-time: "{{ end_time if end_time != 'end_time_command_output' else end_time_command_output }}"
+      delegation-fee: "{{ delegation_fee }}"
+      signer: "{{ signer }}"
+    avalanche_private_key: "{{ subnet_txs_private_key }}"
+  environment:
+    AVALANCHE_NETWORK: "{{ subnet_avalanche_network_id }}"
+    AVALANCHE_KEY_ENCODING: "{{ subnet_txs_key_encoding }}"
+  when:
+    - not node_is_validator
+    - not node_is_pending_validator
+    - subnet_id == avalanche_primary_network_id
+
+# Other Subnets (does not require `signer`)
+- name: "Add '{{ node_id }}' as validator if it is not already (other Subnet)"
   ash.avalanche.ash_cmd:
     command: "avalanche validator add {{ node_id }} {{ stake_or_weight }}"
     options:
@@ -72,3 +93,4 @@
   when:
     - not node_is_validator
     - not node_is_pending_validator
+    - subnet_id != avalanche_primary_network_id

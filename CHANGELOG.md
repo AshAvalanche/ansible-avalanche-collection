@@ -1,5 +1,17 @@
 # Changelog
 
+## [v0.12.2](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.12.2) (2024-02-13)
+
+[Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.12.1...v0.12.2)
+
+**Implemented enhancements:**
+
+- Provide the node BLS PoP when adding a validator to the Primary Network [\#120](https://github.com/AshAvalanche/ansible-avalanche-collection/issues/120)
+
+**Merged pull requests:**
+
+- feat: provide node signer when adding as validator [\#123](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/123) ([Nuttymoon](https://github.com/Nuttymoon))
+
 ## [v0.12.1](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.12.1) (2024-02-09)
 
 [Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.12.0...v0.12.1)

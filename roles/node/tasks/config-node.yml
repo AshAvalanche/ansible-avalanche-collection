@@ -66,6 +66,7 @@
     dest: "{{ avalanchego_conf_dir }}/node.json"
     owner: "{{ avalanchego_user }}"
     group: "{{ avalanchego_group }}"
+    mode: 0400
   notify: Restart avalanchego
 
 - name: Upload genesis.json

@@ -32,7 +32,7 @@
         mode: 0640
       loop:
         - "{{ playbook_dir }}/../files/dashboards/subnets.json.j2"
-      when: grafana_subnets_dashboard_variables is not none and grafana_subnets_dashboard_variables|default([])|length >  0
+      when: (grafana_subnets_dashboard_variables | default([]) | length) >  0
       register: template_subnets
 
     - name: Restart Grafana

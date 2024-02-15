@@ -17,7 +17,7 @@
   hosts: grafana
   become: true
   roles:
-    - role: cloudalchemy.grafana
+    - role: grafana.grafana.grafana
 
 - name: Import templated Grafana dashboard
   hosts: grafana
@@ -32,7 +32,7 @@
         mode: 0640
       loop:
         - "{{ playbook_dir }}/../files/dashboards/subnets.json.j2"
-      when: grafana_subnets_dashboard_variables is defined
+      when: (grafana_subnets_dashboard_variables | default([]) | length) >  0
       register: template_subnets
 
     - name: Restart Grafana

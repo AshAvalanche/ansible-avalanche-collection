@@ -3,8 +3,6 @@ version: '3.9'
 services:
   db-init:
     image: postgres:15
-    volumes:
-      - /var/lib/postgres:/var/lib/postgresql/data
     entrypoint:
       - sh
       - -c
@@ -27,5 +25,3 @@ services:
     ports:
       - target: 5432
         published: 7432
-    volumes:
-      - /var/lib/postgres:/var/lib/postgresql/data

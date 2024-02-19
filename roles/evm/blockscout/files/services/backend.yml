@@ -10,6 +10,3 @@ services:
     command: sh -c "bin/blockscout eval \"Elixir.Explorer.ReleaseTasks.create_and_migrate()\" && bin/blockscout start"
     env_file:
       - /etc/blockscout/conf/vars-backend.env
-    volumes:
-      - /var/log/blockscout/:/app/logs/
-      - /etc/blockscout/conf/custom/images/:/app/images/

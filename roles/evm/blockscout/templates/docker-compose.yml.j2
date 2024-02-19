@@ -5,16 +5,22 @@ services:
     extends:
       file: ./custom/services/redis.yml
       service: redis-db
+    volumes:
+      - {{ blockscout_log_dir }}:/app/logs/
 
   db-init:
     extends:
       file: ./custom/services/db.yml
       service: db-init
+    volumes:
+      - {{ blockscout_data_dir }}:/var/lib/postgresql/data
 
   db:
     extends:
       file: ./custom/services/db.yml
       service: db
+    volumes:
+      - {{ blockscout_data_dir }}:/var/lib/postgresql/data
 
   backend:
     depends_on:
@@ -25,6 +31,9 @@ services:
       service: backend
     links:
       - db:database
+    volumes:
+      - {{ blockscout_log_dir }}:/app/logs/
+      - {{ blockscout_custom_dir }}/images/:/app/images/
 
   visualizer:
     extends:

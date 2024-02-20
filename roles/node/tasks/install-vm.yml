@@ -19,6 +19,13 @@
     owner: "{{ avalanchego_user }}"
     group: "{{ avalanchego_group }}"
 
+- name: "Check if only one of {{ vm_info.download_url }} and {{ vm_info.path }} is defined"
+  assert:
+    that: "vm_info.download_url is defined != vm_info.path is defined"
+    msg: "Only one of vm_info.download_url and vm_info.path must be defined"
+    fail_msg: "Both vm_info.download_url and vm_info.path are defined"
+    success_msg: "Only one of vm_info.download_url and vm_info.path is defined"
+
 - name: "Download {{ vm_name }} {{ vm_version }} binary"
   get_url:
     url: "{{ vm_info.download_url }}/v{{ vm_version }}/{{ avalanchego_vm_binary_filename }}"
@@ -26,6 +33,15 @@
     checksum: "sha256:{{ vm_info.download_url }}/v{{ vm_version }}/{{ avalanchego_vm_checksum_filename }}"
     owner: "{{ avalanchego_user }}"
     group: "{{ avalanchego_group }}"
+  when: vm_info.download_url is defined and vm_info.path is not defined
+
+- name: "Upload {{ vm_name }} {{ vm_version }} binary"
+  copy:
+    src: "{{ vm_info.path }}/{{ avalanchego_vm_binary_filename }}"
+    dest: "{{ avalanchego_vms_dir }}/{{ vm_name }}/releases/{{ avalanchego_vm_binary_filename }}"
+    owner: "{{ avalanchego_user }}"
+    group: "{{ avalanchego_group }}"
+  when: vm_info.download_url is not defined and vm_info.path is defined
 
 - name: "Create {{ vm_name }}-v{{ vm_version }} directory"
   file:

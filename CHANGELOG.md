@@ -1,5 +1,22 @@
 # Changelog
 
+## [v0.12.3](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.12.3) (2024-02-21)
+
+[Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.12.2...v0.12.3)
+
+**Implemented enhancements:**
+
+- Allow to secure the endpoints with the auth API  [\#25](https://github.com/AshAvalanche/ansible-avalanche-collection/issues/25)
+
+**Closed issues:**
+
+- Allow `avalanchego_vms_list` to define a `path` variable to fetch the archive locally [\#125](https://github.com/AshAvalanche/ansible-avalanche-collection/issues/125)
+
+**Merged pull requests:**
+
+- feat: allow a path variable for local VM archive fetching [\#126](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/126) ([leopaul36](https://github.com/leopaul36))
+- fix: modif of install\_monitoring\_stack.yml to fit new update of grafana [\#122](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/122) ([Al3xGROS](https://github.com/Al3xGROS))
+
 ## [v0.12.2](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.12.2) (2024-02-13)
 
 [Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.12.1...v0.12.2)

@@ -33,7 +33,7 @@ services:
       - db:database
     volumes:
       - {{ blockscout_log_dir }}:/app/logs/
-      - {{ blockscout_custom_dir }}/images/:/app/images/
+      - {{ blockscout_custom_dir }}/images:/app/apps/block_scout_web/assets/static/images
 
   visualizer:
     extends:

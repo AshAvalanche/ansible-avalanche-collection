@@ -1,0 +1,12 @@
+version: '3.9'
+
+services:
+  backend:
+    image: blockscout/blockscout:6.1.0
+    pull_policy: always
+    restart: always
+    stop_grace_period: 5m
+    container_name: 'backend'
+    command: sh -c "bin/blockscout eval \"Elixir.Explorer.ReleaseTasks.create_and_migrate()\" && bin/blockscout start"
+    env_file:
+      - /etc/blockscout/conf/vars-backend.env

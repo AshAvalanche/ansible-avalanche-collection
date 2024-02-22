@@ -1,37 +1,61 @@
-version: "3.8"
+version: '3.9'
 
 services:
-  db:
-    image: postgres:14
-    restart: always
-    container_name: "postgres"
-    command: postgres -c 'max_connections=200'
-    environment:
-      POSTGRES_PASSWORD: ""
-      POSTGRES_USER: "postgres"
-      POSTGRES_HOST_AUTH_METHOD: "trust"
-    ports:
-      - 7432:5432
+  redis-db:
+    extends:
+      file: ./custom/services/redis.yml
+      service: redis-db
+    volumes:
+      - {{ blockscout_log_dir }}:/app/logs/
+
+  db-init:
+    extends:
+      file: ./custom/services/db.yml
+      service: db-init
     volumes:
       - {{ blockscout_data_dir }}:/var/lib/postgresql/data
 
-  blockscout:
-    platform: linux/x86_64
+  db:
+    extends:
+      file: ./custom/services/db.yml
+      service: db
+    volumes:
+      - {{ blockscout_data_dir }}:/var/lib/postgresql/data
+
+  backend:
     depends_on:
       - db
-    image: {{ blockscout_image }}:{{ blockscout_image_version }}
-    restart: always
-    stop_grace_period: 5m
-    container_name: "blockscout"
+      - redis-db
+    extends:
+      file: ./custom/services/backend.yml
+      service: backend
     links:
       - db:database
-    command: bash -c "bin/blockscout eval \"Elixir.Explorer.ReleaseTasks.create_and_migrate()\" && bin/blockscout start"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    env_file:
-      - ./vars.env
-    ports:
-      - 4000:4000
     volumes:
       - {{ blockscout_log_dir }}:/app/logs/
-      - {{ blockscout_custom_dir }}:/app/lib/block_scout_web-{{ blockscout_image_version }}/priv/static/images/custom
+      - {{ blockscout_custom_dir }}/images:/app/apps/block_scout_web/assets/static/images
+
+  visualizer:
+    extends:
+      file: ./custom/services/visualizer.yml
+      service: visualizer
+
+  sig-provider:
+    extends:
+      file: ./custom/services/sig-provider.yml
+      service: sig-provider
+
+  frontend:
+    depends_on:
+      - backend
+    extends:
+      file: ./custom/services/frontend.yml
+      service: frontend
+
+  proxy:
+    depends_on:
+      - backend
+      - frontend
+    extends:
+      file: ./custom/services/nginx.yml
+      service: proxy

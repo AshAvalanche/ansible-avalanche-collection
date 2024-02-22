@@ -1,9 +1,6 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # Copyright (c) 2022-2024, E36 Knots
 ---
-# Blockscout version
-blockscout_image: blockscout/blockscout
-blockscout_image_version: 5.1.0
 
 # Configuration directories
 blockscout_conf_dir: /etc/blockscout/conf
@@ -19,44 +16,74 @@ blockscout_data_dir: /var/lib/postgres
 blockscout_user: root
 
 # Blockscout variables
-blockscout_rpc: http://192.168.60.11:9650/ext/bc/27Lga51x8AQnBDJTnE6sUSiFmdrDSqCYhbkiTQD8oBd1EqotZ1/rpc
+blockscout_rpc: http://10.238.106.22:9650/ext/bc/RfX8YRUHePxFENBZFwaNt1tP6CR6RQ4hJJ5AqYv49LRoSKniK/rpc
 blockscout_header_logo_file: ash-logo-circle-30.svg
+blockscout_frontend_ip: 10.238.106.149
 
-# Blockscout Docker env variables
-blockscout_env_vars:
-  # Logo
-  LOGO: "/images/custom/{{ blockscout_header_logo_file }}"
-  # Port
-  PORT: 4000
-  # RPC variables
+# Blockscout env variables
+# --> https://docs.blockscout.com/for-developers/information-and-settings/env-variables
+blockscout_backend_env_vars:
+  # Rpc the client is using
   ETHEREUM_JSONRPC_VARIANT: geth
   ETHEREUM_JSONRPC_HTTP_URL: "{{ blockscout_rpc }}"
   ETHEREUM_JSONRPC_TRACE_URL: "{{ blockscout_rpc }}"
-  CHAIN_ID: 13213
-  # Database
-  DATABASE_URL: postgresql://postgres:@host.docker.internal:7432/blockscout?ssl=false
-  # Native coin does not exist in Coin Gecko
-  DISABLE_EXCHANGE_RATES: "true"
-  INDEXER_DISABLE_ADDRESS_COIN_BALANCE_FETCHER: "true"
-  # debug_traceTransaction not available
-  INDEXER_DISABLE_INTERNAL_TRANSACTIONS_FETCHER: "true"
-  # txpool_content not available
-  INDEXER_DISABLE_PENDING_TRANSACTIONS_FETCHER: "true"
-  # Page title
+
+  # Postgres database endpoint
+  DATABASE_URL: postgresql://postgres:ceWb1MeLBEeOIfk65gU8EjF8@db:5432/blockscout
+  SECRET_KEY_BASE: 56NtB48ear7+wMSf0IQuWDAAazhpb31qyc7GiyspBP2vh7t5zlCsF5QDv76chXeN
+
+  # Network
   NETWORK: EVM
-  SUBNETWORK: My Subnet
-  blockscout_image_version: "{{ blockscout_image_version }}"
-  # Disable Apps menu
-  APPS_MENU: "false"
-  EXTERNAL_APPS: []
-  COIN_NAME: SUBNET
-  # ?
+  SUBNETWORK: MySubnet
+
+  # Port
+  PORT: 4000
+
+  # Logo
+  LOGO: /app/apps/block_scout_web/assets/static/images/ash-logo-circle-30.svg
+
+  # Footer
+  FOOTER_LOGO: /app/apps/block_scout_web/assets/static/images/ash-logo-circle-30.svg
+
+  # Enable SSL encryption for ecto queries
   ECTO_USE_SSL: "false"
-  # Disable metrics viewer
-  WOBSERVER_ENABLED: "false"
-  # Disable Rust Smart Contract verifier
-  ENABLE_RUST_VERIFICATION_SERVICE: "false"
-  # Disable Sol2Uml
-  VISUALIZE_SOL2UML_ENABLED: "false"
-  # Disable other explorer links
+
+  # Fetching coin exchange rates from CoinGecko
+  DISABLE_EXCHANGE_RATES: "true"
+
+  # List of supported chains for chain dropdown
   SUPPORTED_CHAINS: []
+
+  # Number of days for fetching of history of txs count for display
+  TXS_STATS_DAYS_TO_COMPILE_AT_INIT: 10
+
+blockscout_frontend_env_variables:
+  # API conf
+  NEXT_PUBLIC_API_HOST: "{{ blockscout_frontend_ip }}"
+  NEXT_PUBLIC_API_PROTOCOL: http
+  NEXT_PUBLIC_API_BASE_PATH: /
+  # NEXT_PUBLIC_STATS_API_HOST: http://10.238.106.212:8080
+
+  # Network
+  NEXT_PUBLIC_NETWORK_NAME: Ash Subnet
+  NEXT_PUBLIC_NETWORK_SHORT_NAME: Ash
+  NEXT_PUBLIC_NETWORK_ID: 66666
+
+  # Coin
+  NEXT_PUBLIC_NETWORK_CURRENCY_NAME: AshCoin
+  NEXT_PUBLIC_NETWORK_CURRENCY_SYMBOL: ASH
+  NEXT_PUBLIC_NETWORK_CURRENCY_DECIMALS: 18
+
+  # App conf
+  NEXT_PUBLIC_APP_HOST: "{{ blockscout_frontend_ip }}"
+  NEXT_PUBLIC_APP_PROTOCOL: http
+
+  # Miscellaneous
+  NEXT_PUBLIC_HOMEPAGE_CHARTS: ['daily_txs']
+  NEXT_PUBLIC_VISUALIZE_API_HOST: "http://{{ blockscout_frontend_ip }}:8081"
+  NEXT_PUBLIC_IS_TESTNET: "true"
+  NEXT_PUBLIC_API_WEBSOCKET_PROTOCOL: ws
+  NEXT_PUBLIC_API_SPEC_URL: https://raw.githubusercontent.com/blockscout/blockscout-api-v2-swagger/main/swagger.yaml
+
+blockscout_visualizer_env_variables:
+  VISUALIZER__SERVER__GRPC__ENABLED: "false"

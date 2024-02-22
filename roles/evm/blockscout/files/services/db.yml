@@ -1,0 +1,27 @@
+version: '3.9'
+
+services:
+  db-init:
+    image: postgres:15
+    entrypoint:
+      - sh
+      - -c
+      - |
+        chown -R 2000:2000 /var/lib/postgresql/data
+
+  db:
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+    image: postgres:15
+    shm_size: 256m
+    restart: always
+    container_name: 'db'
+    command: postgres -c 'max_connections=200' -c 'client_connection_check_interval=60000'
+    environment:
+        POSTGRES_PASSWORD: ""
+        POSTGRES_USER: "postgres"
+        POSTGRES_HOST_AUTH_METHOD: "trust"
+    ports:
+      - target: 5432
+        published: 7432

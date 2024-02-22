@@ -21,18 +21,58 @@
     group: "{{ blockscout_user }}"
   notify: Restart blockscout
 
-- name: Template vars.env
-  template:
-    src: vars.env.j2
-    dest: "{{ blockscout_conf_dir }}/vars.env"
+- name: Upload services
+  copy:
+    src: "services"
+    dest: "{{ blockscout_custom_dir }}"
     owner: "{{ blockscout_user }}"
     group: "{{ blockscout_user }}"
   notify: Restart blockscout
 
+- name: Upload proxy
+  copy:
+    src: "proxy"
+    dest: "{{ blockscout_custom_dir }}"
+    owner: "{{ blockscout_user }}"
+    group: "{{ blockscout_user }}"
+  notify: Restart blockscout
+
+- name: Template vars-backend.env
+  template:
+    src: vars-backend.env.j2
+    dest: "{{ blockscout_conf_dir }}/vars-backend.env"
+    owner: "{{ blockscout_user }}"
+    group: "{{ blockscout_user }}"
+  notify: Restart blockscout
+
+- name: Template vars-frontend.env
+  template:
+    src: vars-frontend.env.j2
+    dest: "{{ blockscout_conf_dir }}/vars-frontend.env"
+    owner: "{{ blockscout_user }}"
+    group: "{{ blockscout_user }}"
+  notify: Restart blockscout
+
+- name: Template vars-visualizer.env
+  template:
+    src: vars-visualizer.env.j2
+    dest: "{{ blockscout_conf_dir }}/vars-visualizer.env"
+    owner: "{{ blockscout_user }}"
+    group: "{{ blockscout_user }}"
+  notify: Restart blockscout
+
+- name: Ensure images directory exists
+  file:
+    path: "{{ blockscout_custom_dir }}/images"
+    state: directory
+    owner: "{{ blockscout_user }}"
+    group: "{{ blockscout_user }}"
+    mode: '0755'
+
 - name: Upload logo image
   copy:
     src: "{{ blockscout_header_logo_file }}"
-    dest: "{{ blockscout_custom_dir }}/{{ blockscout_header_logo_file }}"
+    dest: "{{ blockscout_custom_dir }}/images/{{ blockscout_header_logo_file }}"
     owner: "{{ blockscout_user }}"
     group: "{{ blockscout_user }}"
   notify: Restart blockscout

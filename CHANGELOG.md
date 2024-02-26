@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/HEAD)
+
+[Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.12.3...HEAD)
+
+**Merged pull requests:**
+
+- feat: upgrade blockscout to 6.1.0 [\#124](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/124) ([Al3xGROS](https://github.com/Al3xGROS))
+
 ## [v0.12.3](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.12.3) (2024-02-21)
 
 [Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.12.2...v0.12.3)

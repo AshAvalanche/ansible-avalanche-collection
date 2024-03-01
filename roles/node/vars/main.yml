@@ -2,7 +2,7 @@
 # Copyright (c) 2022-2024, E36 Knots
 ---
 # AvalancheGo version
-avalanchego_min_version: 1.9.6
+avalanchego_min_version: 1.10.0
 avalanchego_binary_arch: amd64
 avalanchego_binary_name: "avalanchego-linux-{{ avalanchego_binary_arch }}-v{{ avalanchego_version }}.tar.gz"
 avalanchego_binary_url: "https://github.com/ava-labs/avalanchego/releases/download/v{{ avalanchego_version }}/{{ avalanchego_binary_name }}"
@@ -42,24 +42,6 @@ avalanchego_vms_list:
     # The VM binary filename
     binary_filename: subnet-evm
     versions_comp:
-      # Protocol version: 22
-      0.4.8:
-        ge: 1.9.6
-        le: 1.9.8
-      # Protocol version: 23
-      0.4.9:
-        ge: 1.9.9
-        le: 1.9.9
-      0.4.10:
-        ge: 1.9.9
-        le: 1.9.9
-      # Protocol version: 24
-      0.4.11:
-        ge: 1.9.10
-        le: 1.9.16
-      0.4.12:
-        ge: 1.9.10
-        le: 1.9.16
       # Protocol version: 25
       0.5.0:
         ge: 1.10.0
@@ -96,9 +78,14 @@ avalanchego_vms_list:
       0.5.10:
         ge: 1.10.15
         le: 1.10.17
+      # Protocol version: 31
       0.5.11:
         ge: 1.10.18
         le: 1.10.19
+      # Protocol version: 33
       0.6.0-fuji:
         ge: 1.11.0-fuji
         le: 1.11.0-fuji
+      0.6.1:
+        ge: 1.11.1
+        le: 1.11.1

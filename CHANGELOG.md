@@ -1,8 +1,8 @@
 # Changelog
 
-## [Unreleased](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/HEAD)
+## [v0.12.4](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.12.4) (2024-03-01)
 
-[Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.12.3...HEAD)
+[Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.12.3...v0.12.4)
 
 **Merged pull requests:**
 

@@ -5,29 +5,29 @@
   set_fact:
     avalanchego_vm_binary_arch: "{{ 'amd64' if ansible_architecture == 'x86_64' else 'arm64' if ansible_architecture == 'aarch64' else avalanchego_vm_binary_arch }}"
 
-- name: Check that only one of `versions_comp_gh_repo` and `versions_comp_static` is defined
+- name: Check that only one of `versions_comp_gh_repo` and `versions_comp` is defined
   assert:
-    that: "(vm_info.version_comp_gh_repo) is defined != (vm_info.version_comp_static is defined)"
-    msg: "Only one of `version_comp_gh_repo` and `version_comp_static` must be defined"
-    fail_msg: "Both `version_comp_gh_repo` and `version_comp_static` are defined"
-    success_msg: "Only one of `version_comp_gh_repo` and `version_comp_static` is defined"
+    that: "(vm_info.versions_comp_gh_repo) is defined != (vm_info.versions_comp is defined)"
+    msg: "Only one of `versions_comp_gh_repo` and `versions_comp` must be defined"
+    fail_msg: "Both `versions_comp_gh_repo` and `versions_comp` are defined"
+    success_msg: "Only one of `versions_comp_gh_repo` and `versions_comp` is defined"
 
 - name: "Check that {{ vm_name }}={{ vm_version }} is compatible with avalanchego={{ avalanchego_version }}"
   debug:
     msg: "AvalancheGo version {{ item.key }} {{ item.value }}: {{ avalanchego_version is version(item.value, item.key) }}"
   run_once: true
-  loop: "{{ vm_info.version_comp_static[vm_version] | dict2items }}"
+  loop: "{{ vm_info.versions_comp[vm_version] | dict2items }}"
   failed_when: not avalanchego_version is version(item.value, item.key)
-  when: vm_info.version_comp_static is defined
+  when: vm_info.versions_comp is defined
 
 - name: "Check that {{ vm_name }}={{ vm_version }} is compatible with avalanchego={{ avalanchego_version }}"
   ash.avalanche.vm_version_compat:
-    vm_gh_repo: "{{ vm_info.version_comp_gh_repo }}"
+    vm_gh_repo: "{{ vm_info.versions_comp_gh_repo }}"
     vm_version: "v{{ vm_version }}"
     avalanche_gh_repo: "{{ avalanchego_gh_repo }}"
     avalanche_version: "v{{ avalanchego_version }}"
     strict: true
-  when: vm_info.version_comp_gh_repo is defined
+  when: vm_info.versions_comp_gh_repo is defined
 
 - name: "Create {{ vm_name }} dir"
   file:

@@ -42,12 +42,12 @@ avalanchego_vms_list:
     ash_vm_type: SubnetEVM
     # The VM binary filename
     binary_filename: subnet-evm
-    # Only one of `version_comp_repo` or `version_comp_static`
+    # Only one of `versions_comp_repo` or `versions_comp`
     # The GitHub repository where to find the `compatibility.json` file
-    version_comp_gh_repo: ava-labs/subnet-evm
+    versions_comp_gh_repo: ava-labs/subnet-evm
     # The static compatibility matrix
     # Example:
-    # versions_comp_static:
+    # versions_comp:
     #   0.5.0:
     #     ge: 1.10.0
     #     le: 1.10.0

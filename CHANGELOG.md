@@ -1,5 +1,21 @@
 # Changelog
 
+## [v0.12.5](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.12.5) (2024-03-12)
+
+[Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.12.4...v0.12.5)
+
+**Implemented enhancements:**
+
+- Dynamically check for VM version compatibility [\#128](https://github.com/AshAvalanche/ansible-avalanche-collection/issues/128)
+
+**Closed issues:**
+
+- Remove `snow-sample-size` [\#127](https://github.com/AshAvalanche/ansible-avalanche-collection/issues/127)
+
+**Merged pull requests:**
+
+- feat: add + use vm\_version\_compat module [\#129](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/129) ([Nuttymoon](https://github.com/Nuttymoon))
+
 ## [v0.12.4](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.12.4) (2024-03-01)
 
 [Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.12.3...v0.12.4)

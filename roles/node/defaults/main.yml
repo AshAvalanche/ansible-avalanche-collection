@@ -88,8 +88,6 @@ avalanchego_node_json:
   staking-port: "{{ avalanchego_staking_port }}"
   # Consensus
   network-id: "{{ avalanchego_network_id }}"
-  snow-sample-size: 20
-  snow-quorum-size: 15
   # Paths
   db-dir: "{{ avalanchego_db_dir }}"
   subnet-config-dir: "{{ avalanchego_subnets_conf_dir }}"

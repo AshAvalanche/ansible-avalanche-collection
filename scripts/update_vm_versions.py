@@ -20,7 +20,7 @@ VARS_YAML_HEADER_SIZE = 3
 VMS_REPOS = {
     "subnet-evm": "ava-labs/subnet-evm",
 }
-MIN_AVAX_VERSION = "1.9.6"
+MIN_AVAX_VERSION = "1.10.0"
 
 vms_versions_comp = {}
 
@@ -77,5 +77,5 @@ with open(vars_yaml_abs_path) as vars_yaml:
 for vm, v_comp in vms_versions_comp.items():
     vars_obj["avalanchego_vms_list"][vm]["versions_comp"] = v_comp
 
-with open(vars_yaml_abs_path + ".updated", "w") as vars_yaml:
+with open(vars_yaml_abs_path + ".updated.yml", "w") as vars_yaml:
     vars_yaml.write(vars_header + yaml.dump(vars_obj, Dumper=yaml.CDumper))

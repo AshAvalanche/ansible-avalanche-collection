@@ -61,6 +61,14 @@
     group: "{{ blockscout_user }}"
   notify: Restart blockscout
 
+- name: Template vars-smart-contract-verifier.env
+  template:
+    src: vars-smart-contract-verifier.env.j2
+    dest: "{{ blockscout_conf_dir }}/vars-smart-contract-verifier.env"
+    owner: "{{ blockscout_user }}"
+    group: "{{ blockscout_user }}"
+  notify: Restart blockscout
+
 - name: Ensure images directory exists
   file:
     path: "{{ blockscout_custom_dir }}/images"

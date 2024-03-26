@@ -45,6 +45,13 @@ services:
       file: ./custom/services/sig-provider.yml
       service: sig-provider
 
+  sc-verifier:
+    extends:
+      file: ./custom/services/smart-contract-verifier.yml
+      service: smart-contract-verifier
+    ports:
+      - 8082:8050
+
   frontend:
     depends_on:
       - backend

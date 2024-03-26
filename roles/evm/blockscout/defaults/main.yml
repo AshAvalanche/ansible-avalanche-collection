@@ -56,6 +56,9 @@ blockscout_backend_env_vars:
 
   # Number of days for fetching of history of txs count for display
   TXS_STATS_DAYS_TO_COMPILE_AT_INIT: 10
+  
+  # Enable Smart-contract verification microservice
+  MICROSERVICE_SC_VERIFIER_ENABLED: "true"
 
 blockscout_frontend_env_variables:
   # API conf

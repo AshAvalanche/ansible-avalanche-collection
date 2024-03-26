@@ -4,5 +4,12 @@
 - name: Configure Blockscout Docker
   include_tasks: config-blockscout.yml
 
+- name: Restart Blockscout Docker if needed
+  meta: flush_handlers
+  tags:
+    - Restart
+    - blockscout
+    - Restart-blockscout
+
 - name: Start Blockscout Docker
   include_tasks: start-blockscout.yml

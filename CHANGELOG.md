@@ -1,5 +1,17 @@
 # Changelog
 
+## [v0.12.6](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.12.6) (2024-03-29)
+
+[Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.12.5...v0.12.6)
+
+**Implemented enhancements:**
+
+- Upgrade Blockscout to 6.x [\#119](https://github.com/AshAvalanche/ansible-avalanche-collection/issues/119)
+
+**Merged pull requests:**
+
+- fix\(blockscout\): Add smart contract verifier [\#130](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/130) ([servalD](https://github.com/servalD))
+
 ## [v0.12.5](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.12.5) (2024-03-12)
 
 [Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.12.4...v0.12.5)

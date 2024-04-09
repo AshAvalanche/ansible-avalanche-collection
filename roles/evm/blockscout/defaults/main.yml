@@ -2,6 +2,10 @@
 # Copyright (c) 2022-2024, E36 Knots
 ---
 
+# Auto-restart
+## The restart is triggered by any version or configuration change
+blockscout_auto_restart: true
+
 # Configuration directories
 blockscout_conf_dir: /etc/blockscout/conf
 blockscout_custom_dir: "{{ blockscout_conf_dir }}/custom"

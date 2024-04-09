@@ -5,5 +5,4 @@
   service:
     name: blockscout
     state: restarted
-  when:
-  - skip_handlers | default("false") == "false"
+  when: blockscout_auto_restart

@@ -6,4 +6,8 @@
   become: true
   roles:
     - role: geerlingguy.docker
+      tags: 
+        - install
+        - blockscout
+        - install-blockscout
     - role: ash.avalanche.evm.blockscout

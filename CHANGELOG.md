@@ -1,5 +1,13 @@
 # Changelog
 
+## [v0.12.7](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.12.7) (2024-04-10)
+
+[Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.12.6...v0.12.7)
+
+**Merged pull requests:**
+
+- fix\(blockscout\): add tags on playbook [\#131](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/131) ([servalD](https://github.com/servalD))
+
 ## [v0.12.6](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.12.6) (2024-03-29)
 
 [Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.12.5...v0.12.6)

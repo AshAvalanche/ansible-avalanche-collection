@@ -44,20 +44,6 @@
   set_fact:
     node_is_validator: "{{ validators_list_res.output | json_query('[?nodeID==`' + node_id + '`]') | length > 0 }}"
 
-- name: Check if the node is a pending validator (1/2)
-  ash.avalanche.ash_cmd:
-    command: avalanche validator list
-    options:
-      subnet-id: "{{ subnet_id }}"
-      pending: true
-  environment:
-    AVALANCHE_NETWORK: "{{ subnet_avalanche_network_id }}"
-  register: pending_validators_list_res
-
-- name: Check if the node is a pending validator (2/2)
-  set_fact:
-    node_is_pending_validator: "{{ pending_validators_list_res.output | json_query('[?nodeID==`' + node_id + '`]') | length > 0 }}"
-
 # Primary Network (requires `signer`)
 - name: "Add '{{ node_id }}' as validator if it is not already (Primary Network)"
   ash.avalanche.ash_cmd:
@@ -74,7 +60,6 @@
     AVALANCHE_KEY_ENCODING: "{{ subnet_txs_key_encoding }}"
   when:
     - not node_is_validator
-    - not node_is_pending_validator
     - subnet_id == avalanche_primary_network_id
 
 # Other Subnets (does not require `signer`)
@@ -92,5 +77,4 @@
     AVALANCHE_KEY_ENCODING: "{{ subnet_txs_key_encoding }}"
   when:
     - not node_is_validator
-    - not node_is_pending_validator
     - subnet_id != avalanche_primary_network_id

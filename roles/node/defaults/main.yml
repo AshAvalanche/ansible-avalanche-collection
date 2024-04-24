@@ -2,7 +2,7 @@
 # Copyright (c) 2022-2024, E36 Knots
 ---
 # Avalanchego version
-avalanchego_version: 1.10.0
+avalanchego_version: 1.11.3
 
 # Install directories
 avalanchego_install_dir: /opt/avalanche/avalanchego

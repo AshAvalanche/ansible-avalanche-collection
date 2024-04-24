@@ -2,7 +2,7 @@
 # Copyright (c) 2022-2024, E36 Knots
 ---
 # AvalancheGo version
-avalanchego_min_version: 1.10.0
+avalanchego_min_version: 1.11.3
 avalanchego_gh_repo: ava-labs/avalanchego
 avalanchego_binary_arch: amd64
 avalanchego_binary_name: "avalanchego-linux-{{ avalanchego_binary_arch }}-v{{ avalanchego_version }}.tar.gz"

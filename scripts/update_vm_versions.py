@@ -20,7 +20,7 @@ VARS_YAML_HEADER_SIZE = 3
 VMS_REPOS = {
     "subnet-evm": "ava-labs/subnet-evm",
 }
-MIN_AVAX_VERSION = "1.10.0"
+MIN_AVAX_VERSION = "1.11.3"
 
 vms_versions_comp = {}
 

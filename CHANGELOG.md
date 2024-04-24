@@ -1,5 +1,13 @@
 # Changelog
 
+## [v0.13.0](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.13.0) (2024-04-24)
+
+[Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.12.7...v0.13.0)
+
+**Merged pull requests:**
+
+- feat: upgrade avalanchego version [\#132](https://github.com/AshAvalanche/ansible-avalanche-collection/pull/132) ([Al3xGROS](https://github.com/Al3xGROS))
+
 ## [v0.12.7](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.12.7) (2024-04-10)
 
 [Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.12.6...v0.12.7)

@@ -1,5 +1,9 @@
 # Changelog
 
+## [v0.13.2](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.13.2) (2024-09-19)
+
+[Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.13.1...v0.13.2)
+
 ## [v0.13.1](https://github.com/AshAvalanche/ansible-avalanche-collection/tree/v0.13.1) (2024-09-04)
 
 [Full Changelog](https://github.com/AshAvalanche/ansible-avalanche-collection/compare/v0.13.0...v0.13.1)

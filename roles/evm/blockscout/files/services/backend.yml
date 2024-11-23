@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   backend:
-    image: blockscout/blockscout:6.1.0
+    image: blockscout/blockscout:6.9.1
     pull_policy: always
     restart: always
     stop_grace_period: 5m

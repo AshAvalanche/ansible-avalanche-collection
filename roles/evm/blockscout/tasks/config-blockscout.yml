@@ -29,10 +29,18 @@
     group: "{{ blockscout_user }}"
   notify: Restart blockscout
 
-- name: Upload proxy
-  copy:
-    src: "proxy"
-    dest: "{{ blockscout_custom_dir }}"
+- name: Template proxy microservices.conf.template
+  template:
+    src: microservices.conf.template.j2
+    dest: "{{ blockscout_custom_dir }}/proxy/microservices.conf.template"
+    owner: "{{ blockscout_user }}"
+    group: "{{ blockscout_user }}"
+  notify: Restart blockscout
+
+- name: Template proxy default.conf.template
+  template:
+    src: default.conf.template.j2
+    dest: "{{ blockscout_custom_dir }}/proxy/default.conf.template"
     owner: "{{ blockscout_user }}"
     group: "{{ blockscout_user }}"
   notify: Restart blockscout
@@ -59,6 +67,7 @@
     dest: "{{ blockscout_conf_dir }}/vars-visualizer.env"
     owner: "{{ blockscout_user }}"
     group: "{{ blockscout_user }}"
+  when: blockscout_backend_env_vars.MICROSERVICE_VISUALIZE_SOL2UML_ENABLED in ['true', true]
   notify: Restart blockscout
 
 - name: Template vars-smart-contract-verifier.env
@@ -67,6 +76,16 @@
     dest: "{{ blockscout_conf_dir }}/vars-smart-contract-verifier.env"
     owner: "{{ blockscout_user }}"
     group: "{{ blockscout_user }}"
+  when: blockscout_backend_env_vars.MICROSERVICE_SC_VERIFIER_ENABLED in ['true', true]
+  notify: Restart blockscout
+
+- name: Template vars-sig-provider.env
+  template:
+    src: vars-sig-provider.env.j2
+    dest: "{{ blockscout_conf_dir }}/vars-sig-provider.env"
+    owner: "{{ blockscout_user }}"
+    group: "{{ blockscout_user }}"
+  when: blockscout_backend_env_vars.MICROSERVICE_SIG_PROVIDER_ENABLED in ['true', true]
   notify: Restart blockscout
 
 - name: Ensure images directory exists
@@ -80,7 +99,7 @@
 - name: Upload logo image
   copy:
     src: "{{ blockscout_header_logo_file }}"
-    dest: "{{ blockscout_custom_dir }}/images/{{ blockscout_header_logo_file }}"
+    dest: "{{ blockscout_custom_dir }}/images/{{ blockscout_header_logo_file | basename }}"
     owner: "{{ blockscout_user }}"
     group: "{{ blockscout_user }}"
   notify: Restart blockscout

@@ -44,10 +44,10 @@ blockscout_backend_env_vars:
   PORT: 4000
 
   # Logo
-  LOGO: /app/apps/block_scout_web/assets/static/images/ash-logo-circle-30.svg
+  LOGO: /app/apps/block_scout_web/assets/static/images/{{ blockscout_header_logo_file | basename }}
 
   # Footer
-  FOOTER_LOGO: /app/apps/block_scout_web/assets/static/images/ash-logo-circle-30.svg
+  FOOTER_LOGO: /app/apps/block_scout_web/assets/static/images/{{ blockscout_header_logo_file | basename }}
 
   # Enable SSL encryption for ecto queries
   ECTO_USE_SSL: "false"
@@ -62,7 +62,17 @@ blockscout_backend_env_vars:
   TXS_STATS_DAYS_TO_COMPILE_AT_INIT: 10
   
   # Enable Smart-contract verification microservice
-  MICROSERVICE_SC_VERIFIER_ENABLED: "true"
+  MICROSERVICE_SC_VERIFIER_ENABLED: "false"
+  MICROSERVICE_SC_VERIFIER_URL: http://sc-verifier:8050
+  MICROSERVICE_SC_VERIFIER_TYPE: sc_verifier
+
+  # Enable Visualizer services such as SOL2UML
+  MICROSERVICE_VISUALIZE_SOL2UML_ENABLED: "false"
+  MICROSERVICE_VISUALIZE_SOL2UML_URL: http://visualizer:8050
+    
+  # Enable Sig-provider which is used to display decoded transaction data on transaction pages and to determine transaction actions.
+  MICROSERVICE_SIG_PROVIDER_ENABLED: "false"
+  MICROSERVICE_SIG_PROVIDER_URL: http://sig-provider:8050
 
 blockscout_frontend_env_variables:
   # API conf
@@ -87,10 +97,18 @@ blockscout_frontend_env_variables:
 
   # Miscellaneous
   NEXT_PUBLIC_HOMEPAGE_CHARTS: ['daily_txs']
-  NEXT_PUBLIC_VISUALIZE_API_HOST: "http://{{ blockscout_frontend_ip }}:8081"
   NEXT_PUBLIC_IS_TESTNET: "true"
   NEXT_PUBLIC_API_WEBSOCKET_PROTOCOL: ws
   NEXT_PUBLIC_API_SPEC_URL: https://raw.githubusercontent.com/blockscout/blockscout-api-v2-swagger/main/swagger.yaml
 
+  # Visualizer
+  NEXT_PUBLIC_VISUALIZE_API_HOST: "http://{{ blockscout_frontend_ip }}:8081"
+
 blockscout_visualizer_env_variables:
   VISUALIZER__SERVER__GRPC__ENABLED: "false"
+
+blockscout_sig_provider_env_variables:
+  SIG_PROVIDER__SERVER__GRPC__ENABLED: "false"
+
+blockscout_sc_verifier_env_variables:
+  SMART_CONTRACT_VERIFIER__SERVER__GRPC__ENABLED: "false"

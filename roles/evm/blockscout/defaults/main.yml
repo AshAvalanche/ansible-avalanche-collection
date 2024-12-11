@@ -24,6 +24,10 @@ blockscout_rpc: http://10.238.106.22:9650/ext/bc/RfX8YRUHePxFENBZFwaNt1tP6CR6RQ4
 blockscout_header_logo_file: ash-logo-circle-30.svg
 blockscout_frontend_ip: 10.238.106.149
 
+# Services
+# Stats
+blockscout_stats_enabled: "false"
+
 # Blockscout env variables
 # --> https://docs.blockscout.com/for-developers/information-and-settings/env-variables
 blockscout_backend_env_vars:
@@ -42,6 +46,10 @@ blockscout_backend_env_vars:
 
   # Port
   PORT: 4000
+
+  # Indexer
+  INDEXER_DISABLE_PENDING_TRANSACTIONS_FETCHER: false # It uses txpool_content which is some times disabled on nodes
+  INDEXER_DISABLE_INTERNAL_TRANSACTIONS_FETCHER: false # It uses debug_traceTransaction which is some times disabled on nodes
 
   # Logo
   LOGO: /app/apps/block_scout_web/assets/static/images/{{ blockscout_header_logo_file | basename }}
@@ -104,6 +112,9 @@ blockscout_frontend_env_variables:
   # Visualizer
   NEXT_PUBLIC_VISUALIZE_API_HOST: "http://{{ blockscout_frontend_ip }}:8081"
 
+  # Stats
+  NEXT_PUBLIC_STATS_API_HOST: "{{ 'http://'+blockscout_frontend_ip+':8085' if blockscout_stats_enabled in ['true', true] else None }}"
+
 blockscout_visualizer_env_variables:
   VISUALIZER__SERVER__GRPC__ENABLED: "false"
 
@@ -112,3 +123,17 @@ blockscout_sig_provider_env_variables:
 
 blockscout_sc_verifier_env_variables:
   SMART_CONTRACT_VERIFIER__SERVER__GRPC__ENABLED: "false"
+
+blockscout_stats_env_variables:
+  STATS__DB_URL: "{{ blockscout_backend_env_vars.DATABASE_URL | regex_replace('/\\w+?$', '/stats') }}"
+  STATS__BLOCKSCOUT_DB_URL: "{{ blockscout_backend_env_vars.DATABASE_URL }}"
+  STATS__CREATE_DATABASE: "true"
+  STATS__RUN_MIGRATIONS: "true"
+  STATS__BLOCKSCOUT_API_URL: "http://backend:4000"
+  RUST_BACKTRACE: 1
+  STATS__CHARTS_CONFIG: "config/charts.json"
+  STATS__LAYOUT_CONFIG: "config/layout.json"
+  STATS__UPDATE_GROUPS_CONFIG: "config/update_groups.json"
+  STATS__DISABLE_​INTERNAL_TRANSACTIONS: "{{blockscout_backend_env_vars.INDEXER_DISABLE_INTERNAL_TRANSACTIONS_FETCHER}}"
+  # Only once, after the first start, the stats service will update the stats for all stats
+  # STATS__FORCE_UPDATE_ON_START: "true"

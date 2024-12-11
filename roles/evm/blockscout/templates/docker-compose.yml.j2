@@ -55,6 +55,12 @@ services:
       file: ./custom/services/smart-contract-verifier.yml
       service: smart-contract-verifier
 {% endif %}
+{% if blockscout_stats_enabled in ['true', true] %}
+  stats:
+    extends:
+      file: ./custom/services/stats.yml
+      service: stats
+{% endif %}
   frontend:
     depends_on:
       - backend

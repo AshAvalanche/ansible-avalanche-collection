@@ -18,3 +18,5 @@ services:
         published: 8080
       - target: 8081
         published: 8081
+      - target: 8085
+        published: 8085

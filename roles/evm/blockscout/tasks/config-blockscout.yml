@@ -88,6 +88,15 @@
   when: blockscout_backend_env_vars.MICROSERVICE_SIG_PROVIDER_ENABLED in ['true', true]
   notify: Restart blockscout
 
+- name: Template vars-stats.env
+  template:
+    src: vars-stats.env.j2
+    dest: "{{ blockscout_conf_dir }}/vars-stats.env"
+    owner: "{{ blockscout_user }}"
+    group: "{{ blockscout_user }}"
+  when: blockscout_stats_enabled in ['true', true]
+  notify: Restart blockscout
+
 - name: Ensure images directory exists
   file:
     path: "{{ blockscout_custom_dir }}/images"

@@ -9,6 +9,7 @@ blockscout_auto_restart: true
 # Configuration directories
 blockscout_conf_dir: /etc/blockscout/conf
 blockscout_custom_dir: "{{ blockscout_conf_dir }}/custom"
+blockscout_assets_dir: "{{ blockscout_custom_dir }}/assets"
 
 # Log directory
 blockscout_log_dir: /var/log/blockscout
@@ -22,11 +23,20 @@ blockscout_user: root
 # Blockscout variables
 blockscout_rpc: http://10.238.106.22:9650/ext/bc/RfX8YRUHePxFENBZFwaNt1tP6CR6RQ4hJJ5AqYv49LRoSKniK/rpc
 blockscout_header_logo_file: ash-logo-circle-30.svg
+
+# Frontend
 blockscout_frontend_ip: 10.238.106.149
+blockscout_frontend_protocol: http
+blockscout_frontend_url: "{{ blockscout_frontend_protocol }}://{{ blockscout_frontend_ip }}"
+blockscout_assets_url: "{{ blockscout_frontend_url }}/assets"
 
 # Services
 # Stats
 blockscout_stats_enabled: "false"
+
+# Marketplace (https://github.com/blockscout/docs/blob/master/setup/env-variables/frontend-common-envs/envs.md#marketplace-app-configuration-properties)
+# Required fields: blockscout_marketplace_app_list: [{id: 'app', title: 'The App', logo: 'app-logo.png', shortDescription: 'Awesome app', categories: ['Security', 'Tools'], author: 'Bob', url: 'http://app.com', description: 'This is an awesome app']}]
+blockscout_marketplace_app_list: []
 
 # Blockscout env variables
 # --> https://docs.blockscout.com/for-developers/information-and-settings/env-variables
@@ -48,8 +58,8 @@ blockscout_backend_env_vars:
   PORT: 4000
 
   # Indexer
-  INDEXER_DISABLE_PENDING_TRANSACTIONS_FETCHER: false # It uses txpool_content which is some times disabled on nodes
-  INDEXER_DISABLE_INTERNAL_TRANSACTIONS_FETCHER: false # It uses debug_traceTransaction which is some times disabled on nodes
+  INDEXER_DISABLE_PENDING_TRANSACTIONS_FETCHER: "false" # It uses txpool_content which is some times disabled on nodes
+  INDEXER_DISABLE_INTERNAL_TRANSACTIONS_FETCHER: "false" # It uses debug_traceTransaction which is some times disabled on nodes
 
   # Logo
   LOGO: /app/apps/block_scout_web/assets/static/images/{{ blockscout_header_logo_file | basename }}
@@ -85,7 +95,7 @@ blockscout_backend_env_vars:
 blockscout_frontend_env_variables:
   # API conf
   NEXT_PUBLIC_API_HOST: "{{ blockscout_frontend_ip }}"
-  NEXT_PUBLIC_API_PROTOCOL: http
+  NEXT_PUBLIC_API_PROTOCOL: "{{ blockscout_frontend_protocol }}"
   NEXT_PUBLIC_API_BASE_PATH: /
   # NEXT_PUBLIC_STATS_API_HOST: http://10.238.106.212:8080
 
@@ -93,6 +103,7 @@ blockscout_frontend_env_variables:
   NEXT_PUBLIC_NETWORK_NAME: Ash Subnet
   NEXT_PUBLIC_NETWORK_SHORT_NAME: Ash
   NEXT_PUBLIC_NETWORK_ID: 66666
+  NEXT_PUBLIC_NETWORK_RPC_URL: "{{ blockscout_rpc }}"
 
   # Coin
   NEXT_PUBLIC_NETWORK_CURRENCY_NAME: AshCoin
@@ -110,10 +121,15 @@ blockscout_frontend_env_variables:
   NEXT_PUBLIC_API_SPEC_URL: https://raw.githubusercontent.com/blockscout/blockscout-api-v2-swagger/main/swagger.yaml
 
   # Visualizer
-  NEXT_PUBLIC_VISUALIZE_API_HOST: "http://{{ blockscout_frontend_ip }}:8081"
+  NEXT_PUBLIC_VISUALIZE_API_HOST: "{{ blockscout_frontend_url }}:8081"
 
   # Stats
-  NEXT_PUBLIC_STATS_API_HOST: "{{ 'http://'+blockscout_frontend_ip+':8085' if blockscout_stats_enabled in ['true', true] else None }}"
+  NEXT_PUBLIC_STATS_API_HOST: "{{ blockscout_frontend_url+':8085' if blockscout_stats_enabled in ['true', true] else None }}"
+
+  # Dapp marketplace
+  NEXT_PUBLIC_MARKETPLACE_ENABLED: "{{ 'true' if blockscout_marketplace_app_list | length > 0 else 'false' }}"
+  NEXT_PUBLIC_MARKETPLACE_CONFIG_URL: "{{ blockscout_assets_url }}/marketplace-config.json"
+  NEXT_PUBLIC_MARKETPLACE_SUBMIT_FORM: https://forms.gle/S7LK7M6QiNeFnGUN8
 
 blockscout_visualizer_env_variables:
   VISUALIZER__SERVER__GRPC__ENABLED: "false"
@@ -134,6 +150,6 @@ blockscout_stats_env_variables:
   STATS__CHARTS_CONFIG: "config/charts.json"
   STATS__LAYOUT_CONFIG: "config/layout.json"
   STATS__UPDATE_GROUPS_CONFIG: "config/update_groups.json"
-  STATS__DISABLE_​INTERNAL_TRANSACTIONS: "{{blockscout_backend_env_vars.INDEXER_DISABLE_INTERNAL_TRANSACTIONS_FETCHER}}"
+  STATS__DISABLE_INTERNAL_TRANSACTIONS: "{{ blockscout_backend_env_vars.INDEXER_DISABLE_INTERNAL_TRANSACTIONS_FETCHER }}"
   # Only once, after the first start, the stats service will update the stats for all stats
   # STATS__FORCE_UPDATE_ON_START: "true"

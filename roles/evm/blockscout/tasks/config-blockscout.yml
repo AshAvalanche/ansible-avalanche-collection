@@ -12,6 +12,7 @@
     - "{{ blockscout_custom_dir }}"
     - "{{ blockscout_log_dir }}"
     - "{{ blockscout_data_dir }}"
+    - "{{ blockscout_assets_dir }}"
 
 - name: Template docker-compose.yml
   template:
@@ -28,6 +29,14 @@
     owner: "{{ blockscout_user }}"
     group: "{{ blockscout_user }}"
   notify: Restart blockscout
+
+- name: Ensure proxy directory exists
+  file:
+    path: "{{ blockscout_custom_dir }}/proxy"
+    state: directory
+    owner: "{{ blockscout_user }}"
+    group: "{{ blockscout_user }}"
+    mode: '0755'
 
 - name: Template proxy microservices.conf.template
   template:
@@ -95,6 +104,15 @@
     owner: "{{ blockscout_user }}"
     group: "{{ blockscout_user }}"
   when: blockscout_stats_enabled in ['true', true]
+  notify: Restart blockscout
+
+- name: Template marketplace-config.json asset
+  template:
+    src: marketplace-config.json.j2
+    dest: "{{ blockscout_assets_dir }}/marketplace-config.json"
+    owner: "{{ blockscout_user }}"
+    group: "{{ blockscout_user }}"
+  when: blockscout_frontend_env_variables.NEXT_PUBLIC_MARKETPLACE_ENABLED in ['true', true]
   notify: Restart blockscout
 
 - name: Ensure images directory exists

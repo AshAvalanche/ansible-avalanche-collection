@@ -67,7 +67,6 @@ services:
     extends:
       file: ./custom/services/frontend.yml
       service: frontend
-
   proxy:
     depends_on:
       - backend
@@ -75,3 +74,5 @@ services:
     extends:
       file: ./custom/services/nginx.yml
       service: proxy
+    volumes:
+      - {{ blockscout_assets_dir }}:/var/shared

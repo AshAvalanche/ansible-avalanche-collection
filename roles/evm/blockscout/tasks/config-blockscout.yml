@@ -106,15 +106,6 @@
   when: blockscout_stats_enabled in ['true', true]
   notify: Restart blockscout
 
-- name: Template marketplace-config.json asset
-  template:
-    src: marketplace-config.json.j2
-    dest: "{{ blockscout_assets_dir }}/marketplace-config.json"
-    owner: "{{ blockscout_user }}"
-    group: "{{ blockscout_user }}"
-  when: blockscout_frontend_env_variables.NEXT_PUBLIC_MARKETPLACE_ENABLED in ['true', true]
-  notify: Restart blockscout
-
 - name: Ensure images directory exists
   file:
     path: "{{ blockscout_custom_dir }}/images"
@@ -140,3 +131,13 @@
 - name: Reload systemctl daemons
   systemd:
     daemon_reload: true
+
+- name: Create marketplace-config.json asset
+  copy:
+    content: "{{ blockscout_marketplace_app_list }}"
+    dest: "{{ blockscout_assets_dir }}/marketplace-config.json"
+    owner: "{{ blockscout_user }}"
+    group: "{{ blockscout_user }}"
+    mode: '0755'
+  when: blockscout_frontend_env_variables.NEXT_PUBLIC_MARKETPLACE_ENABLED in ['true', true]
+  notify: Restart blockscout

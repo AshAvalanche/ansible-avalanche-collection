@@ -131,6 +131,13 @@ blockscout_frontend_env_variables:
   NEXT_PUBLIC_MARKETPLACE_CONFIG_URL: "{{ blockscout_assets_url }}/marketplace-config.json"
   NEXT_PUBLIC_MARKETPLACE_SUBMIT_FORM: https://forms.gle/S7LK7M6QiNeFnGUN8
 
+  # Other explorers
+  NEXT_PUBLIC_FEATURED_NETWORKS: "{{ [{'title': 'ASH Layer', 'url': blockscout_frontend_url, 'group': 'Testnets', 'icon': 'https://ash.center/img/ash-logo.svg', 'isActive': true}] | to_json }}"
+
+  # Other links
+  # NEXT_PUBLIC_OTHER_LINKS: [{'url':'http://10.200.14.212/','text':'Mainnet'}]
+
+
 blockscout_visualizer_env_variables:
   VISUALIZER__SERVER__GRPC__ENABLED: "false"
 

@@ -25,8 +25,10 @@ blockscout_rpc: http://10.238.106.22:9650/ext/bc/RfX8YRUHePxFENBZFwaNt1tP6CR6RQ4
 blockscout_header_logo_file: ash-logo-circle-30.svg
 
 # Frontend
-blockscout_frontend_ip: 10.238.106.149
+blockscout_frontend_ip: "10.238.106.149"
 blockscout_frontend_protocol: http
+blockscout_frontend_websocket_protocol: ws
+blockscout_frontend_host_name: "{{ blockscout_frontend_ip }}"
 blockscout_frontend_url: "{{ blockscout_frontend_protocol }}://{{ blockscout_frontend_ip }}"
 blockscout_assets_url: "{{ blockscout_frontend_url }}/shared"
 
@@ -94,7 +96,7 @@ blockscout_backend_env_vars:
 
 blockscout_frontend_env_variables:
   # API conf
-  NEXT_PUBLIC_API_HOST: "{{ blockscout_frontend_ip }}"
+  NEXT_PUBLIC_API_HOST: "{{ blockscout_frontend_host_name }}"
   NEXT_PUBLIC_API_PROTOCOL: "{{ blockscout_frontend_protocol }}"
   NEXT_PUBLIC_API_BASE_PATH: /
   # NEXT_PUBLIC_STATS_API_HOST: http://10.238.106.212:8080
@@ -111,13 +113,13 @@ blockscout_frontend_env_variables:
   NEXT_PUBLIC_NETWORK_CURRENCY_DECIMALS: 18
 
   # App conf
-  NEXT_PUBLIC_APP_HOST: "{{ blockscout_frontend_ip }}"
-  NEXT_PUBLIC_APP_PROTOCOL: http
+  NEXT_PUBLIC_APP_HOST: "{{ blockscout_frontend_host_name }}"
+  NEXT_PUBLIC_APP_PROTOCOL: "{{ blockscout_frontend_protocol }}"
 
   # Miscellaneous
   NEXT_PUBLIC_HOMEPAGE_CHARTS: ['daily_txs']
   NEXT_PUBLIC_IS_TESTNET: "true"
-  NEXT_PUBLIC_API_WEBSOCKET_PROTOCOL: ws
+  NEXT_PUBLIC_API_WEBSOCKET_PROTOCOL: "{{ blockscout_frontend_websocket_protocol }}"
   NEXT_PUBLIC_API_SPEC_URL: https://raw.githubusercontent.com/blockscout/blockscout-api-v2-swagger/main/swagger.yaml
 
   # Visualizer

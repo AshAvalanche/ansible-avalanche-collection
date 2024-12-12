@@ -9,7 +9,7 @@ blockscout_auto_restart: true
 # Configuration directories
 blockscout_conf_dir: /etc/blockscout/conf
 blockscout_custom_dir: "{{ blockscout_conf_dir }}/custom"
-blockscout_assets_dir: "{{ blockscout_custom_dir }}/assets"
+blockscout_assets_dir: "{{ blockscout_custom_dir }}/shared"
 
 # Log directory
 blockscout_log_dir: /var/log/blockscout
@@ -28,7 +28,7 @@ blockscout_header_logo_file: ash-logo-circle-30.svg
 blockscout_frontend_ip: 10.238.106.149
 blockscout_frontend_protocol: http
 blockscout_frontend_url: "{{ blockscout_frontend_protocol }}://{{ blockscout_frontend_ip }}"
-blockscout_assets_url: "{{ blockscout_frontend_url }}/assets"
+blockscout_assets_url: "{{ blockscout_frontend_url }}/shared"
 
 # Services
 # Stats

@@ -13,6 +13,7 @@
     - "{{ blockscout_log_dir }}"
     - "{{ blockscout_data_dir }}"
     - "{{ blockscout_assets_dir }}"
+  tags: assets-sync
 
 - name: Template docker-compose.yml
   template:
@@ -37,14 +38,6 @@
     owner: "{{ blockscout_user }}"
     group: "{{ blockscout_user }}"
     mode: '0755'
-
-- name: Template proxy microservices.conf.template
-  template:
-    src: microservices.conf.template.j2
-    dest: "{{ blockscout_custom_dir }}/proxy/microservices.conf.template"
-    owner: "{{ blockscout_user }}"
-    group: "{{ blockscout_user }}"
-  notify: Restart blockscout
 
 - name: Template proxy default.conf.template
   template:
@@ -128,10 +121,6 @@
     dest: /etc/systemd/system/blockscout.service
   notify: Restart blockscout
 
-- name: Reload systemctl daemons
-  systemd:
-    daemon_reload: true
-
 - name: Create marketplace-config.json asset
   copy:
     content: "{{ blockscout_marketplace_app_list }}"
@@ -141,3 +130,30 @@
     mode: '0755'
   when: blockscout_frontend_env_variables.NEXT_PUBLIC_MARKETPLACE_ENABLED in ['true', true]
   notify: Restart blockscout
+  tags: marketplace-sync
+
+- name: Create featured_networks.json asset
+  copy:
+    content: "{{ blockscout_frontend_env_variables.NEXT_PUBLIC_FEATURED_NETWORKS }}"
+    dest: "{{ blockscout_assets_dir }}/featured_networks.json"
+    owner: "{{ blockscout_user }}"
+    group: "{{ blockscout_user }}"
+    mode: '0755'
+  notify: Restart blockscout
+  tags: networks-sync
+
+- name: Copy assets to expose it through NGINX '/shared' api path
+  copy:
+    src: "{{ blockscout_extra_assets_dir if blockscout_extra_assets_dir.endswith('/') else blockscout_extra_assets_dir + '/' }}"
+    dest: "{{ blockscout_assets_dir }}"
+    owner: "{{ blockscout_user }}"
+    group: "{{ blockscout_user }}"
+  when: blockscout_extra_assets_dir | length > 0
+  notify: Restart blockscout
+  tags: assets-sync
+
+- name: Reload systemctl daemons
+  systemd:
+    daemon_reload: true
+
+

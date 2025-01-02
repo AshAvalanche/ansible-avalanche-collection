@@ -64,13 +64,13 @@ services:
   frontend:
     depends_on:
       - backend
+      - proxy
     extends:
       file: ./custom/services/frontend.yml
       service: frontend
   proxy:
     depends_on:
       - backend
-      - frontend
     extends:
       file: ./custom/services/nginx.yml
       service: proxy

@@ -29,8 +29,9 @@ blockscout_frontend_ip: "10.238.106.149"
 blockscout_frontend_protocol: http
 blockscout_frontend_websocket_protocol: ws
 blockscout_frontend_host_name: "{{ blockscout_frontend_ip }}"
-blockscout_frontend_url: "{{ blockscout_frontend_protocol }}://{{ blockscout_frontend_ip }}"
+blockscout_frontend_url: "{{ blockscout_frontend_protocol }}://{{ blockscout_frontend_host_name }}"
 blockscout_assets_url: "{{ blockscout_frontend_url }}/shared"
+blockscout_extra_assets_dir: '' ## eg. A folder containing logo, icon, etc.
 
 # Services
 # Stats
@@ -99,7 +100,6 @@ blockscout_frontend_env_variables:
   NEXT_PUBLIC_API_HOST: "{{ blockscout_frontend_host_name }}"
   NEXT_PUBLIC_API_PROTOCOL: "{{ blockscout_frontend_protocol }}"
   NEXT_PUBLIC_API_BASE_PATH: /
-  # NEXT_PUBLIC_STATS_API_HOST: http://10.238.106.212:8080
 
   # Network
   NEXT_PUBLIC_NETWORK_NAME: Ash Subnet
@@ -123,10 +123,12 @@ blockscout_frontend_env_variables:
   NEXT_PUBLIC_API_SPEC_URL: https://raw.githubusercontent.com/blockscout/blockscout-api-v2-swagger/main/swagger.yaml
 
   # Visualizer
-  NEXT_PUBLIC_VISUALIZE_API_HOST: "{{ blockscout_frontend_url }}:8081"
+  NEXT_PUBLIC_VISUALIZE_API_HOST: "{{ blockscout_frontend_url }}"
+  NEXT_PUBLIC_VISUALIZE_API_BASE_PATH: /visualizer-service
 
   # Stats
-  NEXT_PUBLIC_STATS_API_HOST: "{{ blockscout_frontend_url+':8085' if blockscout_stats_enabled in ['true', true] else None }}"
+  NEXT_PUBLIC_STATS_API_HOST: "{{ blockscout_frontend_url if blockscout_stats_enabled in ['true', true] else None }}"
+  NEXT_PUBLIC_STATS_API_BASE_PATH: /stats-service
 
   # Dapp marketplace
   NEXT_PUBLIC_MARKETPLACE_ENABLED: "{{ 'true' if blockscout_marketplace_app_list | length > 0 else 'false' }}"

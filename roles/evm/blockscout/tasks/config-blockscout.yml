@@ -132,15 +132,17 @@
   notify: Restart blockscout
   tags: marketplace-sync
 
-- name: Create featured_networks.json asset
-  copy:
-    content: "{{ blockscout_frontend_env_variables.NEXT_PUBLIC_FEATURED_NETWORKS }}"
-    dest: "{{ blockscout_assets_dir }}/featured_networks.json"
-    owner: "{{ blockscout_user }}"
-    group: "{{ blockscout_user }}"
-    mode: '0755'
-  notify: Restart blockscout
-  tags: networks-sync
+- name: Convert NEXT_PUBLIC_FEATURED_NETWORKS to json formatting
+  set_fact:
+    blockscout_frontend_env_variables:
+      NEXT_PUBLIC_FEATURED_NETWORKS: "{{ blockscout_frontend_env_variables.NEXT_PUBLIC_FEATURED_NETWORKS | to_json }}"
+  when: "'NEXT_PUBLIC_FEATURED_NETWORKS' in blockscout_frontend_env_variables"
+
+- name: Convert NEXT_PUBLIC_FOOTER_LINKS to json formatting
+  set_fact:
+    blockscout_frontend_env_variables:
+      NEXT_PUBLIC_FOOTER_LINKS: "{{ blockscout_frontend_env_variables.NEXT_PUBLIC_FOOTER_LINKS | to_json }}"
+  when: "'NEXT_PUBLIC_FOOTER_LINKS' in blockscout_frontend_env_variables"
 
 - name: Copy assets to expose it through NGINX '/shared' api path
   copy:

@@ -1,9 +1,20 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # Copyright (c) 2022-2024, E36 Knots
----
+--- 
+- name: Check if bootstrap_db is an url
+  set_fact:
+    avalanchego_bootstrap_db_url: "{{ avalanchego_bootstrap_db }}"
+  when: (avalanchego_bootstrap_db is defined) and (avalanchego_bootstrap_db|length > 0) and (avalanchego_bootstrap_db is url)
+
+- name: Set bootstrap database dir name
+  set_fact:
+    avalanchego_bootstrap_db: "{{ avalanchego_db_dir }}/{{ avalanchego_bootstrap_db | urlsplit('path') | basename }}"
+  when: avalanchego_bootstrap_db_url is defined
+
 - name: Unpack bootstrap database
   unarchive:
-    src: "{{ avalanchego_bootstrap_db }}"
+    remote_src: "{{ (avalanchego_bootstrap_db_url is defined) | bool }}"
+    src: "{{ avalanchego_bootstrap_db if (avalanchego_bootstrap_db_url is not defined) else avalanchego_bootstrap_db_url }}"
     dest: "{{ avalanchego_db_dir }}"
     owner: "{{ avalanchego_user }}"
     group: "{{ avalanchego_group }}"

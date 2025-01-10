@@ -6,11 +6,6 @@
     avalanchego_bootstrap_db_url: "{{ avalanchego_bootstrap_db }}"
   when: (avalanchego_bootstrap_db is defined) and (avalanchego_bootstrap_db|length > 0) and (avalanchego_bootstrap_db is url)
 
-- name: Set bootstrap database dir name
-  set_fact:
-    avalanchego_bootstrap_db: "{{ avalanchego_db_dir }}/{{ avalanchego_bootstrap_db | urlsplit('path') | basename }}"
-  when: avalanchego_bootstrap_db_url is defined
-
 - name: Unpack bootstrap database
   unarchive:
     remote_src: "{{ (avalanchego_bootstrap_db_url is defined) | bool }}"

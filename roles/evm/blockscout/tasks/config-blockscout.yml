@@ -1,6 +1,14 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # Copyright (c) 2022-2024, E36 Knots
 ---
+- name: Create Marketplace config
+  set_fact:
+    blockscout_frontend_env_variables: 
+      NEXT_PUBLIC_MARKETPLACE_ENABLED: 'true'
+      NEXT_PUBLIC_MARKETPLACE_CONFIG_URL: "{{ blockscout_assets_url }}/marketplace-config.json"
+      NEXT_PUBLIC_MARKETPLACE_SUBMIT_FORM: https://forms.gle/S7LK7M6QiNeFnGUN8
+  when: blockscout_marketplace_app_list | length > 0
+
 - name: Create Blockscout directories
   file:
     path: "{{ item }}"
@@ -128,7 +136,7 @@
     owner: "{{ blockscout_user }}"
     group: "{{ blockscout_user }}"
     mode: '0755'
-  when: blockscout_frontend_env_variables.NEXT_PUBLIC_MARKETPLACE_ENABLED in ['true', true]
+  when: blockscout_marketplace_app_list | length > 0
   notify: Restart blockscout
   tags: marketplace-sync
 

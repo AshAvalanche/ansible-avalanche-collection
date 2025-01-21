@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   stats:
-    image: ghcr.io/blockscout/stats:v2.2.3
+    image: ghcr.io/blockscout/stats:v2.3.0
     build: .
     pull_policy: always
     platform: linux/amd64

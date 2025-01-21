@@ -130,11 +130,6 @@ blockscout_frontend_env_variables:
   NEXT_PUBLIC_STATS_API_HOST: "{{ blockscout_frontend_url if blockscout_stats_enabled in ['true', true] else None }}"
   NEXT_PUBLIC_STATS_API_BASE_PATH: /stats-service
 
-  # Dapp marketplace
-  NEXT_PUBLIC_MARKETPLACE_ENABLED: "{{ 'true' if blockscout_marketplace_app_list | length > 0 else 'false' }}"
-  NEXT_PUBLIC_MARKETPLACE_CONFIG_URL: "{{ blockscout_assets_url }}/marketplace-config.json"
-  NEXT_PUBLIC_MARKETPLACE_SUBMIT_FORM: https://forms.gle/S7LK7M6QiNeFnGUN8
-
   # Other explorers
   NEXT_PUBLIC_FEATURED_NETWORKS: "{{ [{'title': 'ASH Layer', 'url': blockscout_frontend_url, 'group': 'Testnets', 'icon': 'https://ash.center/img/ash-logo.svg', 'isActive': true}] | to_json }}"
 

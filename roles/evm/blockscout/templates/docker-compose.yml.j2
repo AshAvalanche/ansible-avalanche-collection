@@ -1,5 +1,5 @@
 version: '3.9'
-
+{% set EMBEDDED_DATABASE = '@db:' in blockscout_backend_env_vars.DATABASE_URL %}
 services:
   redis-db:
     extends:
@@ -7,62 +7,72 @@ services:
       service: redis-db
     volumes:
       - {{ blockscout_log_dir }}:/app/logs/
-
+{% if EMBEDDED_DATABASE %}
   db-init:
     extends:
       file: ./custom/services/db.yml
       service: db-init
     volumes:
       - {{ blockscout_data_dir }}:/var/lib/postgresql/data
-
   db:
     extends:
       file: ./custom/services/db.yml
       service: db
     volumes:
       - {{ blockscout_data_dir }}:/var/lib/postgresql/data
-
+{% endif %}
   backend:
     depends_on:
+{% if EMBEDDED_DATABASE %}
       - db
+{% endif %}
       - redis-db
     extends:
       file: ./custom/services/backend.yml
       service: backend
+{% if EMBEDDED_DATABASE %}
     links:
       - db:database
+{% endif %}
     volumes:
       - {{ blockscout_log_dir }}:/app/logs/
       - {{ blockscout_custom_dir }}/images:/app/apps/block_scout_web/assets/static/images
-
+{% if blockscout_backend_env_vars.MICROSERVICE_VISUALIZE_SOL2UML_ENABLED in ['true', true] %}
   visualizer:
     extends:
       file: ./custom/services/visualizer.yml
       service: visualizer
-
+{% endif %}
+{% if blockscout_backend_env_vars.MICROSERVICE_SIG_PROVIDER_ENABLED in ['true', true] %}
   sig-provider:
     extends:
       file: ./custom/services/sig-provider.yml
       service: sig-provider
-
+{% endif %}
+{% if blockscout_backend_env_vars.MICROSERVICE_SC_VERIFIER_ENABLED in ['true', true] %}
   sc-verifier:
     extends:
       file: ./custom/services/smart-contract-verifier.yml
       service: smart-contract-verifier
-    ports:
-      - 8082:8050
-
+{% endif %}
+{% if blockscout_stats_enabled in ['true', true] %}
+  stats:
+    extends:
+      file: ./custom/services/stats.yml
+      service: stats
+{% endif %}
   frontend:
     depends_on:
       - backend
+      - proxy
     extends:
       file: ./custom/services/frontend.yml
       service: frontend
-
   proxy:
     depends_on:
       - backend
-      - frontend
     extends:
       file: ./custom/services/nginx.yml
       service: proxy
+    volumes:
+      - {{ blockscout_assets_dir }}:/var/shared

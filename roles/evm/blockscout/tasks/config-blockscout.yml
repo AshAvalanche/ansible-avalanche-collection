@@ -1,6 +1,14 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # Copyright (c) 2022-2024, E36 Knots
 ---
+- name: Create Marketplace config
+  set_fact:
+    blockscout_frontend_env_variables: 
+      NEXT_PUBLIC_MARKETPLACE_ENABLED: 'true'
+      NEXT_PUBLIC_MARKETPLACE_CONFIG_URL: "{{ blockscout_assets_url }}/marketplace-config.json"
+      NEXT_PUBLIC_MARKETPLACE_SUBMIT_FORM: https://forms.gle/S7LK7M6QiNeFnGUN8
+  when: blockscout_marketplace_app_list | length > 0
+
 - name: Create Blockscout directories
   file:
     path: "{{ item }}"
@@ -12,6 +20,8 @@
     - "{{ blockscout_custom_dir }}"
     - "{{ blockscout_log_dir }}"
     - "{{ blockscout_data_dir }}"
+    - "{{ blockscout_assets_dir }}"
+  tags: assets-sync
 
 - name: Template docker-compose.yml
   template:
@@ -29,10 +39,18 @@
     group: "{{ blockscout_user }}"
   notify: Restart blockscout
 
-- name: Upload proxy
-  copy:
-    src: "proxy"
-    dest: "{{ blockscout_custom_dir }}"
+- name: Ensure proxy directory exists
+  file:
+    path: "{{ blockscout_custom_dir }}/proxy"
+    state: directory
+    owner: "{{ blockscout_user }}"
+    group: "{{ blockscout_user }}"
+    mode: '0755'
+
+- name: Template proxy default.conf.template
+  template:
+    src: default.conf.template.j2
+    dest: "{{ blockscout_custom_dir }}/proxy/default.conf.template"
     owner: "{{ blockscout_user }}"
     group: "{{ blockscout_user }}"
   notify: Restart blockscout
@@ -59,6 +77,7 @@
     dest: "{{ blockscout_conf_dir }}/vars-visualizer.env"
     owner: "{{ blockscout_user }}"
     group: "{{ blockscout_user }}"
+  when: blockscout_backend_env_vars.MICROSERVICE_VISUALIZE_SOL2UML_ENABLED in ['true', true]
   notify: Restart blockscout
 
 - name: Template vars-smart-contract-verifier.env
@@ -67,6 +86,25 @@
     dest: "{{ blockscout_conf_dir }}/vars-smart-contract-verifier.env"
     owner: "{{ blockscout_user }}"
     group: "{{ blockscout_user }}"
+  when: blockscout_backend_env_vars.MICROSERVICE_SC_VERIFIER_ENABLED in ['true', true]
+  notify: Restart blockscout
+
+- name: Template vars-sig-provider.env
+  template:
+    src: vars-sig-provider.env.j2
+    dest: "{{ blockscout_conf_dir }}/vars-sig-provider.env"
+    owner: "{{ blockscout_user }}"
+    group: "{{ blockscout_user }}"
+  when: blockscout_backend_env_vars.MICROSERVICE_SIG_PROVIDER_ENABLED in ['true', true]
+  notify: Restart blockscout
+
+- name: Template vars-stats.env
+  template:
+    src: vars-stats.env.j2
+    dest: "{{ blockscout_conf_dir }}/vars-stats.env"
+    owner: "{{ blockscout_user }}"
+    group: "{{ blockscout_user }}"
+  when: blockscout_stats_enabled in ['true', true]
   notify: Restart blockscout
 
 - name: Ensure images directory exists
@@ -80,7 +118,7 @@
 - name: Upload logo image
   copy:
     src: "{{ blockscout_header_logo_file }}"
-    dest: "{{ blockscout_custom_dir }}/images/{{ blockscout_header_logo_file }}"
+    dest: "{{ blockscout_custom_dir }}/images/{{ blockscout_header_logo_file | basename }}"
     owner: "{{ blockscout_user }}"
     group: "{{ blockscout_user }}"
   notify: Restart blockscout
@@ -91,6 +129,41 @@
     dest: /etc/systemd/system/blockscout.service
   notify: Restart blockscout
 
+- name: Create marketplace-config.json asset
+  copy:
+    content: "{{ blockscout_marketplace_app_list }}"
+    dest: "{{ blockscout_assets_dir }}/marketplace-config.json"
+    owner: "{{ blockscout_user }}"
+    group: "{{ blockscout_user }}"
+    mode: '0755'
+  when: blockscout_marketplace_app_list | length > 0
+  notify: Restart blockscout
+  tags: marketplace-sync
+
+- name: Convert NEXT_PUBLIC_FEATURED_NETWORKS to json formatting
+  set_fact:
+    blockscout_frontend_env_variables:
+      NEXT_PUBLIC_FEATURED_NETWORKS: "{{ blockscout_frontend_env_variables.NEXT_PUBLIC_FEATURED_NETWORKS | to_json }}"
+  when: "'NEXT_PUBLIC_FEATURED_NETWORKS' in blockscout_frontend_env_variables"
+
+- name: Convert NEXT_PUBLIC_FOOTER_LINKS to json formatting
+  set_fact:
+    blockscout_frontend_env_variables:
+      NEXT_PUBLIC_FOOTER_LINKS: "{{ blockscout_frontend_env_variables.NEXT_PUBLIC_FOOTER_LINKS | to_json }}"
+  when: "'NEXT_PUBLIC_FOOTER_LINKS' in blockscout_frontend_env_variables"
+
+- name: Copy assets to expose it through NGINX '/shared' api path
+  copy:
+    src: "{{ blockscout_extra_assets_dir if blockscout_extra_assets_dir.endswith('/') else blockscout_extra_assets_dir + '/' }}"
+    dest: "{{ blockscout_assets_dir }}"
+    owner: "{{ blockscout_user }}"
+    group: "{{ blockscout_user }}"
+  when: blockscout_extra_assets_dir | length > 0
+  notify: Restart blockscout
+  tags: assets-sync
+
 - name: Reload systemctl daemons
   systemd:
     daemon_reload: true
+
+

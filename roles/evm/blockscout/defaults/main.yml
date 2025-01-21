@@ -9,6 +9,7 @@ blockscout_auto_restart: true
 # Configuration directories
 blockscout_conf_dir: /etc/blockscout/conf
 blockscout_custom_dir: "{{ blockscout_conf_dir }}/custom"
+blockscout_assets_dir: "{{ blockscout_custom_dir }}/shared"
 
 # Log directory
 blockscout_log_dir: /var/log/blockscout
@@ -22,7 +23,23 @@ blockscout_user: root
 # Blockscout variables
 blockscout_rpc: http://10.238.106.22:9650/ext/bc/RfX8YRUHePxFENBZFwaNt1tP6CR6RQ4hJJ5AqYv49LRoSKniK/rpc
 blockscout_header_logo_file: ash-logo-circle-30.svg
-blockscout_frontend_ip: 10.238.106.149
+
+# Frontend
+blockscout_frontend_ip: "10.238.106.149"
+blockscout_frontend_protocol: http
+blockscout_frontend_websocket_protocol: ws
+blockscout_frontend_host_name: "{{ blockscout_frontend_ip }}"
+blockscout_frontend_url: "{{ blockscout_frontend_protocol }}://{{ blockscout_frontend_host_name }}"
+blockscout_assets_url: "{{ blockscout_frontend_url }}/shared"
+blockscout_extra_assets_dir: '' ## eg. A folder containing logo, icon, etc.
+
+# Services
+# Stats
+blockscout_stats_enabled: "false"
+
+# Marketplace (https://github.com/blockscout/docs/blob/master/setup/env-variables/frontend-common-envs/envs.md#marketplace-app-configuration-properties)
+# Required fields: blockscout_marketplace_app_list: [{id: 'app', title: 'The App', logo: 'app-logo.png', shortDescription: 'Awesome app', categories: ['Security', 'Tools'], author: 'Bob', url: 'http://app.com', description: 'This is an awesome app']}]
+blockscout_marketplace_app_list: []
 
 # Blockscout env variables
 # --> https://docs.blockscout.com/for-developers/information-and-settings/env-variables
@@ -43,11 +60,15 @@ blockscout_backend_env_vars:
   # Port
   PORT: 4000
 
+  # Indexer
+  INDEXER_DISABLE_PENDING_TRANSACTIONS_FETCHER: "false" # It uses txpool_content which is some times disabled on nodes
+  INDEXER_DISABLE_INTERNAL_TRANSACTIONS_FETCHER: "false" # It uses debug_traceTransaction which is some times disabled on nodes
+
   # Logo
-  LOGO: /app/apps/block_scout_web/assets/static/images/ash-logo-circle-30.svg
+  LOGO: /app/apps/block_scout_web/assets/static/images/{{ blockscout_header_logo_file | basename }}
 
   # Footer
-  FOOTER_LOGO: /app/apps/block_scout_web/assets/static/images/ash-logo-circle-30.svg
+  FOOTER_LOGO: /app/apps/block_scout_web/assets/static/images/{{ blockscout_header_logo_file | basename }}
 
   # Enable SSL encryption for ecto queries
   ECTO_USE_SSL: "false"
@@ -62,19 +83,29 @@ blockscout_backend_env_vars:
   TXS_STATS_DAYS_TO_COMPILE_AT_INIT: 10
   
   # Enable Smart-contract verification microservice
-  MICROSERVICE_SC_VERIFIER_ENABLED: "true"
+  MICROSERVICE_SC_VERIFIER_ENABLED: "false"
+  MICROSERVICE_SC_VERIFIER_URL: http://sc-verifier:8050
+  MICROSERVICE_SC_VERIFIER_TYPE: sc_verifier
+
+  # Enable Visualizer services such as SOL2UML
+  MICROSERVICE_VISUALIZE_SOL2UML_ENABLED: "false"
+  MICROSERVICE_VISUALIZE_SOL2UML_URL: http://visualizer:8050
+    
+  # Enable Sig-provider which is used to display decoded transaction data on transaction pages and to determine transaction actions.
+  MICROSERVICE_SIG_PROVIDER_ENABLED: "false"
+  MICROSERVICE_SIG_PROVIDER_URL: http://sig-provider:8050
 
 blockscout_frontend_env_variables:
   # API conf
-  NEXT_PUBLIC_API_HOST: "{{ blockscout_frontend_ip }}"
-  NEXT_PUBLIC_API_PROTOCOL: http
+  NEXT_PUBLIC_API_HOST: "{{ blockscout_frontend_host_name }}"
+  NEXT_PUBLIC_API_PROTOCOL: "{{ blockscout_frontend_protocol }}"
   NEXT_PUBLIC_API_BASE_PATH: /
-  # NEXT_PUBLIC_STATS_API_HOST: http://10.238.106.212:8080
 
   # Network
   NEXT_PUBLIC_NETWORK_NAME: Ash Subnet
   NEXT_PUBLIC_NETWORK_SHORT_NAME: Ash
   NEXT_PUBLIC_NETWORK_ID: 66666
+  NEXT_PUBLIC_NETWORK_RPC_URL: "{{ blockscout_rpc }}"
 
   # Coin
   NEXT_PUBLIC_NETWORK_CURRENCY_NAME: AshCoin
@@ -82,15 +113,49 @@ blockscout_frontend_env_variables:
   NEXT_PUBLIC_NETWORK_CURRENCY_DECIMALS: 18
 
   # App conf
-  NEXT_PUBLIC_APP_HOST: "{{ blockscout_frontend_ip }}"
-  NEXT_PUBLIC_APP_PROTOCOL: http
+  NEXT_PUBLIC_APP_HOST: "{{ blockscout_frontend_host_name }}"
+  NEXT_PUBLIC_APP_PROTOCOL: "{{ blockscout_frontend_protocol }}"
 
   # Miscellaneous
   NEXT_PUBLIC_HOMEPAGE_CHARTS: ['daily_txs']
-  NEXT_PUBLIC_VISUALIZE_API_HOST: "http://{{ blockscout_frontend_ip }}:8081"
   NEXT_PUBLIC_IS_TESTNET: "true"
-  NEXT_PUBLIC_API_WEBSOCKET_PROTOCOL: ws
+  NEXT_PUBLIC_API_WEBSOCKET_PROTOCOL: "{{ blockscout_frontend_websocket_protocol }}"
   NEXT_PUBLIC_API_SPEC_URL: https://raw.githubusercontent.com/blockscout/blockscout-api-v2-swagger/main/swagger.yaml
+
+  # Visualizer
+  NEXT_PUBLIC_VISUALIZE_API_HOST: "{{ blockscout_frontend_url }}"
+  NEXT_PUBLIC_VISUALIZE_API_BASE_PATH: /visualizer-service
+
+  # Stats
+  NEXT_PUBLIC_STATS_API_HOST: "{{ blockscout_frontend_url if blockscout_stats_enabled in ['true', true] else None }}"
+  NEXT_PUBLIC_STATS_API_BASE_PATH: /stats-service
+
+  # Other explorers
+  NEXT_PUBLIC_FEATURED_NETWORKS: "{{ [{'title': 'ASH Layer', 'url': blockscout_frontend_url, 'group': 'Testnets', 'icon': 'https://ash.center/img/ash-logo.svg', 'isActive': true}] | to_json }}"
+
+  # Other links
+  # NEXT_PUBLIC_OTHER_LINKS: [{'url':'http://10.200.14.212/','text':'Mainnet'}]
+
 
 blockscout_visualizer_env_variables:
   VISUALIZER__SERVER__GRPC__ENABLED: "false"
+
+blockscout_sig_provider_env_variables:
+  SIG_PROVIDER__SERVER__GRPC__ENABLED: "false"
+
+blockscout_sc_verifier_env_variables:
+  SMART_CONTRACT_VERIFIER__SERVER__GRPC__ENABLED: "false"
+
+blockscout_stats_env_variables:
+  STATS__DB_URL: "{{ blockscout_backend_env_vars.DATABASE_URL | regex_replace('/\\w+?$', '/stats') }}"
+  STATS__BLOCKSCOUT_DB_URL: "{{ blockscout_backend_env_vars.DATABASE_URL }}"
+  STATS__CREATE_DATABASE: "true"
+  STATS__RUN_MIGRATIONS: "true"
+  STATS__BLOCKSCOUT_API_URL: "http://backend:4000"
+  RUST_BACKTRACE: 1
+  STATS__CHARTS_CONFIG: "config/charts.json"
+  STATS__LAYOUT_CONFIG: "config/layout.json"
+  STATS__UPDATE_GROUPS_CONFIG: "config/update_groups.json"
+  STATS__DISABLE_INTERNAL_TRANSACTIONS: "{{ blockscout_backend_env_vars.INDEXER_DISABLE_INTERNAL_TRANSACTIONS_FETCHER }}"
+  # Only once, after the first start, the stats service will update the stats for all stats
+  # STATS__FORCE_UPDATE_ON_START: "true"

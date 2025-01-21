@@ -2,8 +2,10 @@ version: '3.9'
 
 services:
   sig-provider:
-    image: ghcr.io/blockscout/sig-provider:v1.0.0
+    image: ghcr.io/blockscout/sig-provider:v1.1.1
     pull_policy: always
     platform: linux/amd64
     restart: always
     container_name: 'sig-provider'
+    env_file:
+      -  /etc/blockscout/conf/vars-sig-provider.env

@@ -3,9 +3,9 @@
 ---
 collections:
   - name: prometheus.prometheus
-    version: 0.4.0
+    version: 0.23.0
   - name: grafana.grafana
-    version: 2.2.5
+    version: 5.7.0
 
 roles:
   - name: geerlingguy.docker

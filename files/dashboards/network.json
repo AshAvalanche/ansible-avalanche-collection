@@ -28,17 +28,22 @@
   "links": [
     {
       "icon": "external link",
+      "includeVars": true,
+      "keepTime": true,
       "tags": [
         "Avalanche"
       ],
       "type": "dashboards"
     }
   ],
-  "liveNow": false,
+  "liveNow": true,
   "panels": [
     {
       "collapsed": false,
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -51,7 +56,10 @@
       "type": "row"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "description": "Stake weighted average uptime of your node, as reported by network peers. If this falls below 80% node probably won't be rewarded for the current staking period.",
       "fieldConfig": {
         "defaults": {
@@ -59,6 +67,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -137,7 +147,8 @@
             "mean"
           ],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "single",
@@ -149,7 +160,7 @@
           "exemplar": true,
           "expr": "avalanche_network_node_uptime_weighted_average{job=\"avalanchego\"}",
           "interval": "",
-          "legendFormat": "Uptime average",
+          "legendFormat": "Uptime average {{node_id}}",
           "refId": "A"
         }
       ],
@@ -157,7 +168,10 @@
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "description": "Percentage of the stake that view your node as sufficiently online and correct to vote that node be awarded at the end of the staking period.",
       "fieldConfig": {
         "defaults": {
@@ -165,6 +179,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -239,7 +255,8 @@
             "mean"
           ],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "single",
@@ -251,7 +268,7 @@
           "exemplar": true,
           "expr": "avalanche_network_node_uptime_rewarding_stake{job=\"avalanchego\"}",
           "interval": "",
-          "legendFormat": "Rewarding stake",
+          "legendFormat": "Rewarding stake {{node_id}}",
           "refId": "A"
         }
       ],
@@ -295,7 +312,10 @@
         "noDataState": "no_data",
         "notifications": []
       },
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "description": "Number of network peers the node is connected to",
       "fieldConfig": {
         "defaults": {
@@ -303,6 +323,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -360,7 +382,8 @@
             "min"
           ],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "single",
@@ -374,7 +397,7 @@
           "expr": "avalanche_network_peers{job=\"avalanchego\"}",
           "format": "time_series",
           "interval": "",
-          "legendFormat": "Peers connected",
+          "legendFormat": "Peers connected {{node_id}}",
           "refId": "B"
         }
       ],
@@ -382,7 +405,10 @@
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "description": "Shows the amount of time this node will wait for a response to a request before considering the request failed, and the average time it takes to get a response to a request.",
       "fieldConfig": {
         "defaults": {
@@ -390,6 +416,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -449,7 +477,8 @@
             "max"
           ],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "single",
@@ -460,17 +489,17 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "avalanche_requests_current_timeout",
+          "expr": "avalanche_requests_current_timeout{job=\"avalanchego\"}",
           "interval": "",
-          "legendFormat": "Timeout",
+          "legendFormat": "Timeout {{node_id}}",
           "refId": "A"
         },
         {
           "exemplar": true,
-          "expr": "avalanche_requests_average_latency",
+          "expr": "avalanche_requests_average_latency{job=\"avalanchego\"}",
           "hide": false,
           "interval": "",
-          "legendFormat": "Response Time",
+          "legendFormat": "Response Time {{node_id}}",
           "refId": "B"
         }
       ],
@@ -478,7 +507,10 @@
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "description": "Number of outstanding requests related to consensus/bootstrapping. Doesn't include handshake messages.",
       "fieldConfig": {
         "defaults": {
@@ -486,6 +518,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -544,7 +578,8 @@
             "max"
           ],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "single",
@@ -554,9 +589,9 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "avalanche_requests_outstanding",
+          "expr": "avalanche_requests_outstanding{job=\"avalanchego\"}",
           "interval": "",
-          "legendFormat": "Outstanding Requests",
+          "legendFormat": "Outstanding Requests {{node_id}}",
           "refId": "A"
         }
       ],
@@ -564,7 +599,10 @@
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "description": "From all chains",
       "fieldConfig": {
         "defaults": {
@@ -572,6 +610,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -631,7 +671,8 @@
             "max"
           ],
           "displayMode": "table",
-          "placement": "right",
+          "placement": "bottom",
+          "showLegend": true,
           "sortBy": "Mean",
           "sortDesc": true
         },
@@ -643,141 +684,20 @@
       "pluginVersion": "8.0.3",
       "targets": [
         {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_accepted_received{job=\"avalanchego\"}[1m])",
+          "expr": "rate(avalanche_network_msgs{io=\"received\", job=\"avalanchego\"}[1m])",
           "interval": "",
-          "legendFormat": "accepted",
+          "legendFormat": "{{ op }} compressed={{ compressed }} {{node_id}}",
           "refId": "A"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_get_accepted_received{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "get accepted",
-          "refId": "B"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_get_accepted_frontier_received{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "get accepted frontier",
-          "refId": "C"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_get_ancestors_received{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "get ancestors",
-          "refId": "D"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_put_received{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "put",
-          "refId": "E"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_multi_put_received{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "multiput",
-          "refId": "F"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_get_version_received{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "get version",
-          "refId": "G"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_get_peerlist_received{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "get peerlist",
-          "refId": "H"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_pull_query_received{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "pull query",
-          "refId": "I"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_push_query_received{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "push query",
-          "refId": "J"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_version_received{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "version",
-          "refId": "K"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_ping_received{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "ping",
-          "refId": "L"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_pong_received{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "pong",
-          "refId": "M"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_get_received{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "get",
-          "refId": "N"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_chits_received{job=\"avalanchego\"}[1m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "chits",
-          "refId": "O"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_app_gossip_received{job=\"avalanchego\"}[1m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app gossip",
-          "refId": "P"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_app_request_received{job=\"avalanchego\"}[1m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app request",
-          "refId": "Q"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_app_response_received{job=\"avalanchego\"}[1m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app response",
-          "refId": "R"
         }
       ],
       "title": "Messages Received per Second",
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "description": "From all chains",
       "fieldConfig": {
         "defaults": {
@@ -785,6 +705,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -844,7 +766,8 @@
             "max"
           ],
           "displayMode": "table",
-          "placement": "right",
+          "placement": "bottom",
+          "showLegend": true,
           "sortBy": "Mean",
           "sortDesc": true
         },
@@ -856,128 +779,20 @@
       "pluginVersion": "8.0.3",
       "targets": [
         {
-          "expr": "rate(avalanche_network_accepted_sent{job=\"avalanchego\"}[1m])",
+          "expr": "rate(avalanche_network_msgs{io=\"sent\", job=\"avalanchego\"}[1m])",
           "interval": "",
-          "legendFormat": "accepted",
+          "legendFormat": "{{ op }} compressed={{ compressed }} {{node_id}}",
           "refId": "A"
-        },
-        {
-          "expr": "rate(avalanche_network_get_accepted_sent{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "get accepted",
-          "refId": "B"
-        },
-        {
-          "expr": "rate(avalanche_network_get_accepted_frontier_sent{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "get accepted frontier",
-          "refId": "C"
-        },
-        {
-          "expr": "rate(avalanche_network_get_ancestors_sent{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "get ancestors",
-          "refId": "D"
-        },
-        {
-          "expr": "rate(avalanche_network_put_sent{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "put",
-          "refId": "E"
-        },
-        {
-          "expr": "rate(avalanche_network_multi_put_sent{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "multiput",
-          "refId": "F"
-        },
-        {
-          "expr": "rate(avalanche_network_get_version_sent{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "get version",
-          "refId": "G"
-        },
-        {
-          "expr": "rate(avalanche_network_get_peerlist_sent{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "get peerlist",
-          "refId": "H"
-        },
-        {
-          "expr": "rate(avalanche_network_pull_query_sent{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "pull query",
-          "refId": "I"
-        },
-        {
-          "expr": "rate(avalanche_network_push_query_sent{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "push query",
-          "refId": "J"
-        },
-        {
-          "expr": "rate(avalanche_network_version_sent{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "version",
-          "refId": "K"
-        },
-        {
-          "expr": "rate(avalanche_network_ping_sent{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "ping",
-          "refId": "L"
-        },
-        {
-          "expr": "rate(avalanche_network_pong_sent{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "pong",
-          "refId": "M"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_get_sent{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "get",
-          "refId": "N"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_chits_sent{job=\"avalanchego\"}[1m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "chits",
-          "refId": "O"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_app_gossip_sent{job=\"avalanchego\"}[1m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app gossip",
-          "refId": "P"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_app_request_sent{job=\"avalanchego\"}[1m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app request",
-          "refId": "Q"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_app_response_sent{job=\"avalanchego\"}[1m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app response",
-          "refId": "R"
         }
       ],
       "title": "Messages Sent per Second",
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "description": "From all chains",
       "fieldConfig": {
         "defaults": {
@@ -985,6 +800,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisGridShow": true,
             "axisLabel": "",
             "axisPlacement": "auto",
@@ -1042,7 +859,8 @@
             "max"
           ],
           "displayMode": "table",
-          "placement": "right",
+          "placement": "bottom",
+          "showLegend": true,
           "sortBy": "Mean",
           "sortDesc": true
         },
@@ -1054,159 +872,24 @@
       "pluginVersion": "8.0.3",
       "targets": [
         {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "rate(avalanche_network_accepted_received_bytes{job=\"avalanchego\"}[1m])",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "expr": "rate(avalanche_network_msgs_bytes{io=\"received\", job=\"avalanchego\"}[1m])",
           "interval": "",
-          "legendFormat": "accepted",
+          "legendFormat": "{{ op }} {{node_id}}",
           "refId": "A"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "rate(avalanche_network_get_accepted_received_bytes{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "get accepted",
-          "refId": "B"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "rate(avalanche_network_get_accepted_frontier_received_bytes{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "get accepted frontier",
-          "refId": "C"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "rate(avalanche_network_get_ancestors_received_bytes{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "get ancestors",
-          "refId": "D"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "rate(avalanche_network_put_received_bytes{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "put",
-          "refId": "E"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "rate(avalanche_network_multi_put_received_bytes{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "multiput",
-          "refId": "F"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "rate(avalanche_network_get_version_received_bytes{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "get version",
-          "refId": "G"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "rate(avalanche_network_get_peerlist_received_bytes{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "get peerlist",
-          "refId": "H"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "rate(avalanche_network_pull_query_received_bytes{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "pull query",
-          "refId": "I"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "rate(avalanche_network_push_query_received_bytes{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "push query",
-          "refId": "J"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "rate(avalanche_network_version_received_bytes{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "version",
-          "refId": "K"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "rate(avalanche_network_ping_received_bytes{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "ping",
-          "refId": "L"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "rate(avalanche_network_pong_received_bytes{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "pong",
-          "refId": "M"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "rate(avalanche_network_get_received_bytes{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "get",
-          "refId": "N"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "rate(avalanche_network_chits_received_bytes{job=\"avalanchego\"}[1m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "chits",
-          "refId": "O"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "rate(avalanche_network_app_gossip_received_bytes{job=\"avalanchego\"}[1m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app gossip",
-          "refId": "P"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "rate(avalanche_network_app_request_received_bytes{job=\"avalanchego\"}[1m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app request",
-          "refId": "Q"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "rate(avalanche_network_app_response_received_bytes{job=\"avalanchego\"}[1m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app response",
-          "refId": "R"
         }
       ],
       "title": "Messages Received Bandwidth",
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "description": "From all chains",
       "fieldConfig": {
         "defaults": {
@@ -1214,6 +897,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisGridShow": true,
             "axisLabel": "",
             "axisPlacement": "auto",
@@ -1271,7 +956,8 @@
             "max"
           ],
           "displayMode": "table",
-          "placement": "right",
+          "placement": "bottom",
+          "showLegend": true,
           "sortBy": "Mean",
           "sortDesc": true
         },
@@ -1283,159 +969,24 @@
       "pluginVersion": "8.0.3",
       "targets": [
         {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "rate(avalanche_network_accepted_sent_bytes{job=\"avalanchego\"}[1m])",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "expr": "rate(avalanche_network_msgs_bytes{io=\"sent\", job=\"avalanchego\"}[1m])",
           "interval": "",
-          "legendFormat": "accepted",
+          "legendFormat": "{{ op }} {{node_id}}",
           "refId": "A"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "rate(avalanche_network_get_accepted_sent_bytes{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "get accepted",
-          "refId": "B"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "rate(avalanche_network_get_accepted_frontier_sent_bytes{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "get accepted frontier",
-          "refId": "C"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "rate(avalanche_network_get_ancestors_sent_bytes{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "get ancestors",
-          "refId": "D"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "rate(avalanche_network_put_sent_bytes{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "put",
-          "refId": "E"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "rate(avalanche_network_multi_put_sent_bytes{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "multiput",
-          "refId": "F"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "rate(avalanche_network_get_version_sent_bytes{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "get version",
-          "refId": "G"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "rate(avalanche_network_get_peerlist_sent_bytes{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "get peerlist",
-          "refId": "H"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "rate(avalanche_network_pull_query_sent_bytes{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "pull query",
-          "refId": "I"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "rate(avalanche_network_push_query_sent_bytes{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "push query",
-          "refId": "J"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "rate(avalanche_network_version_sent_bytes{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "version",
-          "refId": "K"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "rate(avalanche_network_ping_sent_bytes{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "ping",
-          "refId": "L"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "rate(avalanche_network_pong_sent_bytes{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "pong",
-          "refId": "M"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "rate(avalanche_network_get_sent_bytes{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "get",
-          "refId": "N"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "rate(avalanche_network_chits_sent_bytes{job=\"avalanchego\"}[1m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "chits",
-          "refId": "O"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "rate(avalanche_network_app_gossip_sent_bytes{job=\"avalanchego\"}[1m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app gossip",
-          "refId": "P"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "rate(avalanche_network_app_request_sent_bytes{job=\"avalanchego\"}[1m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app request",
-          "refId": "Q"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "rate(avalanche_network_app_response_sent_bytes{job=\"avalanchego\"}[1m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app response",
-          "refId": "R"
         }
       ],
       "title": "Messages Sent Bandwidth",
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "description": "From all chains",
       "fieldConfig": {
         "defaults": {
@@ -1443,6 +994,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisGridShow": true,
             "axisLabel": "",
             "axisPlacement": "auto",
@@ -1500,7 +1053,8 @@
             "max"
           ],
           "displayMode": "table",
-          "placement": "right",
+          "placement": "bottom",
+          "showLegend": true,
           "sortBy": "Mean",
           "sortDesc": true
         },
@@ -1512,159 +1066,46 @@
       "pluginVersion": "8.0.3",
       "targets": [
         {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "increase(avalanche_network_accepted_received_bytes{job=\"avalanchego\"}[1m])/increase(avalanche_network_accepted_received{job=\"avalanchego\"}[1m])",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "expr": "increase(avalanche_network_msgs_bytes{io=\"received\", job=\"avalanchego\"}[1m])",
           "interval": "",
-          "legendFormat": "accepted",
-          "refId": "A"
+          "legendFormat": "{{ op }} {{node_id}}",
+          "refId": "A",
+          "hide": true
         },
         {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "increase(avalanche_network_get_accepted_received_bytes{job=\"avalanchego\"}[1m])/increase(avalanche_network_get_accepted_received{job=\"avalanchego\"}[1m])",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "expr": "increase(avalanche_network_msgs{io=\"received\", job=\"avalanchego\"}[1m])",
           "interval": "",
-          "legendFormat": "get accepted",
-          "refId": "B"
+          "legendFormat": "{{ op }} {{node_id}}",
+          "refId": "B",
+          "hide": true
         },
         {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "increase(avalanche_network_get_accepted_frontier_received_bytes{job=\"avalanchego\"}[1m])/increase(avalanche_network_get_accepted_frontier_received{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "get accepted frontier",
-          "refId": "C"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "increase(avalanche_network_get_ancestors_received_bytes{job=\"avalanchego\"}[1m])/increase(avalanche_network_get_ancestors_received{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "get ancestors",
-          "refId": "D"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "increase(avalanche_network_put_received_bytes{job=\"avalanchego\"}[1m])/increase(avalanche_network_put_received{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "put",
-          "refId": "E"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "increase(avalanche_network_multi_put_received_bytes{job=\"avalanchego\"}[1m])/increase(avalanche_network_multi_put_received{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "multiput",
-          "refId": "F"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "increase(avalanche_network_get_version_received_bytes{job=\"avalanchego\"}[1m])/increase(avalanche_network_get_version_received{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "get version",
-          "refId": "G"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "increase(avalanche_network_get_peerlist_received_bytes{job=\"avalanchego\"}[1m])/increase(avalanche_network_get_peerlist_received{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "get peerlist",
-          "refId": "H"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "increase(avalanche_network_pull_query_received_bytes{job=\"avalanchego\"}[1m])/increase(avalanche_network_pull_query_received{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "pull query",
-          "refId": "I"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "increase(avalanche_network_push_query_received_bytes{job=\"avalanchego\"}[1m])/increase(avalanche_network_push_query_received{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "push query",
-          "refId": "J"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "increase(avalanche_network_version_received_bytes{job=\"avalanchego\"}[1m])/increase(avalanche_network_version_received{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "version",
-          "refId": "K"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "increase(avalanche_network_ping_received_bytes{job=\"avalanchego\"}[1m])/increase(avalanche_network_ping_received{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "ping",
-          "refId": "L"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "increase(avalanche_network_pong_received_bytes{job=\"avalanchego\"}[1m])/increase(avalanche_network_pong_received{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "pong",
-          "refId": "M"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "increase(avalanche_network_get_received_bytes{job=\"avalanchego\"}[1m])/increase(avalanche_network_get_received{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "get",
-          "refId": "N"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "increase(avalanche_network_chits_received_bytes{job=\"avalanchego\"}[1m])/increase(avalanche_network_chits_received{job=\"avalanchego\"}[1m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "chits",
-          "refId": "O"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "increase(avalanche_network_app_gossip_received_bytes{job=\"avalanchego\"}[1m])/increase(avalanche_network_app_gossip_received{job=\"avalanchego\"}[1m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app gossip",
-          "refId": "P"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "increase(avalanche_network_app_request_received_bytes{job=\"avalanchego\"}[1m])/increase(avalanche_network_app_request_received{job=\"avalanchego\"}[1m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app request",
-          "refId": "Q"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "increase(avalanche_network_app_response_received_bytes{job=\"avalanchego\"}[1m])/increase(avalanche_network_app_response_received{job=\"avalanchego\"}[1m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app response",
-          "refId": "R"
+          "refId": "Size",
+          "datasource": {
+            "type": "__expr__",
+            "uid": "__expr__",
+            "name": "Expression"
+          },
+          "type": "math",
+          "expression": "$A / $B"
         }
       ],
       "title": "Average Received Message Size",
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "description": "From all chains",
       "fieldConfig": {
         "defaults": {
@@ -1672,6 +1113,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisGridShow": true,
             "axisLabel": "",
             "axisPlacement": "auto",
@@ -1729,7 +1172,8 @@
             "max"
           ],
           "displayMode": "table",
-          "placement": "right",
+          "placement": "bottom",
+          "showLegend": true,
           "sortBy": "Mean",
           "sortDesc": true
         },
@@ -1741,152 +1185,36 @@
       "pluginVersion": "8.0.3",
       "targets": [
         {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "increase(avalanche_network_accepted_sent_bytes{job=\"avalanchego\"}[1m])/increase(avalanche_network_accepted_sent{job=\"avalanchego\"}[1m])",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "expr": "increase(avalanche_network_msgs_bytes{io=\"sent\", job=\"avalanchego\"}[1m])",
           "interval": "",
-          "legendFormat": "accepted",
-          "refId": "A"
+          "legendFormat": "{{ op }} {{node_id}}",
+          "refId": "A",
+          "hide": true
         },
         {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "increase(avalanche_network_get_accepted_sent_bytes{job=\"avalanchego\"}[1m])/increase(avalanche_network_get_accepted_sent{job=\"avalanchego\"}[1m])",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "expr": "increase(avalanche_network_msgs{io=\"sent\", job=\"avalanchego\"}[1m])",
           "interval": "",
-          "legendFormat": "get accepted",
-          "refId": "B"
+          "legendFormat": "{{ op }} {{node_id}}",
+          "refId": "B",
+          "hide": true
         },
         {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "increase(avalanche_network_get_accepted_frontier_sent_bytes{job=\"avalanchego\"}[1m])/increase(avalanche_network_get_accepted_frontier_sent{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "get accepted frontier",
-          "refId": "C"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "increase(avalanche_network_get_ancestors_sent_bytes{job=\"avalanchego\"}[1m])/increase(avalanche_network_get_ancestors_sent{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "get ancestors",
-          "refId": "D"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "increase(avalanche_network_put_sent_bytes{job=\"avalanchego\"}[1m])/increase(avalanche_network_put_sent{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "put",
-          "refId": "E"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "increase(avalanche_network_multi_put_sent_bytes{job=\"avalanchego\"}[1m])/increase(avalanche_network_multi_put_sent{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "multiput",
-          "refId": "F"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "increase(avalanche_network_get_version_sent_bytes{job=\"avalanchego\"}[1m])/increase(avalanche_network_get_version_sent{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "get version",
-          "refId": "G"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "increase(avalanche_network_get_peerlist_sent_bytes{job=\"avalanchego\"}[1m])/increase(avalanche_network_get_peerlist_sent{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "get peerlist",
-          "refId": "H"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "increase(avalanche_network_pull_query_sent_bytes{job=\"avalanchego\"}[1m])/increase(avalanche_network_pull_query_sent{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "pull query",
-          "refId": "I"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "increase(avalanche_network_push_query_sent_bytes{job=\"avalanchego\"}[1m])/increase(avalanche_network_push_query_sent{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "push query",
-          "refId": "J"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "increase(avalanche_network_version_sent_bytes{job=\"avalanchego\"}[1m])/increase(avalanche_network_version_sent{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "version",
-          "refId": "K"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "increase(avalanche_network_ping_sent_bytes{job=\"avalanchego\"}[1m])/increase(avalanche_network_ping_sent{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "ping",
-          "refId": "L"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "increase(avalanche_network_pong_sent_bytes{job=\"avalanchego\"}[1m])/increase(avalanche_network_pong_sent{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "pong",
-          "refId": "M"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "increase(avalanche_network_get_sent_bytes{job=\"avalanchego\"}[1m])/increase(avalanche_network_get_sent{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "get",
-          "refId": "N"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "increase(avalanche_network_chits_sent_bytes{job=\"avalanchego\"}[1m])/increase(avalanche_network_chits_sent{job=\"avalanchego\"}[1m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "chits",
-          "refId": "O"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "increase(avalanche_network_app_gossip_sent_bytes{job=\"avalanchego\"}[1m])/increase(avalanche_network_app_gossip_sent{job=\"avalanchego\"}[1m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app gossip",
-          "refId": "P"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "increase(avalanche_network_app_request_sent_bytes{job=\"avalanchego\"}[1m])/increase(avalanche_network_app_request_sent{job=\"avalanchego\"}[1m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app request",
-          "refId": "Q"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "increase(avalanche_network_app_response_sent_bytes{job=\"avalanchego\"}[1m])/increase(avalanche_network_app_response_sent{job=\"avalanchego\"}[1m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app response",
-          "refId": "R"
+          "datasource": {
+            "type": "__expr__",
+            "uid": "__expr__",
+            "name": "Expression"
+          },
+          "refId": "Size",
+          "type": "math",
+          "expression": "$A / $B"
         }
       ],
       "title": "Average Sent Message Size",
@@ -1894,82 +1222,63 @@
     },
     {
       "datasource": {
-        "type": "__expr__",
-        "uid": "__expr__"
+        "type": "prometheus",
+        "uid": "${datasource}"
       },
       "description": "Considers the X-Chain, P-Chain and C-Chain. A lower value indicates vote pipelining (good.) A higher value indicates failed polls (not good.)",
       "fieldConfig": {
         "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
           "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
+            "drawStyle": "bars",
             "lineInterpolation": "smooth",
+            "barAlignment": 0,
             "lineWidth": 1,
+            "fillOpacity": 100,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "insertNulls": false,
+            "showPoints": "never",
             "pointSize": 5,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "axisBorderShow": false,
             "scaleDistribution": {
               "type": "linear"
             },
-            "showPoints": "never",
-            "spanNulls": true,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
+            "axisCenteredZero": false,
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
             },
             "thresholdsStyle": {
-              "mode": "line+area"
+              "mode": "off"
             }
           },
+          "color": {
+            "mode": "palette-classic"
+          },
           "mappings": [],
-          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "transparent",
+                "color": "green",
                 "value": null
-              }
-            ]
-          },
-          "unit": "none"
-        },
-        "overrides": [
-          {
-            "__systemRef": "hideSeriesFrom",
-            "matcher": {
-              "id": "byNames",
-              "options": {
-                "mode": "exclude",
-                "names": [
-                  "Queries per Accepted Container {instance=\"localhost:9650\", job=\"avalanchego\"}"
-                ],
-                "prefix": "All except:",
-                "readOnly": true
-              }
-            },
-            "properties": [
+              },
               {
-                "id": "custom.hideFrom",
-                "value": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": true
-                }
+                "color": "red",
+                "value": 80
               }
             ]
           }
-        ]
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
@@ -1977,85 +1286,62 @@
         "x": 0,
         "y": 41
       },
-      "id": 45,
+      "id": 29,
       "options": {
-        "legend": {
-          "calcs": [
-            "mean",
-            "max",
-            "last"
-          ],
-          "displayMode": "list",
-          "placement": "bottom"
-        },
         "tooltip": {
           "mode": "single",
-          "sort": "none"
+          "sort": "none",
+          "maxHeight": 600
+        },
+        "legend": {
+          "showLegend": true,
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
         }
       },
-      "pluginVersion": "8.0.3",
       "targets": [
         {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "increase(avalanche_network_pull_query_sent{job=\"avalanchego\"}[5m])",
-          "hide": true,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "expr": "sum(increase(avalanche_network_msgs{io=\"sent\", op=~\"pull_query|push_query\", job=\"avalanchego\"}[5m]))",
           "interval": "",
-          "legendFormat": "pull query",
-          "refId": "A"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "increase(avalanche_network_push_query_sent{job=\"avalanchego\"}[5m])",
-          "hide": true,
-          "interval": "",
-          "legendFormat": "push query",
-          "refId": "B"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "increase(avalanche_X_blks_accepted_count{job=\"avalanchego\"}[5m]) ",
-          "hide": true,
-          "interval": "",
-          "legendFormat": "",
-          "refId": "C"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "increase(avalanche_C_blks_accepted_count{job=\"avalanchego\"}[5m]) ",
-          "hide": true,
-          "interval": "",
-          "legendFormat": "",
-          "refId": "D"
-        },
-        {
-          "datasource": "Prometheus",
-          "exemplar": true,
-          "expr": "increase(avalanche_P_blks_accepted_count{job=\"avalanchego\"}[5m])",
-          "hide": true,
-          "interval": "",
-          "legendFormat": "",
-          "refId": "E"
+          "legendFormat": "Messages {{node_id}}",
+          "refId": "A",
+          "hide": true
         },
         {
           "datasource": {
-            "type": "__expr__",
-            "uid": "__expr__"
+            "type": "prometheus",
+            "uid": "${datasource}"
           },
-          "expression": "($A + $B) / ($C + $D + $E)",
-          "hide": false,
-          "refId": "Queries per Accepted Container",
-          "type": "math"
+          "expr": "sum(increase(avalanche_snowman_blks_accepted_count{chain=~\"C|P|X\", job=\"avalanchego\"}[5m]))",
+          "interval": "",
+          "legendFormat": "Messages {{node_id}}",
+          "refId": "B",
+          "hide": true
+        },
+        {
+          "refId": "Messages",
+          "datasource": {
+            "type": "__expr__",
+            "uid": "__expr__",
+            "name": "Expression"
+          },
+          "type": "math",
+          "expression": "$A / $B"
         }
       ],
       "title": "Queries Sent per Accepted Container",
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "description": "Number of messages that are queued to be sent to peers",
       "fieldConfig": {
         "defaults": {
@@ -2063,6 +1349,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -2122,7 +1410,8 @@
             "last"
           ],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "single",
@@ -2132,9 +1421,9 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "avalanche_network_throttler_outbound_awaiting_release",
+          "expr": "avalanche_network_throttler_outbound_awaiting_release{job=\"avalanchego\"}",
           "interval": "",
-          "legendFormat": "Messages",
+          "legendFormat": "Messages {{node_id}}",
           "refId": "A"
         }
       ],
@@ -2142,7 +1431,10 @@
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "description": "Amount of the stake in AVAX that is benched (ignored) because the nodes are unhealthy",
       "fieldConfig": {
         "defaults": {
@@ -2150,6 +1442,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -2211,7 +1505,8 @@
             "last"
           ],
           "displayMode": "table",
-          "placement": "right"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "single",
@@ -2221,24 +1516,10 @@
       "pluginVersion": "8.0.3",
       "targets": [
         {
-          "expr": "avalanche_X_benchlist_benched_weight/1000000000",
+          "expr": "avalanche_benchlist_benched_weight/1000000000",
           "interval": "",
-          "legendFormat": "X chain",
+          "legendFormat": "{{ chain }} {{node_id}}",
           "refId": "A"
-        },
-        {
-          "expr": "avalanche_P_benchlist_benched_weight/1000000000",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "P Chain",
-          "refId": "B"
-        },
-        {
-          "expr": "avalanche_C_benchlist_benched_weight/1000000000",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "C Chain",
-          "refId": "C"
         }
       ],
       "title": "Benched stake",
@@ -2246,7 +1527,10 @@
     },
     {
       "collapsed": false,
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -2259,7 +1543,10 @@
       "type": "row"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "description": "Number of messages waiting to acquire bytes from the inbound message throttler.",
       "fieldConfig": {
         "defaults": {
@@ -2267,6 +1554,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -2326,7 +1615,8 @@
             "last"
           ],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "single",
@@ -2336,9 +1626,9 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "avalanche_network_byte_throttler_inbound_awaiting_acquire",
+          "expr": "avalanche_network_byte_throttler_inbound_awaiting_acquire{job=\"avalanchego\"}",
           "interval": "",
-          "legendFormat": "Messages Awaiting Acquire",
+          "legendFormat": "Messages Awaiting Acquire {{node_id}}",
           "refId": "A"
         }
       ],
@@ -2346,7 +1636,10 @@
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "description": "Number of bytes left in the validator byte allocation of the inbound message throttler",
       "fieldConfig": {
         "defaults": {
@@ -2354,6 +1647,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "axisSoftMin": 0,
@@ -2415,7 +1710,8 @@
             "last"
           ],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "single",
@@ -2425,9 +1721,9 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "avalanche_network_byte_throttler_inbound_remaining_validator_bytes",
+          "expr": "avalanche_network_byte_throttler_inbound_remaining_validator_bytes{job=\"avalanchego\"}",
           "interval": "",
-          "legendFormat": "Bytes Remaining",
+          "legendFormat": "Bytes Remaining {{node_id}}",
           "refId": "A"
         }
       ],
@@ -2435,7 +1731,10 @@
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "description": "The amount of time, on average, that we wait to acquire bytes from the throttler before reading a message.",
       "fieldConfig": {
         "defaults": {
@@ -2443,6 +1742,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -2499,7 +1800,8 @@
             "max"
           ],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "single",
@@ -2509,9 +1811,9 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "increase(avalanche_network_byte_throttler_inbound_acquire_latency_sum[2m])/increase(avalanche_network_byte_throttler_inbound_acquire_latency_count[2m])",
+          "expr": "increase(avalanche_network_byte_throttler_inbound_acquire_latency_sum{job=\"avalanchego\"}[2m])/increase(avalanche_network_byte_throttler_inbound_acquire_latency_count{job=\"avalanchego\"}[2m])",
           "interval": "",
-          "legendFormat": "Acquire",
+          "legendFormat": "Acquire {{node_id}}",
           "refId": "A"
         }
       ],
@@ -2519,7 +1821,10 @@
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "description": "The amount of time, on average, that we wait to acquire from the throttler before reading a message.",
       "fieldConfig": {
         "defaults": {
@@ -2527,6 +1832,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -2583,7 +1890,8 @@
             "max"
           ],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "single",
@@ -2593,9 +1901,9 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "increase(avalanche_network_buffer_throttler_inbound_acquire_latency_sum[2m])/increase(avalanche_network_buffer_throttler_inbound_acquire_latency_count[2m])",
+          "expr": "increase(avalanche_network_buffer_throttler_inbound_acquire_latency_sum{job=\"avalanchego\"}[2m])/increase(avalanche_network_buffer_throttler_inbound_acquire_latency_count{job=\"avalanchego\"}[2m])",
           "interval": "",
-          "legendFormat": "Acquire",
+          "legendFormat": "Acquire {{node_id}}",
           "refId": "A"
         }
       ],
@@ -2603,7 +1911,10 @@
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "description": "Number of messages that are currently being handled and haven't yet returned their bytes to the inbound message throttler.",
       "fieldConfig": {
         "defaults": {
@@ -2611,6 +1922,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -2670,7 +1983,8 @@
             "last"
           ],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "single",
@@ -2680,9 +1994,9 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "avalanche_network_byte_throttler_inbound_awaiting_release",
+          "expr": "avalanche_network_byte_throttler_inbound_awaiting_release{job=\"avalanchego\"}",
           "interval": "",
-          "legendFormat": "Messages Awaiting Release",
+          "legendFormat": "Messages Awaiting Release {{node_id}}",
           "refId": "A"
         }
       ],
@@ -2690,7 +2004,10 @@
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "description": "Number of messages waiting to acquire from the inbound message buffer throttler.",
       "fieldConfig": {
         "defaults": {
@@ -2698,6 +2015,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -2756,7 +2075,8 @@
             "max"
           ],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "single",
@@ -2766,9 +2086,9 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "avalanche_network_buffer_throttler_inbound_awaiting_acquire",
+          "expr": "avalanche_network_buffer_throttler_inbound_awaiting_acquire{job=\"avalanchego\"}",
           "interval": "",
-          "legendFormat": "Messages Awaiting",
+          "legendFormat": "Messages Awaiting {{node_id}}",
           "refId": "A"
         }
       ],
@@ -2776,7 +2096,10 @@
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "description": "Number of bytes left in the at-large byte allocation of the inbound message throttler",
       "fieldConfig": {
         "defaults": {
@@ -2784,6 +2107,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "axisSoftMin": 0,
@@ -2844,7 +2169,8 @@
             "min"
           ],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "single",
@@ -2854,9 +2180,9 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "avalanche_network_byte_throttler_inbound_remaining_at_large_bytes",
+          "expr": "avalanche_network_byte_throttler_inbound_remaining_at_large_bytes{job=\"avalanchego\"}",
           "interval": "",
-          "legendFormat": "Remaining Bytes",
+          "legendFormat": "Remaining Bytes {{node_id}}",
           "refId": "A"
         }
       ],
@@ -2864,7 +2190,10 @@
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "description": "Number of messages waiting to acquire bytes from the inbound bandwidth throttler.",
       "fieldConfig": {
         "defaults": {
@@ -2872,6 +2201,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -2931,7 +2262,8 @@
             "last"
           ],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "single",
@@ -2941,9 +2273,9 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "avalanche_network_bandwidth_throttler_inbound_awaiting_acquire",
+          "expr": "avalanche_network_bandwidth_throttler_inbound_awaiting_acquire{job=\"avalanchego\"}",
           "interval": "",
-          "legendFormat": "Messages Awaiting Acquire",
+          "legendFormat": "Messages Awaiting Acquire {{node_id}}",
           "refId": "A"
         }
       ],
@@ -2952,7 +2284,10 @@
     },
     {
       "collapsed": false,
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -2965,7 +2300,10 @@
       "type": "row"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "description": "Number of bytes left in the at-large byte allocation of the outbound message throttler",
       "fieldConfig": {
         "defaults": {
@@ -2973,6 +2311,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "axisSoftMin": 0,
@@ -3033,7 +2373,8 @@
             "min"
           ],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "single",
@@ -3043,9 +2384,9 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "avalanche_network_throttler_outbound_remaining_at_large_bytes",
+          "expr": "avalanche_network_throttler_outbound_remaining_at_large_bytes{job=\"avalanchego\"}",
           "interval": "",
-          "legendFormat": "Bytes Remaining",
+          "legendFormat": "Bytes Remaining {{node_id}}",
           "refId": "A"
         }
       ],
@@ -3053,7 +2394,10 @@
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "description": "Number of bytes left in the validator byte allocation of the outbound message throttler",
       "fieldConfig": {
         "defaults": {
@@ -3061,6 +2405,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "axisSoftMin": 0,
@@ -3117,7 +2463,8 @@
             "min"
           ],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "single",
@@ -3127,9 +2474,9 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "avalanche_network_throttler_outbound_remaining_validator_bytes",
+          "expr": "avalanche_network_throttler_outbound_remaining_validator_bytes{job=\"avalanchego\"}",
           "interval": "",
-          "legendFormat": "Bytes Remaining",
+          "legendFormat": "Bytes Remaining {{node_id}}",
           "refId": "A"
         }
       ],
@@ -3138,7 +2485,10 @@
     },
     {
       "collapsed": false,
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -3151,7 +2501,10 @@
       "type": "row"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "description": "From all chains",
       "fieldConfig": {
         "defaults": {
@@ -3159,6 +2512,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -3218,7 +2573,8 @@
             "max"
           ],
           "displayMode": "table",
-          "placement": "right"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "single",
@@ -3228,134 +2584,20 @@
       "pluginVersion": "8.0.3",
       "targets": [
         {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_accepted_failed{job=\"avalanchego\"}[1m])",
+          "expr": "rate(avalanche_network_msgs_failed_to_send{job=\"avalanchego\"}[1m])",
           "interval": "",
-          "legendFormat": "accepted",
+          "legendFormat": "{{ op }} {{node_id}}",
           "refId": "A"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_get_accepted_failed{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "get accepted",
-          "refId": "B"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_get_accepted_frontier_failed{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "get accepted frontier",
-          "refId": "C"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_get_ancestors_failed{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "get ancestors",
-          "refId": "D"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_put_failed{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "put",
-          "refId": "E"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_multi_put_failed{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "multiput",
-          "refId": "F"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_get_version_failed{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "get version",
-          "refId": "G"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_get_peerlist_failed{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "get peerlist",
-          "refId": "H"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_pull_query_failed{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "pull query",
-          "refId": "I"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_push_query_failed{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "push query",
-          "refId": "J"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_version_failed{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "version",
-          "refId": "K"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_ping_failed{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "ping",
-          "refId": "L"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_pong_failed{job=\"avalanchego\"}[1m])",
-          "interval": "",
-          "legendFormat": "pong",
-          "refId": "M"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_chits_failed{job=\"avalanchego\"}[1m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "chits",
-          "refId": "N"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_app_gossip_failed{job=\"avalanchego\"}[1m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app gossip",
-          "refId": "O"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_app_request_failed{job=\"avalanchego\"}[1m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app request",
-          "refId": "P"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_app_response_failed{job=\"avalanchego\"}[1m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app response",
-          "refId": "Q"
         }
       ],
       "title": "Messages Failed To Send per Second",
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "description": "Number of messages that could not be parsed because they were of unknown type or invalidly formatted.",
       "fieldConfig": {
         "defaults": {
@@ -3363,6 +2605,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -3417,7 +2661,8 @@
             "max"
           ],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "single",
@@ -3427,9 +2672,9 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "increase(avalanche_network_msgs_failed_to_parse[1m])>0",
+          "expr": "increase(avalanche_network_msgs_failed_to_parse[1m])",
           "interval": "",
-          "legendFormat": "Failed to Parse",
+          "legendFormat": "Failed to Parse {{node_id}}",
           "refId": "A"
         }
       ],
@@ -3437,7 +2682,10 @@
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "description": "Number of inbound messages dropped (not processed) due to expiration in last minute.",
       "fieldConfig": {
         "defaults": {
@@ -3445,6 +2693,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -3503,7 +2753,8 @@
             "max"
           ],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "single",
@@ -3513,9 +2764,9 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "increase(avalanche_P_handler_expired[1m])+increase(avalanche_C_handler_expired[1m])+increase(avalanche_X_handler_expired[1m])",
+          "expr": "sum(increase(avalanche_handler_expired[1m]) or 0 * up)",
           "interval": "",
-          "legendFormat": "Messages Dropped",
+          "legendFormat": "Messages Dropped {{node_id}}",
           "refId": "A"
         }
       ],
@@ -3523,7 +2774,10 @@
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "description": "Number of outbound messages dropped (not sent) due to rate-limiting in the last minute",
       "fieldConfig": {
         "defaults": {
@@ -3531,6 +2785,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -3585,7 +2841,8 @@
             "max"
           ],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "single",
@@ -3595,9 +2852,9 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "increase(avalanche_network_throttler_outbound_acquire_failures[1m])",
+          "expr": "increase(avalanche_network_throttler_outbound_acquire_failures{job=\"avalanchego\"}[1m])",
           "interval": "",
-          "legendFormat": "Messages Dropped",
+          "legendFormat": "Messages Dropped {{node_id}}",
           "refId": "A"
         }
       ],
@@ -3605,7 +2862,10 @@
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "description": "Number of inbound connections dropped due to inbound connection rate-limiting",
       "fieldConfig": {
         "defaults": {
@@ -3613,6 +2873,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -3667,7 +2929,8 @@
             "max"
           ],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "single",
@@ -3677,9 +2940,9 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "increase(avalanche_network_inbound_conn_throttler_rate_limited[1m])",
+          "expr": "increase(avalanche_network_inbound_conn_throttler_rate_limited{job=\"avalanchego\"}[1m])",
           "interval": "",
-          "legendFormat": "Rate-Limited",
+          "legendFormat": "Rate-Limited {{node_id}}",
           "refId": "A"
         }
       ],
@@ -3688,7 +2951,10 @@
     },
     {
       "collapsed": false,
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -3701,7 +2967,10 @@
       "type": "row"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -3709,6 +2978,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -3763,9 +3034,15 @@
       "id": 39,
       "options": {
         "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom"
+          "calcs": [
+            "max",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "sortBy": "Mean",
+          "sortDesc": true
         },
         "tooltip": {
           "mode": "single",
@@ -3774,67 +3051,27 @@
       },
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
           "exemplar": true,
-          "expr": "(increase(avalanche_network_codec_multi_put_compress_time_sum[5m])+1)/(increase(avalanche_network_codec_multi_put_compress_time_count[5m])+1)",
+          "expr": "increase(avalanche_network_codec_compressed_duration{direction=\"compression\"}[5m])/increase(avalanche_network_codec_compressed_count{direction=\"compression\"}[5m])",
           "hide": false,
           "interval": "",
-          "legendFormat": "Multiput",
+          "legendFormat": "{{ op }} {{ type }} {{node_id}}",
           "refId": "A"
-        },
-        {
-          "exemplar": true,
-          "expr": "(increase(avalanche_network_codec_push_query_compress_time_sum[5m])+1)/(increase(avalanche_network_codec_push_query_compress_time_count[5m])+1)",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "Push Query",
-          "refId": "B"
-        },
-        {
-          "exemplar": true,
-          "expr": "(increase(avalanche_network_codec_put_compress_time_sum[5m])+1)/(increase(avalanche_network_codec_put_compress_time_count[5m])+1)",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "Put",
-          "refId": "C"
-        },
-        {
-          "exemplar": true,
-          "expr": "(increase(avalanche_network_codec_peerlist_compress_time_sum[5m])+1)/(increase(avalanche_network_codec_peerlist_compress_time_count[5m])+1)",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "Peer List",
-          "refId": "D"
-        },
-        {
-          "exemplar": true,
-          "expr": "(increase(avalanche_network_codec_app_gossip_compress_time_sum[5m])+1)/(increase(avalanche_network_codec_app_gossip_compress_time_count[5m])+1)",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "App Gossip",
-          "refId": "E"
-        },
-        {
-          "exemplar": true,
-          "expr": "(increase(avalanche_network_codec_app_request_compress_time_sum[5m])+1)/(increase(avalanche_network_codec_app_request_compress_time_count[5m])+1)",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "App Request",
-          "refId": "F"
-        },
-        {
-          "exemplar": true,
-          "expr": "(increase(avalanche_network_codec_app_response_compress_time_sum[5m])+1)/(increase(avalanche_network_codec_app_response_compress_time_count[5m])+1)",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "App Response",
-          "refId": "G"
         }
       ],
       "title": "Average Message Compression Time",
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -3842,6 +3079,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -3893,12 +3132,18 @@
         "x": 12,
         "y": 101
       },
-      "id": 46,
+      "id": 66,
       "options": {
         "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom"
+          "calcs": [
+            "max",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "sortBy": "Mean",
+          "sortDesc": true
         },
         "tooltip": {
           "mode": "single",
@@ -3907,67 +3152,24 @@
       },
       "targets": [
         {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_codec_multi_put_compress_time_sum[5m])",
-          "hide": false,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "expr": "increase(avalanche_network_codec_compressed_duration{direction=\"decompression\"}[5m])/increase(avalanche_network_codec_compressed_count{direction=\"decompression\"}[5m])",
           "interval": "",
-          "legendFormat": "Multiput",
+          "legendFormat": "{{ op }} {{ type }} {{node_id}}",
           "refId": "A"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_codec_push_query_compress_time_sum[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "Push Query",
-          "refId": "B"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_codec_put_compress_time_sum[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "Put",
-          "refId": "C"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_codec_peerlist_compress_time_sum[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "Peer List",
-          "refId": "D"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_codec_app_gossip_compress_time_sum[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "App Gossip",
-          "refId": "E"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_codec_app_request_compress_time_sum[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "App Request",
-          "refId": "F"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_codec_app_response_compress_time_sum[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "App Response",
-          "refId": "G"
         }
       ],
-      "title": "Total Message Compression Time per Second",
+      "title": "Average Message Decompression Time",
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "description": "Rate at which we save bytes (don't send/receive them over the network) by compressing messages/receiving compressed messages.",
       "fieldConfig": {
         "defaults": {
@@ -3975,6 +3177,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -4024,7 +3228,7 @@
         "h": 10,
         "w": 24,
         "x": 0,
-        "y": 109
+        "y": 117
       },
       "id": 38,
       "options": {
@@ -4034,7 +3238,8 @@
             "max"
           ],
           "displayMode": "table",
-          "placement": "right"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "single",
@@ -4043,115 +3248,10 @@
       },
       "targets": [
         {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_multi_put_compression_saved_received_bytes_sum[5m])",
+          "expr": "rate(avalanche_network_msgs_bytes_saved[5m])",
           "interval": "",
-          "legendFormat": "Inbound Multiput",
+          "legendFormat": "{{ io }} {{ op }} {{node_id}}",
           "refId": "A"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_multi_put_compression_saved_sent_bytes_sum[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "Outbound Multiput",
-          "refId": "B"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_put_compression_saved_received_bytes_sum[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "Inbound Put",
-          "refId": "C"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_put_compression_saved_sent_bytes_sum[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "Outbound Put",
-          "refId": "D"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_push_query_compression_saved_received_bytes_sum[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "Inbound Push Query",
-          "refId": "E"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_push_query_compression_saved_sent_bytes_sum[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "Outbound Push Query",
-          "refId": "F"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_peerlist_compression_saved_received_bytes_sum[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "Inbound Peer List",
-          "refId": "G"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_peerlist_compression_saved_sent_bytes_sum[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "Outbound Peer List",
-          "refId": "H"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_app_gossip_compression_saved_received_bytes_sum[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "Inbound App Gossip",
-          "refId": "I"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_app_gossip_compression_saved_sent_bytes_sum[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "Outbound App Gossip",
-          "refId": "J"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_app_request_compression_saved_received_bytes_sum[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "Inbound App Request",
-          "refId": "K"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_app_request_compression_saved_sent_bytes_sum[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "Outbound App Request",
-          "refId": "L"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_app_response_compression_saved_received_bytes_sum[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "Inbound App Response",
-          "refId": "M"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_network_app_response_compression_saved_sent_bytes_sum[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "Outbound App Response",
-          "refId": "N"
         }
       ],
       "title": "Bytes Saved by Compression",
@@ -4159,13 +3259,40 @@
     }
   ],
   "refresh": "10s",
-  "schemaVersion": 36,
+  "schemaVersion": 37,
   "style": "dark",
   "tags": [
     "Avalanche"
   ],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "hide": 0,
+        "includeAll": false,
+        "label": "Data Source",
+        "multi": false,
+        "name": "datasource",
+        "options": [],
+        "query": "prometheus",
+        "queryValue": "",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "type": "datasource"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${datasource}"
+        },
+        "filters": [],
+        "hide": 0,
+        "label": "Filter",
+        "name": "filter",
+        "skipUrlSync": false,
+        "type": "adhoc"
+      }
+    ]
   },
   "time": {
     "from": "now-3h",
@@ -4187,6 +3314,6 @@
   "timezone": "",
   "title": "Network",
   "uid": "jB1TgdZ7z",
-  "version": 5,
+  "version": 11,
   "weekStart": ""
 }

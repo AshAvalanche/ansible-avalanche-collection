@@ -1,0 +1,24 @@
+logLevel: warn
+ 
+server:
+  listenV4: true
+  httpHostV4: "0.0.0.0"
+  listenV6: false
+  httpHostV6: "[::]"
+  httpPort: {{ erpc_port}}
+  aliasing:
+    rules:
+      - matchDomain: "*"
+        serveProject: "ash"
+        serveArchitecture: "evm"
+        serveChain: {{ erpc_chain_id }}
+        
+projects:
+  - id: ash
+    upstreams:
+{% for value in erpc_endpoint_list %}
+      - endpoint: {{ value }}/ext/bc/{{ erpc_blockchain_id }}/rpc
+        type: evm
+        evm:
+          chainId: {{ erpc_chain_id }}
+{% endfor %}

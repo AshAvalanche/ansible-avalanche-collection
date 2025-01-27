@@ -1,0 +1,10 @@
+version: '3.9'
+
+services:
+  erpc:
+    image: ghcr.io/erpc/erpc:{{ erpc_version }}
+    ports:
+      - "4000:4000"
+    volumes:
+      - {{ erpc_conf_dir }}/erpc.yaml:/root/erpc.yaml
+    restart: unless-stopped

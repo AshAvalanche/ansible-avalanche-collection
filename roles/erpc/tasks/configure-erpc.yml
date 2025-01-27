@@ -1,0 +1,40 @@
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (c) 2022-2025, E36 Knots
+---
+- name: Create eRPC directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ erpc_user }}"
+    group: "{{ erpc_user }}"
+  loop:
+    - "{{ erpc_conf_dir }}"
+    - "{{ erpc_custom_dir }}"
+  tags: assets-sync
+
+- name: Template docker-compose.yml
+  template:
+    src: docker-compose.yml.j2
+    dest: "{{ erpc_conf_dir }}/docker-compose.yml"
+    owner: "{{ erpc_user }}"
+    group: "{{ erpc_user }}"
+  notify: Restart erpc
+
+- name: Template erpc.yaml
+  template:
+    src: erpc.yaml.j2
+    dest: "{{ erpc_conf_dir }}/erpc.yaml"
+    owner: "{{ erpc_user }}"
+    group: "{{ erpc_user }}"
+    mode: '0644'
+  notify: Restart erpc
+
+- name: Template erpc.service file
+  template:
+    src: erpc.service.j2
+    dest: /etc/systemd/system/erpc.service
+  notify: Restart erpc
+
+- name: Reload systemctl daemons
+  systemd:
+    daemon_reload: true

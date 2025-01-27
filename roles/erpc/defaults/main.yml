@@ -1,0 +1,17 @@
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (c) 2022-2025, E36 Knots
+---
+erpc_version: 0.0.35
+
+erpc_auto_restart: true
+
+erpc_user: root
+erpc_port: 4000
+
+# Configuration directories
+erpc_conf_dir: /etc/erpc/conf
+erpc_custom_dir: "{{ erpc_conf_dir }}/custom"
+
+
+erpc_endpoint_list: ["http://localhost:8545"]
+erpc_chain_id: 43113

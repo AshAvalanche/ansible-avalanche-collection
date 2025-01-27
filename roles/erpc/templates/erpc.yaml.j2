@@ -21,4 +21,6 @@ projects:
         type: evm
         evm:
           chainId: {{ erpc_chain_id }}
+        allowMethods:
+          - "*"
 {% endfor %}

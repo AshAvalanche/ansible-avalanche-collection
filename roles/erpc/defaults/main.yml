@@ -6,7 +6,7 @@ erpc_version: 0.0.35
 erpc_auto_restart: true
 
 erpc_user: root
-erpc_port: 4000
+erpc_port: 9000
 
 # Configuration directories
 erpc_conf_dir: /etc/erpc/conf

@@ -26,15 +26,15 @@
 
 - name: Check point
   block:
-    - name: Wait for eRPC to start
+    - name: Wait 4sec for eRPC to start
       wait_for:
         port: "{{ erpc_port }}"
         delay: 1
-        timeout: 3
+        timeout: 4
       register: ping_status
   always:
     - name: Retrieves logs from the container
-      command: docker logs conf-erpc-1
+      command: docker logs --tail 20 conf-erpc-1
       register: erpc_logs
       failed_when: erpc_logs.stderr
       when: ping_status is failed

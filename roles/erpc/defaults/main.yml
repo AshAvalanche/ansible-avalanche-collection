@@ -5,13 +5,21 @@ erpc_version: 0.0.35
 
 erpc_auto_restart: true
 
+# VM/Docker configuration
 erpc_user: root
-erpc_port: 9000
+erpc_port: 9650
 
-# Configuration directories
+# Internal directories
 erpc_conf_dir: /etc/erpc/conf
 erpc_custom_dir: "{{ erpc_conf_dir }}/custom"
 
-
+# eRPC fast configuration
 erpc_endpoint_list: ["http://localhost:8545"]
-erpc_chain_id: 43113
+erpc_chaines:
+  - name: C
+    evm_id: 43113
+    chain_id: C
+# eRPC full configuration
+erpc_projects: []
+erpc_aliasing_rules: []
+erpc_limiters_budgets: []

@@ -1,26 +1,45 @@
 logLevel: warn
- 
+
 server:
   listenV4: true
   httpHostV4: "0.0.0.0"
   listenV6: false
-  httpHostV6: "[::]"
-  httpPort: {{ erpc_port}}
+  httpPort: 4000
   aliasing:
     rules:
+{% if erpc_aliasing_rules %}
+      {{ erpc_aliasing_rules }}
+{% elif not erpc_projects %}
       - matchDomain: "*"
-        serveProject: "ash"
         serveArchitecture: "evm"
-        serveChain: {{ erpc_chain_id }}
-        
+        serveChain: {{ erpc_chaines[0].evm_id }}
+        serveProject: "{{ erpc_chaines[0].name }}"
+{% endif %}
+
 projects:
-  - id: ash
+{% if erpc_projects %}
+  {{ erpc_projects }}
+{% else %}
+{% for chain in erpc_chaines %}
+  - id: {{ chain.name }}
+    upstreamDefaults:
+      rateLimitBudget: {{ chain.limiter | default('default', true) }}
+      type: evm
+      evm:
+        chainId: {{ chain.evm_id }}
     upstreams:
-{% for value in erpc_endpoint_list %}
-      - endpoint: {{ value }}/ext/bc/{{ erpc_blockchain_id }}/rpc
-        type: evm
-        evm:
-          chainId: {{ erpc_chain_id }}
-        allowMethods:
-          - "*"
+{% for node in erpc_endpoint_list %}
+      - endpoint: "{{ node }}/ext/bc/{{ chain.chain_id }}/rpc"
 {% endfor %}
+{% endfor %}
+{% endif %}
+rateLimiters:
+  budgets:
+    - id: default
+      rules:
+        - method: '*'
+          maxCount: 1000
+          period: 1s
+{% if erpc_limiters_budgets %}
+    {{ erpc_limiters_budgets }}
+{% endif %}

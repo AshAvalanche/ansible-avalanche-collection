@@ -28,7 +28,7 @@
   block:
     - name: Wait 4sec for eRPC to start
       wait_for:
-        port: "{{ erpc_port }}"
+        port: 4000
         delay: 1
         timeout: 4
       register: ping_status

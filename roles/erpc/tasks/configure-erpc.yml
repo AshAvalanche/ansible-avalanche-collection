@@ -20,6 +20,20 @@
     group: "{{ erpc_user }}"
   notify: Restart erpc
 
+- name: Build parameter state
+  set_fact:
+    has_erpc_projects: "{{ erpc_projects is defined and erpc_projects | length > 0 }}"
+    has_erpc_chaines: "{{ erpc_chaines is defined and erpc_chaines | length > 0 }}"
+    has_erpc_endpoint_list: "{{ erpc_endpoint_list is defined and erpc_endpoint_list | length > 0 }}"
+    has_erpc_aliasing_rules: "{{ erpc_aliasing_rules is defined and erpc_aliasing_rules | length > 0 }}"
+    has_erpc_limiters_budgets: "{{ erpc_limiters_budgets is defined and erpc_limiters_budgets | length > 0 }}"
+
+- name: Validate parameter state
+  assert:
+    that:
+      - has_erpc_projects or has_erpc_chaines
+      - has_erpc_endpoint_list
+
 - name: Template erpc.yaml
   template:
     src: erpc.yaml.j2

@@ -28,7 +28,6 @@ erpc_version: 0.0.35
 erpc_auto_restart: true
 
 erpc_user: root
-erpc_port: 9650
 
 erpc_conf_dir: /etc/erpc/conf
 erpc_custom_dir: "{{ erpc_conf_dir }}/custom"

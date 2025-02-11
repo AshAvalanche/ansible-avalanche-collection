@@ -7,14 +7,19 @@ erpc_auto_restart: true
 
 # VM/Docker configuration
 erpc_user: root
-erpc_port: 9650
 
 # Internal directories
 erpc_conf_dir: /etc/erpc/conf
 erpc_custom_dir: "{{ erpc_conf_dir }}/custom"
 
 # eRPC fast configuration
-erpc_endpoint_list: ["http://localhost:8545"]
+erpc_endpoint_list:
+  - "http://{{ hostvars['validator01'].ansible_host }}:9650"
+  - "http://{{ hostvars['validator02'].ansible_host }}:9650"
+  - "http://{{ hostvars['validator03'].ansible_host }}:9650"
+  - "http://{{ hostvars['validator04'].ansible_host }}:9650"
+  - "http://{{ hostvars['validator05'].ansible_host }}:9650"
+
 erpc_chaines:
   - name: C
     evm_id: 43113

@@ -1,0 +1,51 @@
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (c) 2022-2024, E36 Knots
+---
+- name: Getting Avalanche network configuration
+  hosts: bootstrap_nodes[0]
+  tasks:
+
+    - name: Get subnet list
+      ash.avalanche.ash_cmd:
+        command: avalanche subnet list
+      environment:
+        AVALANCHE_NETWORK: "{{ avalanchego_network_id }}"
+      register: subnet_list
+
+- name: Build eRPC Configuration based on your network
+  hosts: erpc
+  tasks:
+    - name: List enpoints from ansible
+      set_fact:
+        erpc_endpoint_list: "{{ groups['avalanche_nodes'] | map('extract', hostvars, ['ansible_host']) | map('regex_replace', '^(.*)$', 'http://\\1:9650') | list }}"
+
+
+    # Limitation: Only the first endpoint is used which may not be tracking all the chains
+    - name: Build eRPC chains configuration
+      fetch_chain_ids:
+        rpc_url: "{{ erpc_endpoint_list[0] }}"
+        chains: "{{ hostvars[groups['bootstrap_nodes'][0]].subnet_list.output | ash.avalanche.subnets_to_blockchains }}"
+      register: erpc_chaines
+
+    - name: Set chains configuration
+      set_fact:
+        erpc_chaines: "{{ erpc_chaines.results }}" 
+
+- name: Install eRPC Docker
+  hosts: erpc
+  become: true
+  roles:
+    - role: geerlingguy.docker
+      tags: 
+        - configure
+        - install
+        - erpc
+    - role: ash.avalanche.erpc
+  tasks:
+    - name: List of chains
+      debug: 
+        msg: "{{ erpc_chaines }}"
+
+    - name: List of endpoints
+      debug: 
+        msg: "{{ erpc_endpoint_list }}"

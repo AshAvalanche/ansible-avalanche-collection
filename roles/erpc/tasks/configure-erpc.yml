@@ -23,7 +23,7 @@
 - name: Build parameter state
   set_fact:
     has_erpc_projects: "{{ erpc_projects is defined and erpc_projects | length > 0 }}"
-    has_erpc_chaines: "{{ erpc_chaines is defined and erpc_chaines | length > 0 }}"
+    has_erpc_chains: "{{ erpc_chains is defined and erpc_chains | length > 0 }}"
     has_erpc_endpoint_list: "{{ erpc_endpoint_list is defined and erpc_endpoint_list | length > 0 }}"
     has_erpc_aliasing_rules: "{{ erpc_aliasing_rules is defined and erpc_aliasing_rules | length > 0 }}"
     has_erpc_limiters_budgets: "{{ erpc_limiters_budgets is defined and erpc_limiters_budgets | length > 0 }}"
@@ -31,7 +31,7 @@
 - name: Validate parameter state
   assert:
     that:
-      - has_erpc_projects or has_erpc_chaines
+      - has_erpc_projects or has_erpc_chains
       - has_erpc_endpoint_list
 
 - name: Template erpc.yaml
@@ -40,7 +40,7 @@
     dest: "{{ erpc_conf_dir }}/erpc.yaml"
     owner: "{{ erpc_user }}"
     group: "{{ erpc_user }}"
-    mode: '0644'
+    mode: "0644"
   notify: Restart erpc
 
 - name: Template erpc.service file

@@ -4,7 +4,6 @@
 - name: Getting Avalanche network configuration
   hosts: bootstrap_nodes[0]
   tasks:
-
     - name: Get subnet list
       ash.avalanche.ash_cmd:
         command: avalanche subnet list
@@ -19,33 +18,33 @@
       set_fact:
         erpc_endpoint_list: "{{ groups['avalanche_nodes'] | map('extract', hostvars, ['ansible_host']) | map('regex_replace', '^(.*)$', 'http://\\1:9650') | list }}"
 
-
     # Limitation: Only the first endpoint is used which may not be tracking all the chains
     - name: Build eRPC chains configuration
       fetch_chain_ids:
         rpc_url: "{{ erpc_endpoint_list[0] }}"
         chains: "{{ hostvars[groups['bootstrap_nodes'][0]].subnet_list.output | ash.avalanche.subnets_to_blockchains }}"
-      register: erpc_chaines
+        include_c_chain: "{{ erpc_include_c_chain }}"
+      register: erpc_chains
 
     - name: Set chains configuration
       set_fact:
-        erpc_chaines: "{{ erpc_chaines.results }}" 
+        erpc_chains: "{{ erpc_chains.results }}"
 
 - name: Install eRPC Docker
   hosts: erpc
   become: true
   roles:
     - role: geerlingguy.docker
-      tags: 
+      tags:
         - configure
         - install
         - erpc
     - role: ash.avalanche.erpc
   tasks:
     - name: List of chains
-      debug: 
-        msg: "{{ erpc_chaines }}"
+      debug:
+        msg: "{{ erpc_chains }}"
 
     - name: List of endpoints
-      debug: 
+      debug:
         msg: "{{ erpc_endpoint_list }}"

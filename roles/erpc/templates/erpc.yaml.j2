@@ -9,11 +9,11 @@ server:
     rules:
 {% if has_erpc_aliasing_rules %}
       {{ erpc_aliasing_rules }}
-{% elif has_erpc_chaines %}
+{% elif has_erpc_chains %}
       - matchDomain: "*"
         serveArchitecture: "evm"
-        serveChain: {{ erpc_chaines[0].evm_id }}
-        serveProject: "{{ erpc_chaines[0].name }}"
+        serveChain: {{ erpc_chains[0].evm_id }}
+        serveProject: "{{ erpc_chains[0].name }}"
 {% else %}
       - matchDomain: "*"
         serveArchitecture: "evm"
@@ -22,8 +22,8 @@ server:
 projects:
 {% if has_erpc_projects %}
   {{ erpc_projects }}
-{% elif has_erpc_chaines %}
-{% for chain in erpc_chaines %}
+{% elif has_erpc_chains %}
+{% for chain in erpc_chains %}
   - id: {{ chain.name }}
     networkDefaults:
       failsafe:

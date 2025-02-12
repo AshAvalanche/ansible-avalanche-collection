@@ -12,7 +12,10 @@ erpc_user: root
 erpc_conf_dir: /etc/erpc/conf
 erpc_custom_dir: "{{ erpc_conf_dir }}/custom"
 
-# eRPC fast configuration
+# eRPC autoconfiguration (install_erpc_network)
+erpc_include_c_chain: true
+
+# eRPC fast configuration (install_erpc_docker)
 erpc_endpoint_list:
   - "http://{{ hostvars['validator01'].ansible_host }}:9650"
   - "http://{{ hostvars['validator02'].ansible_host }}:9650"
@@ -20,7 +23,7 @@ erpc_endpoint_list:
   - "http://{{ hostvars['validator04'].ansible_host }}:9650"
   - "http://{{ hostvars['validator05'].ansible_host }}:9650"
 
-erpc_chaines:
+erpc_chains:
   - name: C
     evm_id: 43113
     chain_id: C

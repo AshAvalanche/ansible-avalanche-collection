@@ -39,7 +39,7 @@ erpc_custom_dir: "{{ erpc_conf_dir }}/custom"
 erpc_endpoint_list:
   - "http://localhost:8545"
 
-erpc_chaines:
+erpc_chains:
   - name: C
     evm_id: 43113
     chain_id: C
@@ -48,9 +48,9 @@ erpc_chaines:
 ### **Advanced Configuration**
 
 ```yaml
-erpc_projects: []  # List of eRPC projects. The `erpc_chaines` and `erpc_endpoint_list` variables will have no effect if this list is not empty.
-erpc_aliasing_rules: []  # List of aliasing rules. By default, the first `erpc_chaines` is accessible without a route.
-erpc_limiters_budgets: []  # Management of request quotas.
+erpc_projects: [] # List of eRPC projects. The `erpc_chains` and `erpc_endpoint_list` variables will have no effect if this list is not empty.
+erpc_aliasing_rules: [] # List of aliasing rules. By default, the first `erpc_chains` is accessible without a route.
+erpc_limiters_budgets: [] # Management of request quotas.
 ```
 
 ## Usage
@@ -60,4 +60,3 @@ Run the following command:
 ```sh
 ansible-playbook ash.avalanche.install_erpc_docker -i inventories/local
 ```
-

@@ -34,6 +34,7 @@ def main():
     module_args = dict(
         rpc_url=dict(type="str", required=True),
         chains=dict(type="list", required=True),
+        include_c_chain=dict(type="bool", required=False, default=True),
     )
 
     results = []
@@ -49,7 +50,8 @@ def main():
 
             results.append({'evm_id': int(fetched_chain_id, 16), **chain})
 
-        results.append({'evm_id': 43113, 'chain_id': 'C', 'name': 'C-Chain'})
+        if module.params["include_c_chain"]:
+            results.append({'evm_id': 43113, 'chain_id': 'C', 'name': 'C'})
 
         module.exit_json(**{'results': results})
 

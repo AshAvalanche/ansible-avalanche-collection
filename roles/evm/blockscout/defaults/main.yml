@@ -70,6 +70,8 @@ blockscout_backend_env_vars:
   # Footer
   FOOTER_LOGO: /app/apps/block_scout_web/assets/static/images/{{ blockscout_header_logo_file | basename }}
 
+  FAVICON_MASTER_URL: /app/apps/block_scout_web/assets/static/images/{{ blockscout_header_logo_file | basename }}
+
   # Enable SSL encryption for ecto queries
   ECTO_USE_SSL: "false"
 

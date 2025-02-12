@@ -3,7 +3,10 @@
     "list": [
       {
         "builtIn": 1,
-        "datasource": "-- Grafana --",
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
         "enable": true,
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
@@ -19,27 +22,35 @@
     ]
   },
   "editable": true,
-  "gnetId": null,
+  "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 50,
+  "id": 1,
   "links": [
     {
       "icon": "external link",
+      "includeVars": true,
+      "keepTime": true,
       "tags": [
         "Avalanche"
       ],
       "type": "dashboards"
     }
   ],
+  "liveNow": true,
   "panels": [
     {
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -91,52 +102,53 @@
         "x": 0,
         "y": 0
       },
-      "id": 21,
+      "id": 15,
       "options": {
         "legend": {
           "calcs": [
+            "min",
             "mean",
-            "lastNotNull",
             "max"
           ],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "pluginVersion": "8.0.4",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
           "exemplar": true,
-          "expr": "round(increase(avalanche_P_blks_accepted_count{job=\"avalanchego\"}[1m]))>0",
+          "expr": "round(increase(avalanche_snowman_blks_accepted_count{chain=\"P\", job=\"avalanchego\"}[1m]))>0",
           "interval": "",
-          "legendFormat": "Accepted",
+          "legendFormat": "Blocks {{node_id}}",
           "refId": "A"
-        },
-        {
-          "exemplar": true,
-          "expr": "round(increase(avalanche_P_blks_acc_count{job=\"avalanchego\"}[1m]))>0",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "",
-          "refId": "B"
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "Accepted Blocks in Last Minute",
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -171,6 +183,10 @@
               {
                 "color": "green",
                 "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
               }
             ]
           },
@@ -184,38 +200,47 @@
         "x": 12,
         "y": 0
       },
-      "id": 15,
+      "id": 20,
       "options": {
         "legend": {
           "calcs": [
+            "min",
             "mean",
-            "lastNotNull",
             "max"
           ],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "pluginVersion": "8.0.4",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
           "exemplar": true,
-          "expr": "round(increase(avalanche_P_blks_rejected_count{job=\"avalanchego\"}[1m]))>0",
+          "expr": "round(increase(avalanche_snowman_blks_rejected_count{chain=\"P\", job=\"avalanchego\"}[1m]))>0",
           "interval": "",
-          "legendFormat": "Rejected",
+          "legendFormat": "Blocks {{node_id}}",
+          "range": true,
           "refId": "A"
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "Rejected Blocks in Last Minute",
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "description": "The average time between a block's issuance and acceptance by this node over the last 5 minutes.",
       "fieldConfig": {
         "defaults": {
@@ -223,177 +248,9 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "smooth",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": true,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "line+area"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "transparent",
-                "value": null
-              }
-            ]
-          },
-          "unit": "ns"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 8
-      },
-      "id": 23,
-      "options": {
-        "legend": {
-          "calcs": [
-            "mean",
-            "lastNotNull",
-            "max"
-          ],
-          "displayMode": "list",
-          "placement": "bottom"
-        },
-        "tooltip": {
-          "mode": "single"
-        }
-      },
-      "pluginVersion": "8.0.4",
-      "targets": [
-        {
-          "expr": "rate(avalanche_P_blks_accepted_sum{job=\"avalanchego\"}[5m]) / rate(avalanche_P_blks_accepted_count{job=\"avalanchego\"}[5m])",
-          "interval": "",
-          "legendFormat": "Avg Acceptance Latency",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Average Block Acceptance Latency",
-      "type": "timeseries"
-    },
-    {
-      "datasource": "Prometheus",
-      "description": "The average time between a block's issuance and rejection by this node over the last 5 minutes.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "smooth",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": true,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "line+area"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "transparent",
-                "value": null
-              }
-            ]
-          },
-          "unit": "ns"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 8
-      },
-      "id": 25,
-      "options": {
-        "legend": {
-          "calcs": [
-            "mean",
-            "lastNotNull",
-            "max"
-          ],
-          "displayMode": "list",
-          "placement": "bottom"
-        },
-        "tooltip": {
-          "mode": "single"
-        }
-      },
-      "pluginVersion": "8.0.4",
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_blks_rejected_sum{job=\"avalanchego\"}[5m]) / rate(avalanche_P_blks_rejected_count{job=\"avalanchego\"}[5m])",
-          "interval": "",
-          "legendFormat": "Rejection Latency",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Average Block Rejection Latency",
-      "type": "timeseries"
-    },
-    {
-      "datasource": "Prometheus",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "Transactions",
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
@@ -428,10 +285,197 @@
               {
                 "color": "transparent",
                 "value": null
+              }
+            ]
+          },
+          "unit": "ns"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "id": 22,
+      "options": {
+        "legend": {
+          "calcs": [
+            "min",
+            "mean",
+            "max"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "8.0.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "expr": "rate(avalanche_snowman_blks_accepted_sum{chain=\"P\", job=\"avalanchego\"}[5m]) / rate(avalanche_snowman_blks_accepted_count{chain=\"P\", job=\"avalanchego\"}[5m])",
+          "interval": "",
+          "legendFormat": "Avg Acceptance Latency",
+          "refId": "A"
+        }
+      ],
+      "title": "Average Block Acceptance Latency",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "description": "The average time between a block's issuance and rejection by this node over the last 5 minutes.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "smooth",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
-                "value": 500
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ns"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 8
+      },
+      "id": 23,
+      "options": {
+        "legend": {
+          "calcs": [
+            "min",
+            "mean",
+            "max"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "8.0.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "expr": "rate(avalanche_snowman_blks_rejected_sum{chain=\"P\", job=\"avalanchego\"}[5m]) / rate(avalanche_snowman_blks_rejected_count{chain=\"P\", job=\"avalanchego\"}[5m])",
+          "interval": "",
+          "legendFormat": "Avg Rejection Latency",
+          "refId": "A"
+        }
+      ],
+      "title": "Average Block Rejection Latency",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Transactions",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "bars",
+            "fillOpacity": 100,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "line+area"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "transparent",
+                "value": null
               }
             ]
           },
@@ -450,58 +494,66 @@
         "legend": {
           "calcs": [
             "mean",
-            "lastNotNull",
             "max"
           ],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "pluginVersion": "8.0.4",
       "targets": [
         {
-          "expr": "avalanche_P_blks_processing{job=\"avalanchego\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "exemplar": true,
+          "expr": "avalanche_snowman_blks_processing{chain=\"P\", job=\"avalanchego\"}>0",
           "interval": "",
-          "legendFormat": "Transactions",
+          "legendFormat": "Blocks {{node_id}}",
           "refId": "A"
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "Processing Blocks",
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
-      "description": "Percentage of queries for which we receive chits on time.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "palette-classic"
           },
           "custom": {
-            "axisLabel": "",
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Incomplete Polls",
             "axisPlacement": "auto",
             "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
+            "drawStyle": "bars",
+            "fillOpacity": 100,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
             },
-            "lineInterpolation": "smooth",
+            "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
             "scaleDistribution": {
               "type": "linear"
             },
             "showPoints": "never",
-            "spanNulls": true,
+            "spanNulls": false,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -511,17 +563,12 @@
             }
           },
           "mappings": [],
-          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "red",
-                "value": null
-              },
-              {
                 "color": "transparent",
-                "value": 0.85
+                "value": null
               }
             ]
           },
@@ -535,39 +582,44 @@
         "x": 12,
         "y": 16
       },
-      "id": 11,
+      "id": 39,
       "options": {
         "legend": {
           "calcs": [
             "mean",
-            "lastNotNull",
-            "min"
+            "max"
           ],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "pluginVersion": "8.0.4",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
           "exemplar": true,
-          "expr": "(increase(avalanche_P_handler_chits_count{job=\"avalanchego\"}[5m]) + 1) / (increase(avalanche_P_handler_chits_count{job=\"avalanchego\"}[5m]) + increase(avalanche_P_handler_query_failed_count{job=\"avalanchego\"}[5m]) + 1)",
-          "instant": false,
+          "expr": "avalanche_snowman_polls{chain=\"P\"} > 0",
           "interval": "",
-          "legendFormat": "% Successful",
+          "legendFormat": "Polls {{node_id}}",
           "refId": "A"
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Percentage of Successful Queries",
+      "title": "Incomplete Polls",
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "description": "Measures how much of each second is being spent handling different kinds of messages on the P-Chain.\nThe value for chits, for example, is the number of seconds spent handling chits messages per second, over the last 30 seconds.",
       "fieldConfig": {
         "defaults": {
@@ -575,7 +627,9 @@
             "mode": "palette-classic"
           },
           "custom": {
-            "axisLabel": "seconds/second",
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
@@ -634,138 +688,153 @@
             "max"
           ],
           "displayMode": "table",
-          "placement": "right"
+          "placement": "right",
+          "showLegend": true
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "pluginVersion": "8.0.4",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
           "exemplar": true,
-          "expr": "rate(avalanche_P_handler_pull_query_sum{job=\"avalanchego\"}[5m])",
+          "expr": "rate(avalanche_handler_message_handling_time{chain=\"P\", job=\"avalanchego\"}[5m])",
           "interval": "",
-          "legendFormat": "pull query",
+          "legendFormat": "{{ op }} {{node_id}}",
           "refId": "A"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_push_query_sum{job=\"avalanchego\"}[5m])",
-          "interval": "",
-          "legendFormat": "push query",
-          "refId": "B"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_chits_sum{job=\"avalanchego\"}[5m])",
-          "interval": "",
-          "legendFormat": "chits",
-          "refId": "C"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_accepted_sum{job=\"avalanchego\"}[5m])",
-          "interval": "",
-          "legendFormat": "accepted",
-          "refId": "D"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_get_sum{job=\"avalanchego\"}[5m])",
-          "interval": "",
-          "legendFormat": "get",
-          "refId": "E"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_put_sum{job=\"avalanchego\"}[5m])",
-          "interval": "",
-          "legendFormat": "put",
-          "refId": "F"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_multiput_sum{job=\"avalanchego\"}[5m])",
-          "interval": "",
-          "legendFormat": "multiput",
-          "refId": "G"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_get_ancestors_sum{job=\"avalanchego\"}[5m])",
-          "interval": "",
-          "legendFormat": "get ancestors",
-          "refId": "H"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_get_failed_sum{job=\"avalanchego\"}[5m])",
-          "interval": "",
-          "legendFormat": "get failed",
-          "refId": "I"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_query_failed_sum{job=\"avalanchego\"}[5m])",
-          "interval": "",
-          "legendFormat": "query failed",
-          "refId": "J"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_get_accepted_sum{job=\"avalanchego\"}[5m])",
-          "interval": "",
-          "legendFormat": "get accepted",
-          "refId": "K"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_get_ancestors_failed_sum{job=\"avalanchego\"}[5m])",
-          "interval": "",
-          "legendFormat": "get ancestors failed",
-          "refId": "L"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_app_request_sum{job=\"avalanchego\"}[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app request ",
-          "refId": "N"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_app_request_failed_sum{job=\"avalanchego\"}[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app request failed ",
-          "refId": "M"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_app_response_sum{job=\"avalanchego\"}[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app response",
-          "refId": "O"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_app_gossip_sum{job=\"avalanchego\"}[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app gossip",
-          "refId": "P"
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "Message Handling Time (Total)",
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "description": "Percentage of queries for which we receive chits on time.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "smooth",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "line+area"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "transparent",
+                "value": 0.8
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 24
+      },
+      "id": 11,
+      "options": {
+        "legend": {
+          "calcs": [
+            "min",
+            "mean",
+            "max"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "8.0.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "expr": "max(increase(avalanche_handler_messages{chain=\"P\", op=\"chits\", job=\"avalanchego\"}[5m]))",
+          "hide": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "expr": "max(increase(avalanche_handler_messages{chain=\"P\", op=\"query_failed\", job=\"avalanchego\"}[5m]))",
+          "hide": true,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__"
+          },
+          "expression": "($A + 1) / ($A + $B + 1)",
+          "refId": "% Successful",
+          "type": "math"
+        }
+      ],
+      "title": "Percentage of Successful Queries",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "description": "Measures how long each kind of request on the P-Chain takes to handle.\nThe value for chits, for example, is how long, in seconds, it takes to handle a chits message.",
       "fieldConfig": {
         "defaults": {
@@ -773,7 +842,9 @@
             "mode": "palette-classic"
           },
           "custom": {
-            "axisLabel": "seconds",
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
@@ -822,7 +893,7 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 24
+        "y": 32
       },
       "id": 7,
       "options": {
@@ -832,138 +903,235 @@
             "max"
           ],
           "displayMode": "table",
-          "placement": "right"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "pluginVersion": "8.0.4",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
           "exemplar": true,
-          "expr": "rate(avalanche_P_handler_pull_query_sum{job=\"avalanchego\"}[5m])/rate(avalanche_P_handler_pull_query_count{job=\"avalanchego\"}[5m])",
+          "expr": "rate(avalanche_handler_message_handling_time{chain=\"P\", job=\"avalanchego\"}[5m])/rate(avalanche_handler_messages{chain=\"P\", job=\"avalanchego\"}[5m])",
           "interval": "",
-          "legendFormat": "pull query",
+          "legendFormat": "{{ op }} {{node_id}}",
           "refId": "A"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_push_query_sum{job=\"avalanchego\"}[5m])/rate(avalanche_P_handler_push_query_count{job=\"avalanchego\"}[5m])",
-          "interval": "",
-          "legendFormat": "push query",
-          "refId": "B"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_chits_sum{job=\"avalanchego\"}[5m])/rate(avalanche_P_handler_chits_count{job=\"avalanchego\"}[5m])",
-          "interval": "",
-          "legendFormat": "chits",
-          "refId": "C"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_accepted_sum{job=\"avalanchego\"}[5m])/rate(avalanche_P_handler_accepted_count{job=\"avalanchego\"}[5m])",
-          "interval": "",
-          "legendFormat": "accepted",
-          "refId": "D"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_get_sum{job=\"avalanchego\"}[5m])/rate(avalanche_P_handler_get_count{job=\"avalanchego\"}[5m])",
-          "interval": "",
-          "legendFormat": "get",
-          "refId": "E"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_put_sum{job=\"avalanchego\"}[5m])/rate(avalanche_P_handler_put_count{job=\"avalanchego\"}[5m])",
-          "interval": "",
-          "legendFormat": "put",
-          "refId": "F"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_multiput_sum{job=\"avalanchego\"}[5m])/rate(avalanche_P_handler_multi_put_count{job=\"avalanchego\"}[5m])",
-          "interval": "",
-          "legendFormat": "multiput",
-          "refId": "G"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_get_ancestors_sum{job=\"avalanchego\"}[5m])/rate(avalanche_P_handler_get_ancestors_count{job=\"avalanchego\"}[5m])",
-          "interval": "",
-          "legendFormat": "get ancestors",
-          "refId": "H"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_get_failed_sum{job=\"avalanchego\"}[5m])/rate(avalanche_P_handler_get_failed_count{job=\"avalanchego\"}[5m])",
-          "interval": "",
-          "legendFormat": "get failed",
-          "refId": "I"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_query_failed_sum{job=\"avalanchego\"}[5m])/rate(avalanche_P_handler_query_failed_count{job=\"avalanchego\"}[5m])",
-          "interval": "",
-          "legendFormat": "query failed",
-          "refId": "J"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_get_accepted_sum{job=\"avalanchego\"}[5m])/rate(avalanche_P_handler_get_accepted_count{job=\"avalanchego\"}[5m])",
-          "interval": "",
-          "legendFormat": "get accepted",
-          "refId": "K"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_get_ancestors_failed_sum{job=\"avalanchego\"}[5m])/rate(avalanche_P_handler_get_ancestors_failed_count{job=\"avalanchego\"}[5m])",
-          "interval": "",
-          "legendFormat": "get ancestors failed",
-          "refId": "L"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_app_request_sum{job=\"avalanchego\"}[5m])/rate(avalanche_P_handler_app_request_count{job=\"avalanchego\"}[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app request",
-          "refId": "M"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_app_request_failed_sum{job=\"avalanchego\"}[5m])/rate(avalanche_P_handler_app_request_failed_count{job=\"avalanchego\"}[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app request failed",
-          "refId": "N"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_app_gossip_sum{job=\"avalanchego\"}[5m])/rate(avalanche_P_handler_app_gossip_count{job=\"avalanchego\"}[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app gossip",
-          "refId": "O"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_app_response_sum{job=\"avalanchego\"}[5m])/rate(avalanche_P_handler_app_response_count{job=\"avalanchego\"}[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app response",
-          "refId": "P"
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "Message Handling Time (per Message)",
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "bars",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 0,
+        "y": 33
+      },
+      "id": 19,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "8.0.6",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "exemplar": true,
+          "expr": "avalanche_handler_sync_unprocessed_msgs_count{chain=\"P\"}",
+          "interval": "",
+          "legendFormat": "{{ op }}",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "exemplar": true,
+          "expr": "avalanche_handler_async_unprocessed_msgs_count{chain=\"P\"}",
+          "interval": "",
+          "legendFormat": "{{ op }}",
+          "refId": "B"
+        }
+      ],
+      "title": "Unprocessed Incoming Messages",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "bars",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 6,
+        "y": 33
+      },
+      "id": 29,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "8.0.6",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "exemplar": true,
+          "expr": "increase(avalanche_handler_expired{chain=\"P\", job=\"avalanchego\"}[1m]) or 0 * up",
+          "interval": "",
+          "legendFormat": "{{ op }}",
+          "refId": "A"
+        }
+      ],
+      "title": "Incoming Messages Expired in Last Minute",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "description": "The total stake of validators currently \"benched\" due to poor query responsiveness. Queries to these validators will immediately timeout until they are removed from the \"bench.\"",
       "fieldConfig": {
         "defaults": {
@@ -971,6 +1139,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -1013,7 +1183,7 @@
               }
             ]
           },
-          "unit": "short"
+          "unit": "percent"
         },
         "overrides": []
       },
@@ -1021,40 +1191,46 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 33
+        "y": 41
       },
-      "id": 29,
+      "id": 25,
       "options": {
         "legend": {
           "calcs": [
             "mean",
-            "lastNotNull",
             "max"
           ],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "pluginVersion": "8.0.4",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
           "exemplar": true,
-          "expr": "avg_over_time(avalanche_P_benchlist_benched_weight{job=\"avalanchego\"}[15m]) / 10^9",
+          "expr": "avg_over_time(avalanche_benchlist_benched_weight{chain=\"P\", job=\"avalanchego\"}[15m]) / 10^9",
           "interval": "",
-          "legendFormat": "AVAX Benched",
+          "legendFormat": "AVAX Benched {{node_id}}",
           "refId": "A"
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "AVAX Benched",
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
       "description": "Measures how many of each kind of message are received per second on the P-Chain.",
       "fieldConfig": {
         "defaults": {
@@ -1062,7 +1238,9 @@
             "mode": "palette-classic"
           },
           "custom": {
-            "axisLabel": "Messages received/s",
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Messages / Second",
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
@@ -1111,7 +1289,7 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 33
+        "y": 41
       },
       "id": 6,
       "options": {
@@ -1121,406 +1299,70 @@
             "max"
           ],
           "displayMode": "table",
-          "placement": "right"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "pluginVersion": "8.0.4",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
           "exemplar": true,
-          "expr": "rate(avalanche_P_handler_pull_query_count{job=\"avalanchego\"}[5m])",
+          "expr": "rate(avalanche_handler_messages{chain=\"P\", job=\"avalanchego\"}[5m])",
           "interval": "",
-          "legendFormat": "pull query",
+          "legendFormat": "{{ op }} {{node_id}}",
           "refId": "A"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_push_query_count{job=\"avalanchego\"}[5m])",
-          "interval": "",
-          "legendFormat": "push query",
-          "refId": "B"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_chits_count{job=\"avalanchego\"}[5m])",
-          "interval": "",
-          "legendFormat": "chits",
-          "refId": "C"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_accepted_count{job=\"avalanchego\"}[5m])",
-          "interval": "",
-          "legendFormat": "accepted",
-          "refId": "D"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_get_count{job=\"avalanchego\"}[5m])",
-          "interval": "",
-          "legendFormat": "get",
-          "refId": "E"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_put_count{job=\"avalanchego\"}[5m])",
-          "interval": "",
-          "legendFormat": "put",
-          "refId": "F"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_multi_put_count{job=\"avalanchego\"}[5m])",
-          "interval": "",
-          "legendFormat": "multiput",
-          "refId": "G"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_get_ancestors_count{job=\"avalanchego\"}[5m])",
-          "interval": "",
-          "legendFormat": "get ancestors",
-          "refId": "H"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_get_failed_count{job=\"avalanchego\"}[5m])",
-          "interval": "",
-          "legendFormat": "get failed",
-          "refId": "I"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_query_failed_count{job=\"avalanchego\"}[5m])",
-          "interval": "",
-          "legendFormat": "query failed",
-          "refId": "J"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_get_accepted_count{job=\"avalanchego\"}[5m])",
-          "interval": "",
-          "legendFormat": "get accepted",
-          "refId": "K"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_get_ancestors_failed_count{job=\"avalanchego\"}[5m])",
-          "interval": "",
-          "legendFormat": "get ancestors failed",
-          "refId": "L"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_app_request_count{job=\"avalanchego\"}[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app request",
-          "refId": "P"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_app_request_failed_count{job=\"avalanchego\"}[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app request failed",
-          "refId": "M"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_app_response_count{job=\"avalanchego\"}[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app response",
-          "refId": "N"
-        },
-        {
-          "exemplar": true,
-          "expr": "rate(avalanche_P_handler_app_gossip_count{job=\"avalanchego\"}[5m])",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "app gossip",
-          "refId": "O"
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "Messages Received per Second",
-      "type": "timeseries"
-    },
-    {
-      "datasource": "Prometheus",
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "axisSoftMax": 1,
-            "axisSoftMin": 0,
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "smooth",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 42
-      },
-      "id": 35,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom"
-        },
-        "tooltip": {
-          "mode": "single"
-        }
-      },
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "increase(avalanche_P_vm_block_cache_hit[5m])/(increase(avalanche_P_vm_block_cache_hit[5m])+increase(avalanche_P_vm_block_cache_miss[5m]))",
-          "interval": "",
-          "legendFormat": "Hit Rate",
-          "refId": "A"
-        }
-      ],
-      "title": "Block Cache Hit Rate",
-      "type": "timeseries"
-    },
-    {
-      "datasource": "Prometheus",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "axisSoftMin": 0,
-            "barAlignment": 0,
-            "drawStyle": "bars",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": true,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 8,
-        "x": 0,
-        "y": 50
-      },
-      "id": 19,
-      "options": {
-        "legend": {
-          "calcs": [
-            "mean",
-            "lastNotNull",
-            "max"
-          ],
-          "displayMode": "list",
-          "placement": "bottom"
-        },
-        "tooltip": {
-          "mode": "single"
-        }
-      },
-      "pluginVersion": "8.0.5",
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "avalanche_P_handler_unprocessed_msgs_len",
-          "interval": "",
-          "legendFormat": "Pending Messages",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Unprocessed Incoming Messages",
-      "type": "timeseries"
-    },
-    {
-      "datasource": "Prometheus",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "bars",
-            "fillOpacity": 100,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": true,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 8,
-        "x": 8,
-        "y": 50
-      },
-      "id": 33,
-      "options": {
-        "legend": {
-          "calcs": [
-            "mean",
-            "max"
-          ],
-          "displayMode": "list",
-          "placement": "bottom"
-        },
-        "tooltip": {
-          "mode": "single"
-        }
-      },
-      "pluginVersion": "8.1.4",
-      "targets": [
-        {
-          "expr": "increase(avalanche_P_handler_expired[1m])",
-          "interval": "",
-          "legendFormat": "Expired",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Incoming Messages Expired in Last Minute",
       "type": "timeseries"
     }
   ],
   "refresh": "10s",
-  "schemaVersion": 30,
+  "schemaVersion": 37,
   "style": "dark",
   "tags": [
     "Avalanche"
   ],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "hide": 0,
+        "includeAll": false,
+        "label": "Data Source",
+        "multi": false,
+        "name": "datasource",
+        "options": [],
+        "query": "prometheus",
+        "queryValue": "",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "type": "datasource"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${datasource}"
+        },
+        "filters": [],
+        "hide": 0,
+        "label": "Filter",
+        "name": "filter",
+        "skipUrlSync": false,
+        "type": "adhoc"
+      }
+    ]
   },
   "time": {
-    "from": "now-24h",
+    "from": "now-6h",
     "to": "now"
   },
   "timepicker": {
@@ -1540,5 +1382,6 @@
   "timezone": "",
   "title": "P-Chain",
   "uid": "uWlS20i7z",
-  "version": 36
+  "version": 52,
+  "weekStart": ""
 }

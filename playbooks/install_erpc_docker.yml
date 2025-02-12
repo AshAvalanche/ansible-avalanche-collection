@@ -1,0 +1,13 @@
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (c) 2022-2024, E36 Knots
+---
+- name: Install eRPC Docker
+  hosts: erpc
+  become: true
+  roles:
+    - role: geerlingguy.docker
+      tags: 
+        - configure
+        - install
+        - erpc
+    - role: ash.avalanche.erpc

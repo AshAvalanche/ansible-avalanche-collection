@@ -1,0 +1,14 @@
+[Unit]
+Description=eRPC
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+WorkingDirectory={{ erpc_conf_dir }}
+ExecStart=/usr/bin/env /usr/local/bin/docker-compose -f ./docker-compose.yml up -d
+ExecStop=/usr/bin/env /usr/local/bin/docker-compose -f ./docker-compose.yml stop
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

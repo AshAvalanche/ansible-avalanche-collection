@@ -1,0 +1,33 @@
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (c) 2022-2025, E36 Knots
+---
+erpc_version: 0.0.35
+
+erpc_auto_restart: true
+
+# VM/Docker configuration
+erpc_user: root
+
+# Internal directories
+erpc_conf_dir: /etc/erpc/conf
+erpc_custom_dir: "{{ erpc_conf_dir }}/custom"
+
+# eRPC autoconfiguration (install_erpc_network)
+erpc_include_c_chain: true
+
+# eRPC fast configuration (install_erpc_docker)
+erpc_endpoint_list:
+  - "http://{{ hostvars['validator01'].ansible_host }}:9650"
+  - "http://{{ hostvars['validator02'].ansible_host }}:9650"
+  - "http://{{ hostvars['validator03'].ansible_host }}:9650"
+  - "http://{{ hostvars['validator04'].ansible_host }}:9650"
+  - "http://{{ hostvars['validator05'].ansible_host }}:9650"
+
+erpc_chains:
+  - name: C
+    evm_id: 43113
+    chain_id: C
+# eRPC full configuration
+erpc_projects: []
+erpc_aliasing_rules: []
+erpc_limiters_budgets: []

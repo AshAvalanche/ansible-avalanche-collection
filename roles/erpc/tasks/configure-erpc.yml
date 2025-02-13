@@ -1,0 +1,54 @@
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (c) 2022-2025, E36 Knots
+---
+- name: Create eRPC directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ erpc_user }}"
+    group: "{{ erpc_user }}"
+  loop:
+    - "{{ erpc_conf_dir }}"
+    - "{{ erpc_custom_dir }}"
+  tags: assets-sync
+
+- name: Template docker-compose.yml
+  template:
+    src: docker-compose.yml.j2
+    dest: "{{ erpc_conf_dir }}/docker-compose.yml"
+    owner: "{{ erpc_user }}"
+    group: "{{ erpc_user }}"
+  notify: Restart erpc
+
+- name: Build parameter state
+  set_fact:
+    has_erpc_projects: "{{ erpc_projects is defined and erpc_projects | length > 0 }}"
+    has_erpc_chains: "{{ erpc_chains is defined and erpc_chains | length > 0 }}"
+    has_erpc_endpoint_list: "{{ erpc_endpoint_list is defined and erpc_endpoint_list | length > 0 }}"
+    has_erpc_aliasing_rules: "{{ erpc_aliasing_rules is defined and erpc_aliasing_rules | length > 0 }}"
+    has_erpc_limiters_budgets: "{{ erpc_limiters_budgets is defined and erpc_limiters_budgets | length > 0 }}"
+
+- name: Validate parameter state
+  assert:
+    that:
+      - has_erpc_projects or has_erpc_chains
+      - has_erpc_endpoint_list
+
+- name: Template erpc.yaml
+  template:
+    src: erpc.yaml.j2
+    dest: "{{ erpc_conf_dir }}/erpc.yaml"
+    owner: "{{ erpc_user }}"
+    group: "{{ erpc_user }}"
+    mode: "0644"
+  notify: Restart erpc
+
+- name: Template erpc.service file
+  template:
+    src: erpc.service.j2
+    dest: /etc/systemd/system/erpc.service
+  notify: Restart erpc
+
+- name: Reload systemctl daemons
+  systemd:
+    daemon_reload: true

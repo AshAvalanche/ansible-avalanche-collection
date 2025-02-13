@@ -1,0 +1,44 @@
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (c) 2022-2025, E36 Knots
+---
+- name: Install and configure eRPC
+  import_tasks: configure-erpc.yml
+  tags: 
+  - erpc
+  - configure
+  - install
+
+- name: Check if the container is present
+  command: docker ps -a
+  register: erpc_container_status
+  ignore_errors: true
+  changed_when: erpc_container_status.stdout.find('erpc') == -1
+  notify: Restart erpc
+
+- name: Re/start eRPC Docker if needed
+  meta: flush_handlers
+
+- name: Start eRPC Docker
+  include_tasks: start-erpc.yml
+  tags:
+    - erpc
+    - start
+
+- name: Check point
+  block:
+    - name: Wait 4sec for eRPC to start
+      wait_for:
+        port: 4000
+        delay: 1
+        timeout: 4
+      register: ping_status
+  always:
+    - name: Retrieves logs from the container
+      command: docker logs --tail 20 conf-erpc-1
+      register: erpc_logs
+      failed_when: erpc_logs.stderr
+      when: ping_status is failed
+  tags:
+    - erpc
+    - start
+    - wait 

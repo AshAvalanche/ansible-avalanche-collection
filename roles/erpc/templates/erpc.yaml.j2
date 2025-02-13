@@ -1,0 +1,82 @@
+logLevel: warn
+
+server:
+  listenV4: true
+  httpHostV4: "0.0.0.0"
+  listenV6: false
+  httpPort: 4000
+  aliasing:
+    rules:
+{% if has_erpc_aliasing_rules %}
+      {{ erpc_aliasing_rules }}
+{% elif has_erpc_chains %}
+      - matchDomain: "*"
+        serveArchitecture: "evm"
+        serveChain: {{ erpc_chains[0].evm_id }}
+        serveProject: "{{ erpc_chains[0].name }}"
+{% else %}
+      - matchDomain: "*"
+        serveArchitecture: "evm"
+{% endif %}
+
+projects:
+{% if has_erpc_projects %}
+  {{ erpc_projects }}
+{% elif has_erpc_chains %}
+{% for chain in erpc_chains %}
+  - id: {{ chain.name }}
+    networkDefaults:
+      failsafe:
+        timeout:
+          duration: "30s"
+        hedge:
+          quantile: 0.99
+          maxCount: 2
+        retry:
+          maxAttempts: 3
+          delay: "100ms"
+          jitter: "0ms"
+          backoffMaxDelay: "1s"
+          backoffFactor: 1.5
+    upstreamDefaults:
+      rateLimitBudget: {{ chain.limiter | default('default', true) }}
+      type: evm
+      evm:
+        chainId: {{ chain.evm_id }}
+{% if chain.get('ignoreMethods') %}
+      ignoreMethods:
+{% for method in chain.ignoreMethods %}
+        - "{{ method }}"
+{% endfor %}
+{% endif %}
+      failsafe:
+        timeout:
+          duration: "15s"
+        retry:
+          maxAttempts: 3
+          delay: "300ms"
+          jitter: "100ms"
+          backoffMaxDelay: "5s"
+          backoffFactor: 1.5
+        circuitBreaker:
+          failureThresholdCount: 160
+          failureThresholdCapacity: 200
+          halfOpenAfter: "5m"
+          successThresholdCount: 3
+          successThresholdCapacity: 3
+    upstreams:
+{% for node in erpc_endpoint_list %}
+      - endpoint: "{{ node }}{{'/ext/bc/'+chain.chain_id+'/rpc' if chain.chain_id is defined else '' }}"
+{% endfor %}
+{% endfor %}
+{% endif %}
+rateLimiters:
+  budgets:
+    - id: default
+      rules:
+        - method: '*'
+          maxCount: 1000
+          period: 1s
+{% if has_erpc_limiters_budgets %}
+    {{ erpc_limiters_budgets }}
+{% endif %}

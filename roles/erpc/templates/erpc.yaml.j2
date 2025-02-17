@@ -12,19 +12,14 @@ server:
 {% elif has_erpc_chains %}
       - matchDomain: "*"
         serveArchitecture: "evm"
-        serveChain: {{ erpc_chains[0].evm_id }}
-        serveProject: "{{ erpc_chains[0].name }}"
-{% else %}
-      - matchDomain: "*"
-        serveArchitecture: "evm"
+        serveProject: "main"
 {% endif %}
 
 projects:
 {% if has_erpc_projects %}
   {{ erpc_projects }}
 {% elif has_erpc_chains %}
-{% for chain in erpc_chains %}
-  - id: {{ chain.name }}
+  - id: main
     networkDefaults:
       failsafe:
         timeout:
@@ -41,14 +36,6 @@ projects:
     upstreamDefaults:
       rateLimitBudget: {{ chain.limiter | default('default', true) }}
       type: evm
-      evm:
-        chainId: {{ chain.evm_id }}
-{% if chain.get('ignoreMethods') %}
-      ignoreMethods:
-{% for method in chain.ignoreMethods %}
-        - "{{ method }}"
-{% endfor %}
-{% endif %}
       failsafe:
         timeout:
           duration: "15s"
@@ -65,8 +52,17 @@ projects:
           successThresholdCount: 3
           successThresholdCapacity: 3
     upstreams:
+{% for chain in erpc_chains %}
 {% for node in erpc_endpoint_list %}
       - endpoint: "{{ node }}{{'/ext/bc/'+chain.chain_id+'/rpc' if chain.chain_id is defined else '' }}"
+        evm:
+          chainId: {{ chain.evm_id }}
+{% if chain.get('ignoreMethods') %}
+        ignoreMethods:
+{% for method in chain.ignoreMethods %}
+          - "{{ method }}"
+{% endfor %}
+{% endif %}
 {% endfor %}
 {% endfor %}
 {% endif %}

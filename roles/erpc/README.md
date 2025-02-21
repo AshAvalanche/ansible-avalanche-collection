@@ -33,7 +33,7 @@ erpc_conf_dir: /etc/erpc/conf
 erpc_custom_dir: "{{ erpc_conf_dir }}/custom"
 ```
 
-### **Avalanche Nodes and Chaines Configuration**
+### **Avalanche Nodes and Chains Configuration**
 
 ```yaml
 erpc_endpoint_list:

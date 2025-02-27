@@ -1,11 +1,11 @@
 version: '3.9'
 
 services:
-  frontend:
+  bc_frontend:
     image: ghcr.io/blockscout/frontend:v1.37.4
     pull_policy: always
     platform: linux/amd64
     restart: always
-    container_name: 'frontend'
+    container_name: 'bc_frontend'
     env_file:
       - /etc/blockscout/conf/vars-frontend.env

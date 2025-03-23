@@ -61,13 +61,13 @@ services:
       file: ./custom/services/stats.yml
       service: stats
 {% endif %}
-  frontend:
+  bc_frontend:
     depends_on:
       - backend
       - proxy
     extends:
       file: ./custom/services/frontend.yml
-      service: frontend
+      service: bc_frontend
   proxy:
     depends_on:
       - backend

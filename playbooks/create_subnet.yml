@@ -19,6 +19,7 @@
       tags:
         - validate
         - add-validators
+      when: hostvars[groups['subnet_txs_host'][0]].subnet_validators_add
 
 - name: Subnet creation recap
   hosts: subnet_txs_host[0]

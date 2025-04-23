@@ -1,0 +1,96 @@
+---
+- name: Remove old IPFS container
+  community.docker.docker_container:
+    name: ipfs
+    state: absent
+    force_kill: true
+    docker_host: unix:///var/run/docker.sock
+
+- name: Ensure IPFS data volume exists
+  community.docker.docker_volume:
+    name: ipfs-data
+    state: present
+    docker_host: unix:///var/run/docker.sock
+
+- name: Initialize IPFS repo
+  community.docker.docker_container:
+    name: ipfs-init
+    image: ipfs/go-ipfs:latest
+    command: init
+    network_mode: host
+    volumes:
+      - ipfs-data:/data/ipfs
+    state: started
+    docker_host: unix:///var/run/docker.sock
+
+- name: Cleanup ipfs-init helper
+  community.docker.docker_container:
+    name: ipfs-init
+    state: absent
+    force_kill: true
+    docker_host: unix:///var/run/docker.sock
+
+- name: Set IPFS API port to {{ graph_node.ipfs.port }}
+  community.docker.docker_container:
+    name: ipfs-config-api
+    image: ipfs/go-ipfs:latest
+    command:
+      - config
+      - Addresses.API
+      - "/ip4/0.0.0.0/tcp/{{ graph_node.ipfs.port }}"
+    network_mode: host
+    volumes:
+      - ipfs-data:/data/ipfs
+    state: started
+    docker_host: unix:///var/run/docker.sock
+
+- name: Set IPFS Gateway port to {{ graph_node.ipfs.gateway_port }}
+  community.docker.docker_container:
+    name: ipfs-config-gateway
+    image: ipfs/go-ipfs:latest
+    command:
+      - config
+      - Addresses.Gateway
+      - "/ip4/0.0.0.0/tcp/{{ graph_node.ipfs.gateway_port }}"
+    network_mode: host
+    volumes:
+      - ipfs-data:/data/ipfs
+    state: started
+    docker_host: unix:///var/run/docker.sock
+
+- name: Cleanup IPFS helper containers
+  community.docker.docker_container:
+    name: "{{ item }}"
+    state: absent
+    force_kill: true
+    docker_host: unix:///var/run/docker.sock
+  loop:
+    - ipfs-config-api
+    - ipfs-config-gateway
+
+- name: Launch IPFS daemon
+  community.docker.docker_container:
+    name: ipfs
+    image: ipfs/go-ipfs:latest
+    command: daemon --migrate=true
+    restart_policy: always
+    network_mode: host
+    volumes:
+      - ipfs-data:/data/ipfs
+    docker_host: unix:///var/run/docker.sock
+
+- name: Restart IPFS daemon (if needed)
+  meta: flush_handlers
+
+- name: Wait for IPFS HTTP API to respond
+  uri:
+    url: "http://127.0.0.1:{{ graph_node.ipfs.port }}/api/v0/version"
+    method: POST
+    headers:
+      Content-Type: "application/json"
+    status_code: [200, 405]
+    return_content: no
+  register: ipfs_check
+  until: ipfs_check.status in [200, 405]
+  retries: 12
+  delay: 5

@@ -1,0 +1,38 @@
+---
+- name: Remove old Postgres container
+  community.docker.docker_container:
+    name: postgres
+    state: absent
+    force_kill: true
+    docker_host: unix:///var/run/docker.sock
+
+- name: Ensure postgres-data volume exists (fresh C-locale initdb)
+  community.docker.docker_volume:
+    name: postgres-data
+    state: present
+    docker_host: unix:///var/run/docker.sock
+
+- name: Launch Postgres container
+  community.docker.docker_container:
+    name: postgres
+    image: postgres:13
+    restart_policy: always
+    env:
+      POSTGRES_USER:       "{{ graph_node.postgres.user }}"
+      POSTGRES_PASSWORD:   "{{ graph_node.postgres.password }}"
+      POSTGRES_DB:         "{{ graph_node.postgres.db }}"
+      POSTGRES_INITDB_ARGS: "--locale=C --encoding=UTF8"
+    network_mode: host
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    docker_host: unix:///var/run/docker.sock
+
+- name: Restart Postgres container (if needed)
+  meta: flush_handlers
+
+- name: Wait for Postgres to be ready
+  wait_for:
+    host: 127.0.0.1
+    port: "{{ graph_node.postgres.port }}"
+    delay: 5
+    timeout: 30

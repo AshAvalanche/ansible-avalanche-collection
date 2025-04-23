@@ -1,0 +1,19 @@
+---
+- name: Verify that RPC URL is set
+  assert:
+    that:
+      - graph_node.ethereum.rpc_url is defined
+      - graph_node.ethereum.rpc_url != ""
+    fail_msg: >
+      graph_node.ethereum.rpc_url must be defined (e.g.
+      "http://<host>:9650/ext/bc/<blockchain_id>/rpc") but was:
+      {{ graph_node.ethereum.rpc_url }}
+
+- name: Execute IPFS tasks
+  import_tasks: config_ipfs.yml
+
+- name: Execute Postgres tasks
+  import_tasks: config_postgres.yml
+
+- name: Execute Graph Node container tasks
+  import_tasks: launch_graph_node.yml

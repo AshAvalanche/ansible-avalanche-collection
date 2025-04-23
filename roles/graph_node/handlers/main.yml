@@ -1,0 +1,18 @@
+---
+- name: restart ipfs
+  community.docker.docker_container:
+    name: ipfs
+    state: restarted
+    docker_host: unix:///var/run/docker.sock
+
+- name: restart postgres
+  community.docker.docker_container:
+    name: postgres
+    state: restarted
+    docker_host: unix:///var/run/docker.sock
+
+- name: restart graph-node
+  community.docker.docker_container:
+    name: graph-node
+    state: restarted
+    docker_host: unix:///var/run/docker.sock

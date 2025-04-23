@@ -1,0 +1,32 @@
+{
+ "collection_info": {
+  "namespace": "ash",
+  "name": "avalanche",
+  "version": "0.13.3",
+  "authors": [
+   "Gauthier Leonard <gauthier@e36knots.com>",
+   "L\u00e9o Schoukroun <leo@e36knots.com>"
+  ],
+  "readme": "README.md",
+  "tags": [
+   "blockchain",
+   "avalanche"
+  ],
+  "description": "Ansible roles to manage Avalanche nodes, Subnets and blockchains",
+  "license": [],
+  "license_file": "LICENSE",
+  "dependencies": {},
+  "repository": "https://github.com/AshAvalanche/ansible-avalanche-collection",
+  "documentation": "https://docs.ash.center/docs/tools/ansible-avalanche-collection/overview",
+  "homepage": null,
+  "issues": "https://github.com/AshAvalanche/ansible-avalanche-collection/issues"
+ },
+ "file_manifest_file": {
+  "name": "FILES.json",
+  "ftype": "file",
+  "chksum_type": "sha256",
+  "chksum_sha256": "a5471926610a0440a28ca828cf26e8fbf64373a8f848d1887ca31c37e90364fb",
+  "format": 1
+ },
+ "format": 1
+}

@@ -21,3 +21,5 @@ graph_node:
     custom: /etc/graph-node/conf/custom
     assets: /etc/graph-node/conf/custom/shared
     logs:   /var/log/graph_node
+  metrics:
+    port: 8040

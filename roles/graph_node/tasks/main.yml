@@ -17,3 +17,13 @@
 
 - name: Execute Graph Node container tasks
   import_tasks: launch_graph_node.yml
+
+- name: Verify Prometheus metrics endpoint is accessible
+  uri:
+    url: "http://127.0.0.1:{{ graph_node.metrics.port }}/metrics"
+    method: GET
+    status_code: 200
+  register: metrics_check
+  until: metrics_check.status == 200
+  retries: 5
+  delay: 5

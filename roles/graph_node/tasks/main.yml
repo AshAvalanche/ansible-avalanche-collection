@@ -1,29 +1,11 @@
 ---
-- name: Verify that RPC URL is set
-  assert:
-    that:
-      - graph_node.ethereum.rpc_url is defined
-      - graph_node.ethereum.rpc_url != ""
-    fail_msg: >
-      graph_node.ethereum.rpc_url must be defined (e.g.
-      "http://<host>:9650/ext/bc/<blockchain_id>/rpc") but was:
-      {{ graph_node.ethereum.rpc_url }}
+- name: Configure Graph Node directories
+  import_tasks: configure-graph-node.yml
 
-- name: Execute IPFS tasks
-  import_tasks: config_ipfs.yml
+- name: Check if the Graph Node container is present
+  command: docker ps -q --filter "name=graph-node"
+  register: graph_node_container
+  changed_when: false
 
-- name: Execute Postgres tasks
-  import_tasks: config_postgres.yml
-
-- name: Execute Graph Node container tasks
-  import_tasks: launch_graph_node.yml
-
-- name: Verify Prometheus metrics endpoint is accessible
-  uri:
-    url: "http://127.0.0.1:{{ graph_node.metrics.port }}/metrics"
-    method: GET
-    status_code: 200
-  register: metrics_check
-  until: metrics_check.status == 200
-  retries: 5
-  delay: 5
+- name: Start Graph Node service
+  import_tasks: start-graph-node.yml

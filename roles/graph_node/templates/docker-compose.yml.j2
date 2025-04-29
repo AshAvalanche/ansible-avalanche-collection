@@ -2,14 +2,22 @@ version: "3.9"
 
 services:
   ipfs:
+    container_name: ipfs
     image: ipfs/go-ipfs:latest
     ports:
       - "{{ graph_node.ipfs.port }}:5001"
       - "{{ graph_node.ipfs.gateway_port }}:8082"
     volumes:
       - ipfs-data:/data/ipfs
+    command: daemon --migrate=true
+    healthcheck:
+      test: ["CMD", "ipfs", "id"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   postgres:
+    container_name: graph-node-postgres
     image: postgres:13
     environment:
       POSTGRES_USER: {{ graph_node.postgres.user }}
@@ -20,24 +28,38 @@ services:
       - "{{ graph_node.postgres.port }}:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "{{ graph_node.postgres.user }}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   graph-node:
+    container_name: graph-node
     image: graphprotocol/graph-node:{{ graph_node.version }}
-    depends_on:
-      - ipfs
-      - postgres
+    network_mode: host
     ports:
       - "{{ graph_node.ports.graphql }}:8000"
       - "{{ graph_node.ports.admin }}:8020"
+    volumes:
+      - {{ graph_node.paths.conf }}/graph-node.yaml:/etc/graph-node/graph-node.yaml
+    restart: unless-stopped
     environment:
-      postgres_host: postgres
-      postgres_user: {{ graph_node.postgres.user }}
-      postgres_pass: {{ graph_node.postgres.password }}
-      postgres_db: {{ graph_node.postgres.db }}
-      ipfs: ipfs:{{ graph_node.ipfs.port }}
-      ethereum: "{{ graph_node.ethereum.network }}:{{ blockchain_id }}"
-      GRAPH_LOG: info
+      postgres_host: "127.0.0.1"
+      postgres_port: "{{ graph_node.postgres.port }}"
+      postgres_user: "{{ graph_node.postgres.user }}"
+      postgres_pass: "{{ graph_node.postgres.password }}"
+      postgres_db:   "{{ graph_node.postgres.db }}"
+      ipfs:          "127.0.0.1:{{ graph_node.ipfs.port }}"
+      ethereum:      "{{ graph_node.RPC.network }}:{{ graph_node.RPC.rpc_url }}"
+      GRAPH_LOG:     "info"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      ipfs:
+        condition: service_healthy
 
 volumes:
   ipfs-data:
   postgres-data:
+  graph-node-data:

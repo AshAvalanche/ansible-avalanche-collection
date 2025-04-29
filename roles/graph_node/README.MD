@@ -42,7 +42,7 @@ graph_node:
     port: 5001
     gateway_port: 8082
 
-  ethereum:
+  RPC:
     network: subnet
     rpc_url: "http://<node-ip>:9650/ext/bc/<blockchain-id>/rpc"
 

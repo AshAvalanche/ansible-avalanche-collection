@@ -5,10 +5,17 @@ graph_node:
     graphql: 8000
     admin: 8020
   postgres:
+    create: true
     user: graph
     password: yqopFTn6n7MG0*FcG0*v
     db: graph
     port: 5432
+    graph_node_postgres_external:
+      host: ""
+      port: ""
+      user: ""
+      password: ""
+      db: ""
   ipfs:
     host: ipfs
     port: 5001

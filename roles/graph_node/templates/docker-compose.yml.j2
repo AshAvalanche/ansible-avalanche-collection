@@ -1,5 +1,11 @@
 version: "3.9"
 
+{% set pg_host = "127.0.0.1" if graph_node.postgres.create else graph_node.postgres.graph_node_postgres_external.host %}
+{% set pg_port = graph_node.postgres.port if graph_node.postgres.create else graph_node.postgres.graph_node_postgres_external.port %}
+{% set pg_user = graph_node.postgres.user if graph_node.postgres.create else graph_node.postgres.graph_node_postgres_external.user %}
+{% set pg_pass = graph_node.postgres.password if graph_node.postgres.create else graph_node.postgres.graph_node_postgres_external.password %}
+{% set pg_db   = graph_node.postgres.db   if graph_node.postgres.create else graph_node.postgres.graph_node_postgres_external.db %}
+
 services:
   ipfs:
     container_name: ipfs
@@ -16,23 +22,25 @@ services:
       timeout: 10s
       retries: 3
 
+{% if graph_node.postgres.create %}
   postgres:
     container_name: graph-node-postgres
     image: postgres:13
     environment:
-      POSTGRES_USER: {{ graph_node.postgres.user }}
-      POSTGRES_PASSWORD: {{ graph_node.postgres.password }}
-      POSTGRES_DB: {{ graph_node.postgres.db }}
+      POSTGRES_USER: {{ pg_user }}
+      POSTGRES_PASSWORD: {{ pg_pass }}
+      POSTGRES_DB: {{ pg_db }}
       POSTGRES_INITDB_ARGS: "--locale=C --encoding=UTF8"
     ports:
-      - "{{ graph_node.postgres.port }}:5432"
+      - "{{ pg_port }}:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "{{ graph_node.postgres.user }}"]
+      test: ["CMD", "pg_isready", "-U", "{{ pg_user }}"]
       interval: 30s
       timeout: 10s
       retries: 3
+{% endif %}
 
   graph-node:
     container_name: graph-node
@@ -45,17 +53,19 @@ services:
       - {{ graph_node.paths.conf }}/graph-node.yaml:/etc/graph-node/graph-node.yaml
     restart: unless-stopped
     environment:
-      postgres_host: "127.0.0.1"
-      postgres_port: "{{ graph_node.postgres.port }}"
-      postgres_user: "{{ graph_node.postgres.user }}"
-      postgres_pass: "{{ graph_node.postgres.password }}"
-      postgres_db:   "{{ graph_node.postgres.db }}"
+      postgres_host: "{{ pg_host }}"
+      postgres_port: "{{ pg_port }}"
+      postgres_user: "{{ pg_user }}"
+      postgres_pass: "{{ pg_pass }}"
+      postgres_db:   "{{ pg_db }}"
       ipfs:          "127.0.0.1:{{ graph_node.ipfs.port }}"
       ethereum:      "{{ graph_node.RPC.network }}:{{ graph_node.RPC.rpc_url }}"
       GRAPH_LOG:     "info"
     depends_on:
+{% if graph_node.postgres.create %}
       postgres:
         condition: service_healthy
+{% endif %}
       ipfs:
         condition: service_healthy
 

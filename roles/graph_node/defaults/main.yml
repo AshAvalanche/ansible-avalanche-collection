@@ -17,7 +17,7 @@ graph_node:
     gateway_port: 8082
   rpc:
     network: subnet
-    rpc_url: "http://127.0.0.1:9650/ext/bc/{{ graph_node_blockchain_id }}/rpc"
+    rpc_url: "http://{{ hostvars[ groups['bootstrap_nodes'][0] ].ansible_host }}:9650/ext/bc/{{ graph_node_blockchain_id }}/rpc"
   paths:
     conf: /etc/graph-node
     custom: /etc/graph-node/conf/custom

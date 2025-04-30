@@ -2,14 +2,27 @@
 - name: Configure Graph Node directories
   import_tasks: configure-graph-node.yml
 
-- name: Check if the graph-node container exists
-  command: docker ps -a --filter "name=graph-node" --format "{{ '{{' }}.Names{{ '}}' }}"
-  register: graph_node_container
-  changed_when: false
-
-- name: Restart the graph-node container if it exists
-  command: docker restart graph-node
-  when: "'graph-node' in graph_node_container.stdout_lines"
-
 - name: Start Graph Node service
   import_tasks: start-graph-node.yml
+
+- name: Check Graph Node availability (port 8020)
+  block:
+    - name: Wait 10s for Graph Node to start
+      wait_for:
+        port: 8020
+        delay: 2
+        timeout: 10
+      register: graphnode_ping
+
+  always:
+    - name: Retrieve last 20 logs from Graph Node container if startup failed
+      command: docker logs --tail 20 graph-node
+      register: graphnode_logs
+      failed_when: graphnode_logs.stderr != ""
+      when: graphnode_ping.failed
+      changed_when: false
+
+  tags:
+    - graph-node
+    - start
+    - wait

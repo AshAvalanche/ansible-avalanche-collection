@@ -6,7 +6,7 @@ Requires=docker.service
 [Service]
 Restart=always
 ExecStart=/usr/bin/env /usr/local/bin/docker-compose -f ./docker-compose.yml up -d
-ExecStop=/usr/bin/env /usr/local/bin/docker-compose -f ./docker-compose.yml stop
+ExecStop=/usr/bin/env /usr/local/bin/docker-compose -f ./docker-compose.yml down
 WorkingDirectory={{ graph_node.paths.conf }}
 RemainAfterExit=yes
 Environment="COMPOSE_PROJECT_NAME=graphnode"

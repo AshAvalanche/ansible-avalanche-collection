@@ -50,7 +50,7 @@ services:
       - "{{ graph_node.ports.graphql }}:8000"
       - "{{ graph_node.ports.admin }}:8020"
     volumes:
-      - {{ graph_node.paths.conf }}/graph-node.yaml:/etc/graph-node/graph-node.yaml
+      - {{ graph_node.paths.conf }}/graph-node:/etc/graph-node/graph-node
     restart: unless-stopped
     environment:
       postgres_host: "{{ pg_host }}"

@@ -1,6 +1,4 @@
 ---
-# Removed redundant handlers as Docker Compose will manage service restarts.
-
 - name: Restart graph-node
   service:
     name: graph-node

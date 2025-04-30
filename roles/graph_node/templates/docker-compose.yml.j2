@@ -1,10 +1,10 @@
 version: "3.9"
 
-{% set pg_host = "127.0.0.1" if graph_node.postgres.create else graph_node.postgres.graph_node_postgres_external.host %}
-{% set pg_port = graph_node.postgres.port if graph_node.postgres.create else graph_node.postgres.graph_node_postgres_external.port %}
-{% set pg_user = graph_node.postgres.user if graph_node.postgres.create else graph_node.postgres.graph_node_postgres_external.user %}
-{% set pg_pass = graph_node.postgres.password if graph_node.postgres.create else graph_node.postgres.graph_node_postgres_external.password %}
-{% set pg_db   = graph_node.postgres.db   if graph_node.postgres.create else graph_node.postgres.graph_node_postgres_external.db %}
+{% set pg_host = "127.0.0.1" if graph_node.postgres.create else graph_node.postgres.host %}
+{% set pg_port = graph_node.postgres.port if graph_node.postgres.create else graph_node.postgres.port %}
+{% set pg_user = graph_node.postgres.user if graph_node.postgres.create else graph_node.postgres.user %}
+{% set pg_pass = graph_node.postgres.password if graph_node.postgres.create else graph_node.postgres.password %}
+{% set pg_db   = graph_node.postgres.db   if graph_node.postgres.create else graph_node.postgres.db %}
 
 services:
   ipfs:

@@ -3,13 +3,13 @@
   import_tasks: configure-graph-node.yml
 
 - name: Check if the graph-node container exists
-  shell: docker ps -a --filter "name=graph-node" --format "{{ '{{' }}.Names{{ '}}' }}"
+  command: docker ps -a --filter "name=graph-node" --format "{{ '{{' }}.Names{{ '}}' }}"
   register: graph_node_container
   changed_when: false
 
 - name: Restart the graph-node container if it exists
-  shell: docker restart graph-node
-  when: graph_node_container.stdout == "graph-node"
+  command: docker restart graph-node
+  when: "'graph-node' in graph_node_container.stdout_lines"
 
 - name: Start Graph Node service
   import_tasks: start-graph-node.yml

@@ -59,7 +59,7 @@ services:
       postgres_pass: "{{ pg_pass }}"
       postgres_db:   "{{ pg_db }}"
       ipfs:          "127.0.0.1:{{ graph_node.ipfs.port }}"
-      ethereum:      "{{ graph_node.RPC.network }}:{{ graph_node.RPC.rpc_url }}"
+      ethereum:      "{{ graph_node.rpc.network }}:{{ graph_node.rpc.rpc_url }}"
       GRAPH_LOG:     "info"
     depends_on:
 {% if graph_node.postgres.create %}

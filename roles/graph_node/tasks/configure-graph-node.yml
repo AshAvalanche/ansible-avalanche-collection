@@ -28,12 +28,12 @@
 
 - name: Build parameter state
   set_fact:
-    has_graph_node_RPC: "{{ graph_node.RPC.rpc_url is defined and graph_node.RPC.rpc_url | length > 0 }}"
+    has_graph_node_rpc: "{{ graph_node.rpc.rpc_url is defined and graph_node.rpc.rpc_url | length > 0 }}"
 
 - name: Validate parameter state
   assert:
     that:
-      - has_graph_node_RPC
+      - has_graph_node_rpc
 
 - name: Template graph-node.service file
   template:

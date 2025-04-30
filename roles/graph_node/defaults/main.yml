@@ -20,7 +20,7 @@ graph_node:
     host: ipfs
     port: 5001
     gateway_port: 8082
-  RPC:
+  rpc:
     network: subnet
     rpc_url: "http://127.0.0.1:9650/ext/bc/{{ graph_node_blockchain_id }}/rpc"
   paths:

@@ -1,6 +1,6 @@
-version: "3.9"
+version: '3.9'
 
-{% set pg_host = "127.0.0.1" if graph_node.postgres.create else graph_node.postgres.host %}
+{% set pg_host = "postgres" if graph_node.postgres.create else graph_node.postgres.host %}
 {% set pg_port = graph_node.postgres.port if graph_node.postgres.create else graph_node.postgres.port %}
 {% set pg_user = graph_node.postgres.user if graph_node.postgres.create else graph_node.postgres.user %}
 {% set pg_pass = graph_node.postgres.password if graph_node.postgres.create else graph_node.postgres.password %}
@@ -15,7 +15,7 @@ services:
       - "{{ graph_node.ipfs.gateway_port }}:8082"
     volumes:
       - ipfs-data:/data/ipfs
-    command: daemon --migrate=true
+    command: daemon --migrate=true --api=/ip4/0.0.0.0/tcp/5001
     healthcheck:
       test: ["CMD", "ipfs", "id"]
       interval: 30s
@@ -45,7 +45,6 @@ services:
   graph-node:
     container_name: graph-node
     image: graphprotocol/graph-node:{{ graph_node.version }}
-    network_mode: host
     ports:
       - "{{ graph_node.ports.graphql }}:8000"
       - "{{ graph_node.ports.admin }}:8020"
@@ -58,7 +57,7 @@ services:
       postgres_user: "{{ pg_user }}"
       postgres_pass: "{{ pg_pass }}"
       postgres_db:   "{{ pg_db }}"
-      ipfs:          "127.0.0.1:{{ graph_node.ipfs.port }}"
+      ipfs:          "ipfs:{{ graph_node.ipfs.port }}"
       ethereum:      "{{ graph_node.rpc.network }}:{{ graph_node.rpc.rpc_url }}"
       GRAPH_LOG:     "info"
     depends_on:

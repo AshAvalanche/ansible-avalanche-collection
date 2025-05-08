@@ -1,0 +1,47 @@
+---
+- name: Create Graph Node directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ graph_node.user }}"
+    group: "{{ graph_node.user }}"
+  loop:
+    - "{{ graph_node.paths.conf }}"
+    - "{{ graph_node.paths.custom }}"
+  tags: assets-sync
+
+- name: Template docker-compose.yml
+  template:
+    src: docker-compose.yml.j2
+    dest: "{{ graph_node.paths.conf }}/docker-compose.yml"
+    owner: "{{ graph_node.user }}"
+    group: "{{ graph_node.user }}"
+  notify: Restart graph-node
+
+- name: Ensure blockchain id is set
+  assert:
+    that:
+      - graph_node_blockchain_id is defined
+    fail_msg: "graph_node_blockchain_id must be defined in the inventory or playbook."
+    success_msg: "graph_node_blockchain_id is defined."
+
+
+- name: Build parameter state
+  set_fact:
+    has_graph_node_rpc: "{{ graph_node.rpc.rpc_url is defined and graph_node.rpc.rpc_url | length > 0 }}"
+
+- name: Validate parameter state
+  assert:
+    that:
+      - has_graph_node_rpc
+
+- name: Template graph-node.service file
+  template:
+    src: graph-node.service.j2
+    dest: /etc/systemd/system/graph-node.service
+  notify: Restart graph-node
+
+- name: Reload systemctl daemons
+  systemd:
+    daemon_reload: true
+

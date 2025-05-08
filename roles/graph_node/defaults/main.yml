@@ -1,0 +1,29 @@
+graph_node:
+  version: v0.38.0
+  user: root
+  ports:
+    graphql: 8000
+    admin: 8020
+  postgres:
+    create: true
+    user: graph
+    password: yqopFTn6n7MG0*FcG0*v
+    db: graph
+    port: 5432
+    host: "localhost"
+  ipfs:
+    host: ipfs
+    port: 5001
+    gateway_port: 8082
+  rpc:
+    network: subnet
+    rpc_url: "http://{{ hostvars[ groups['bootstrap_nodes'][0] ].ansible_host }}:9650/ext/bc/{{ graph_node_blockchain_id }}/rpc"
+  paths:
+    conf: /etc/graph-node
+    custom: /etc/graph-node/conf/custom
+    assets: /etc/graph-node/conf/custom/shared
+    logs:   /var/log/graph_node
+  metrics:
+    port: 8040
+
+graph_node_auto_restart: true

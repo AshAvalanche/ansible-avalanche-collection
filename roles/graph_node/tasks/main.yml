@@ -1,0 +1,51 @@
+---
+- name: Configure Graph Node directories
+  import_tasks: configure-graph-node.yml
+
+- name: Re/start Graph Node Docker if needed
+  meta: flush_handlers
+
+- name: Start Graph Node service
+  import_tasks: start-graph-node.yml
+
+- name: Ensure Graph Node dependencies are up and ready
+  block:
+    - name: Wait for IPFS to be ready on port 5001
+      wait_for:
+        port: 5001
+        host: 127.0.0.1
+        delay: 2
+        timeout: 30
+
+    - name: Wait for Postgres to be ready on port 5432
+      wait_for:
+        port: 5432
+        host: 127.0.0.1
+        delay: 2
+        timeout: 30
+
+    - name: Wait 60s for Graph Node to be available on port 8000
+      wait_for:
+        port: 8000
+        host: 127.0.0.1
+        delay: 2
+        timeout: 60
+      register: graphnode_status
+
+  always:
+    - name: Retrieve last 20 logs from the Graph Node container if it failed
+      command: docker logs --tail 20 graph-node
+      register: graphnode_logs
+      when: graphnode_status is failed
+      failed_when: false
+      changed_when: false
+
+    - name: Show Graph Node logs if it failed
+      debug:
+        var: graphnode_logs.stdout_lines
+      when: graphnode_status is failed
+
+  tags:
+    - graph-node
+    - start
+    - wait

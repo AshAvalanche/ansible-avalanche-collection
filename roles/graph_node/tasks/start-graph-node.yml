@@ -1,0 +1,6 @@
+---
+- name: Start and enable graph-node.service
+  service:
+    name: graph-node
+    state: started
+    enabled: true

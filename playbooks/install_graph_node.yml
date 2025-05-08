@@ -1,0 +1,14 @@
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (c) 2022-2024, E36 Knots
+---
+- name: Install Graph Node
+  hosts: graph_node
+  become: true
+  pre_tasks:
+    - name: Ensure apt cache is up to date
+      apt:
+        update_cache: true
+
+  roles:
+    - role: geerlingguy.docker
+    - role: ash.avalanche.graph_node

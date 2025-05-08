@@ -1,0 +1,6 @@
+---
+- name: Restart graph-node
+  service:
+    name: graph-node
+    state: restarted
+  when: graph_node_auto_restart

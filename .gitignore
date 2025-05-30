@@ -1,3 +1,48 @@
-.vscode
-
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
 *.pyc
+
+# Virtual environments
+.venv/
+env/
+venv/
+
+# Ansible specific
+*.retry
+*.log
+
+# System files
+.DS_Store
+Thumbs.db
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS-generated files
+ehthumbs.db
+Icon?
+
+# Test output
+.coverage
+.tox/
+nosetests.xml
+.junit.xml
+.testrepository/
+
+# GitHub workflows
+*.out
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# Other
+*.bak
+*.tmp

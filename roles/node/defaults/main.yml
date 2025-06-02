@@ -26,7 +26,7 @@ avalanchego_group: avalanche
 
 # Auto-restart
 ## The restart is triggered by any version or configuration change
-avalanchego_auto_restart: true
+avalanchego_auto_restart: false
 
 # HTTP
 ## Change this to public IP to accept API calls from the outside

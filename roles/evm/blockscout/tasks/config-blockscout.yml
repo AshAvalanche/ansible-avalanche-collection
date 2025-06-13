@@ -107,6 +107,29 @@
   when: blockscout_stats_enabled in ['true', true]
   notify: Restart blockscout
 
+- name: Download chart config for stats service
+  get_url:
+    url: https://raw.githubusercontent.com/blockscout/blockscout-rs/refs/heads/main/stats/config/charts.json
+    dest: "{{ blockscout_conf_dir }}/charts.json"
+    owner: "{{ blockscout_user }}"
+    group: "{{ blockscout_user }}"
+  when: blockscout_stats_enabled in ['true', true]
+  notify: Restart blockscout
+
+- name: Customize chart unit
+  ansible.builtin.replace:
+    path: "{{ blockscout_conf_dir }}/charts.json"
+    regexp: "ETH"
+    replace: "{{ blockscout_frontend_env_variables.NEXT_PUBLIC_NETWORK_CURRENCY_SYMBOL }}"
+  when: blockscout_stats_enabled in ['true', true]
+
+- name: Customize chart min unit
+  ansible.builtin.replace:
+    path: "{{ blockscout_conf_dir }}/charts.json"
+    regexp: "Gwei"
+    replace: "{{ CURRENCY_MIN_SYMBOL }}"
+  when: blockscout_stats_enabled in ['true', true] and CURRENCY_MIN_SYMBOL is defined
+
 - name: Ensure images directory exists
   file:
     path: "{{ blockscout_custom_dir }}/images"

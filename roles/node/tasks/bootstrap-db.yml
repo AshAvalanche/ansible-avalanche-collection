@@ -10,7 +10,7 @@
   unarchive:
     remote_src: "{{ (avalanchego_bootstrap_db_url is defined) | bool }}"
     src: "{{ avalanchego_bootstrap_db if (avalanchego_bootstrap_db_url is not defined) else avalanchego_bootstrap_db_url }}"
-    dest: "{{ avalanchego_db_dir }}"
+    dest: "{{ avalanchego_data_dir }}/db"
     owner: "{{ avalanchego_user }}"
     group: "{{ avalanchego_group }}"
-    creates: "{{ avalanchego_db_dir }}/{{ avalanchego_network_id }}"
+    creates: "{{ avalanchego_data_dir }}/db/{{ avalanchego_network_id }}"

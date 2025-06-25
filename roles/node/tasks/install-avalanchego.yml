@@ -22,10 +22,11 @@
     state: directory
     owner: "{{ avalanchego_user }}"
     group: "{{ avalanchego_group }}"
+    recurse: true
   loop:
     - "{{ avalanchego_plugins_dir }}"
     - "{{ avalanchego_releases_dir }}"
-    - "{{ avalanchego_db_dir }}"
+    - "{{ avalanchego_data_dir }}"
     - "{{ avalanchego_subnets_conf_dir }}"
     - "{{ avalanchego_chains_conf_dir }}"
     - "{{ avalanchego_vms_conf_dir }}"

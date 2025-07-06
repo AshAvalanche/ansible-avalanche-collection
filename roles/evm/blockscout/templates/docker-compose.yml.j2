@@ -60,6 +60,8 @@ services:
     extends:
       file: ./custom/services/stats.yml
       service: stats
+    volumes:
+      - {{ blockscout_conf_dir }}/charts.json:/app/{{ blockscout_stats_env_variables.STATS__CHARTS_CONFIG }}
 {% endif %}
   bc_frontend:
     depends_on:

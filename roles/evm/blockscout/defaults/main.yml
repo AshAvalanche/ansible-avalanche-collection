@@ -41,6 +41,8 @@ blockscout_stats_enabled: "false"
 # Required fields: blockscout_marketplace_app_list: [{id: 'app', title: 'The App', logo: 'app-logo.png', shortDescription: 'Awesome app', categories: ['Security', 'Tools'], author: 'Bob', url: 'http://app.com', description: 'This is an awesome app']}]
 blockscout_marketplace_app_list: []
 
+# CURRENCY_MIN_SYMBOL: nASH
+
 # Blockscout env variables
 # --> https://docs.blockscout.com/for-developers/information-and-settings/env-variables
 blockscout_backend_env_vars:

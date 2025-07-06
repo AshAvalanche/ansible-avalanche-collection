@@ -4,6 +4,10 @@
 # Create a Subnet and add nodes from the `subnet_validators` group as validators
 - name: Create the Subnet
   hosts: subnet_txs_host[0]
+  tasks:
+    - name: Check undefiened variables
+      set_fact:
+        subnet_validators_add: "{{ subnet_validators_add | default(true) }}"
   roles:
     - role: ash.avalanche.subnet
 
@@ -19,6 +23,7 @@
       tags:
         - validate
         - add-validators
+      when: hostvars[groups['subnet_txs_host'][0]].subnet_validators_add
 
 - name: Subnet creation recap
   hosts: subnet_txs_host[0]

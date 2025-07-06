@@ -97,5 +97,10 @@ server {
         proxy_set_header      Upgrade "$http_upgrade";
         proxy_set_header      Connection $connection_upgrade;
         proxy_cache_bypass    $http_upgrade;
+        # Needed to fix "upstream sent too big header while reading response header from upstream" after enabling WalletConnect
+        proxy_buffer_size          128k;
+        proxy_buffers              4 256k;
+        proxy_busy_buffers_size    256k;
+        proxy_temp_file_write_size 256k;
     }
 }

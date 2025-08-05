@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   bc_frontend:
-    image: ghcr.io/blockscout/frontend:v2.0.3
+    image: ghcr.io/blockscout/frontend:v2.2.1
     pull_policy: always
     platform: linux/amd64
     restart: always

@@ -159,3 +159,6 @@ avalanchego_service_options: |
 ash_cli_install: true
 ## The avalanche network to be used in the Ash CLI (sets the RPC endpoints to use)
 ash_cli_network_id: "{{ avalanchego_network_id }}"
+
+avalanchego_tracked_chains_ids:
+  - "{{ avalanche_primary_network_id }}"

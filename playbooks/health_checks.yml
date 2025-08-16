@@ -6,7 +6,7 @@
   tasks:
     - include_role:
         name: ash.avalanche.node
-        tasks_from: health-checks
+        tasks_from: health-checks-static-chain-ids
 
     - name: Display health checks results
       debug:

@@ -37,7 +37,7 @@ avalanche_primary_network_id: 11111111111111111111111111111111LpoYY
 avalanchego_vms_list:
   subnet-evm:
     download_url: https://github.com/ava-labs/subnet-evm/releases/download
-    id: dkr3SJRCf2QfRUaepreGf2PtfEtpLHuPixeBMNrf1QQBxWLNN
+    id: srEXiWaHuhNyGwPUi444Tu47ZEDwxTWrbQiuD7FmgSAQ6X7Dy
     # Used in Ash CLI
     ash_vm_type: SubnetEVM
     # The VM binary filename

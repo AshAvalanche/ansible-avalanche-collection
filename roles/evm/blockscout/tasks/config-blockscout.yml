@@ -109,12 +109,16 @@
 
 - name: Download chart config for stats service
   get_url:
-    url: https://raw.githubusercontent.com/blockscout/blockscout-rs/refs/heads/main/stats/config/charts.json
-    dest: "{{ blockscout_conf_dir }}/charts.json"
+    url: https://raw.githubusercontent.com/blockscout/blockscout-rs/refs/tags/stats/v2.11.1/stats/config/blockscout_instance/{{ item }}
+    dest: "{{ blockscout_conf_dir }}/{{ item }}"
     owner: "{{ blockscout_user }}"
     group: "{{ blockscout_user }}"
   when: blockscout_stats_enabled in ['true', true]
   notify: Restart blockscout
+  loop:
+    - charts.json
+    - layout.json
+    - update_groups.json
 
 - name: Customize chart unit
   ansible.builtin.replace:

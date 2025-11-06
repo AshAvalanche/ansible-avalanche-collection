@@ -15,7 +15,6 @@ from ansible.module_utils.urls import Request
 GITHUB_RAW_URL = "https://raw.githubusercontent.com"
 GITHUB_API_URL = "https://api.github.com"
 
-
 def get_json(url):
     r = Request()
 
@@ -65,10 +64,16 @@ def run_module():
     vm_rpcchainvm_proto_version = int(
         vm_compat_json["rpcChainVMProtocolVersion"][vm_version]
     )
+    formated_avax_version = avax_version.replace("-fuji", "")
     for rpc_ver, avax_ver in avax_compat_json.items():
-        if avax_version in avax_ver:
+        if formated_avax_version in avax_ver:
             avax_rpcchainvm_proto_version = int(rpc_ver)
             break
+
+    if "avax_rpcchainvm_proto_version" not in locals():
+        module.fail_json(
+            msg=f"AvalancheGo version {avax_version} not found in compatibility JSON:\n{avax_compat_json_url}"
+        )
 
     result["vm_rpcchainvm_proto_version"] = vm_rpcchainvm_proto_version
     result["avalanche_rpcchainvm_proto_version"] = avax_rpcchainvm_proto_version

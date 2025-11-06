@@ -6,3 +6,4 @@
     name: blockscout
     state: restarted
   when: blockscout_auto_restart
+  retries: 1

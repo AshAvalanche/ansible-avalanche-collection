@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   db-init:
-    image: postgres:15
+    image: postgres:17
     entrypoint:
       - sh
       - -c
@@ -13,7 +13,7 @@ services:
     depends_on:
       db-init:
         condition: service_completed_successfully
-    image: postgres:15
+    image: postgres:17
     shm_size: 256m
     restart: always
     container_name: 'db'

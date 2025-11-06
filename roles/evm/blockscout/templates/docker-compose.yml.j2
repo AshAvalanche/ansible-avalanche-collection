@@ -62,6 +62,8 @@ services:
       service: stats
     volumes:
       - {{ blockscout_conf_dir }}/charts.json:/app/{{ blockscout_stats_env_variables.STATS__CHARTS_CONFIG }}
+      - {{ blockscout_conf_dir }}/layout.json:/app/{{ blockscout_stats_env_variables.STATS__LAYOUT_CONFIG }}
+      - {{ blockscout_conf_dir }}/update_groups.json:/app/{{ blockscout_stats_env_variables.STATS__UPDATE_GROUPS_CONFIG }}
 {% endif %}
   bc_frontend:
     depends_on:

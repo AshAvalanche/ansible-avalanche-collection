@@ -9,6 +9,19 @@
       NEXT_PUBLIC_MARKETPLACE_SUBMIT_FORM: https://forms.gle/S7LK7M6QiNeFnGUN8
   when: blockscout_marketplace_app_list | length > 0
 
+- name: Determine whether the database should be embedded locally in a docker container and an access should be externalized
+  set_fact:
+    EMBEDDED_DATABASE: "{{ '@db:' in blockscout_backend_env_vars.DATABASE_URL }}"
+    local_database_externalized: "{{ blockscout_backend_env_vars.LOCAL_DATABASE_EXTERNAL_USER is defined }}"
+
+- name: Check if the local database externalization variables are properly set
+  ansible.builtin.assert:
+    that:
+      - EMBEDDED_DATABASE
+      - blockscout_backend_env_vars.LOCAL_DATABASE_EXTERNAL_USER is defined and blockscout_backend_env_vars.LOCAL_DATABASE_EXTERNAL_NAME is defined
+    fail_msg: "Both LOCAL_DATABASE_EXTERNAL_USER and LOCAL_DATABASE_EXTERNAL_NAME must be defined to externalize local database access when using an embedded database."
+  when: local_database_externalized
+
 - name: Create Blockscout directories
   file:
     path: "{{ item }}"
@@ -61,6 +74,30 @@
     dest: "{{ blockscout_conf_dir }}/vars-backend.env"
     owner: "{{ blockscout_user }}"
     group: "{{ blockscout_user }}"
+  notify: Restart blockscout
+
+- name: Template pg_hba.conf
+  template:
+    src: pg_hba.conf.j2
+    dest: "{{ blockscout_conf_dir }}/pg_hba.conf"
+    owner: "{{ blockscout_user }}"
+    group: "{{ blockscout_user }}"
+  when: local_database_externalized
+  notify: Restart blockscout
+
+- name: Create private key (RSA, 4096 bits)
+  community.crypto.openssl_privatekey:
+    path: "{{ blockscout_conf_dir }}/server.key"
+    owner: 999
+    mode: '0600'
+  when: local_database_externalized
+
+- name: Create simple self-signed certificate for local Postgres SSL connections
+  community.crypto.x509_certificate:
+    path: "{{ blockscout_conf_dir }}/server.crt"
+    privatekey_path: "{{ blockscout_conf_dir }}/server.key"
+    provider: selfsigned
+  when: local_database_externalized
   notify: Restart blockscout
 
 - name: Template vars-frontend.env

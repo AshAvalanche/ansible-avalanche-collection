@@ -54,6 +54,9 @@ blockscout_backend_env_vars:
   # Postgres database endpoint
   DATABASE_URL: postgresql://postgres:ceWb1MeLBEeOIfk65gU8EjF8@db:5432/blockscout
   SECRET_KEY_BASE: 56NtB48ear7+wMSf0IQuWDAAazhpb31qyc7GiyspBP2vh7t5zlCsF5QDv76chXeN
+  # If using a local database, set the following two variables (Both database and user must be created and configured beforehand)
+  # LOCAL_DATABASE_EXTERNAL_USER: external # If using a local database, set the user name here (It will open the db port for this user)
+  LOCAL_DATABASE_EXTERNAL_NAME: blockscout # If using a local database, set the database name here (usually 'blockscout')
 
   # Network
   NETWORK: EVM

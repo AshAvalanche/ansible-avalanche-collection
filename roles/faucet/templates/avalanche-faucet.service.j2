@@ -7,8 +7,8 @@ After=docker.service
 Type=oneshot
 User={{ avalanche_faucet_user }}
 WorkingDirectory={{ avalanche_faucet_conf_dir }}
-ExecStart=/usr/bin/env /usr/local/bin/docker-compose -f {{ avalanche_faucet_conf_dir }}/docker-compose.yml up -d
-ExecStop=/usr/bin/env /usr/local/bin/docker-compose -f {{ avalanche_faucet_conf_dir }}/docker-compose.yml stop
+ExecStart=/usr/bin/env docker compose -f {{ avalanche_faucet_conf_dir }}/docker-compose.yml up -d
+ExecStop=/usr/bin/env docker compose -f {{ avalanche_faucet_conf_dir }}/docker-compose.yml stop
 RemainAfterExit=yes
 
 [Install]

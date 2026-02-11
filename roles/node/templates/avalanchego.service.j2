@@ -10,7 +10,7 @@ Type=simple
 User={{ avalanchego_user }}
 WorkingDirectory={{ avalanchego_install_dir }}
 ExecStart={{ avalanchego_install_dir }}/current/avalanchego --plugin-dir={{ avalanchego_install_dir }}/current/plugins --config-file={{ avalanchego_conf_dir }}/node.json
-Restart=no
+Restart={{ avalanchego_service_restart_policy }}
 {{ avalanchego_service_options }}
 
 [Install]

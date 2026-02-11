@@ -147,6 +147,7 @@ validator_stake_or_weight: 1
 validator_delegation_fee: 2
 
 # Systemd
+avalanchego_service_restart_policy: on-failure
 ## Additional systemd avalanchego.service options
 ## Only modify this variable if you are absolutely sure about what you are doing
 ## Please refer to Ubuntu man pages for the usage of these options

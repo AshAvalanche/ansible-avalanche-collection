@@ -17,6 +17,8 @@ GITHUB_API_URL = "https://api.github.com"
 
 VARS_YAML_PATH = "../roles/node/vars/main.yml"
 VARS_YAML_HEADER_SIZE = 3
+# README-derived compatibility applies to subnet-evm releases published from the subnet-evm repo
+# (AvalancheGo < 1.14.2 style). From AvalancheGo 1.14.2+, subnet-evm is bundled on the AvalancheGo release.
 VMS_REPOS = {
     "subnet-evm": "ava-labs/subnet-evm",
 }

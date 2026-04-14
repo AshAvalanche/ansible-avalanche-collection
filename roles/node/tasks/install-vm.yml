@@ -5,6 +5,30 @@
   set_fact:
     avalanchego_vm_binary_arch: "{{ 'amd64' if ansible_architecture == 'x86_64' else 'arm64' if ansible_architecture == 'aarch64' else avalanchego_vm_binary_arch }}"
 
+- name: Detect subnet-evm plugin bundled in AvalancheGo release
+  set_fact:
+    subnet_evm_bundled_in_avalanchego_release: >-
+      {{ vm_name == 'subnet-evm'
+      and avalanchego_version is version(subnet_evm_bundled_first_avalanchego_version, '>=') }}
+
+- name: Resolve effective VM version for install paths
+  set_fact:
+    vm_version_effective: "{{ avalanchego_version if subnet_evm_bundled_in_avalanchego_release else vm_version }}"
+
+- name: Resolve VM release tarball filename
+  set_fact:
+    vm_release_tarball: "{{ vm_info.binary_filename ~ '-linux-' ~ avalanchego_vm_binary_arch ~ '-v' ~ avalanchego_version ~ '.tar.gz' if subnet_evm_bundled_in_avalanchego_release else vm_info.binary_filename ~ '_' ~ vm_version_effective ~ '_linux_' ~ avalanchego_vm_binary_arch ~ '.tar.gz' }}"
+
+- name: Require subnet-evm version to match AvalancheGo when bundled
+  assert:
+    that:
+      - vm_version == avalanchego_version
+    fail_msg: >-
+      From AvalancheGo {{ subnet_evm_bundled_first_avalanchego_version }} onward, subnet-evm is released
+      with AvalancheGo and must use the same version string in avalanchego_vms_install as avalanchego_version
+      (subnet-evm: {{ vm_version }}, avalanchego_version: {{ avalanchego_version }}).
+  when: subnet_evm_bundled_in_avalanchego_release
+
 - name: Check that only one of `versions_comp_gh_repo` and `versions_comp` is defined
   assert:
     that: "(vm_info.versions_comp_gh_repo) is defined != (vm_info.versions_comp is defined)"
@@ -18,7 +42,9 @@
   run_once: true
   loop: "{{ vm_info.versions_comp[vm_version] | dict2items }}"
   failed_when: not avalanchego_version is version(item.value, item.key)
-  when: vm_info.versions_comp is defined
+  when:
+    - vm_info.versions_comp is defined
+    - not subnet_evm_bundled_in_avalanchego_release
 
 - name: "Check that {{ vm_name }}={{ vm_version }} is compatible with avalanchego={{ avalanchego_version }}"
   ash.avalanche.vm_version_compat:
@@ -27,7 +53,9 @@
     avalanche_gh_repo: "{{ avalanchego_gh_repo }}"
     avalanche_version: "v{{ avalanchego_version }}"
     strict: true
-  when: vm_info.versions_comp_gh_repo is defined
+  when:
+    - vm_info.versions_comp_gh_repo is defined
+    - not subnet_evm_bundled_in_avalanchego_release
 
 - name: "Create {{ vm_name }} dir"
   file:
@@ -43,42 +71,59 @@
     fail_msg: "Both `download_url` and `path` are defined"
     success_msg: "Only one of `download_url` and `path` is defined"
 
-- name: "Download {{ vm_name }} {{ vm_version }} binary"
+# Bundled subnet-evm: GitHub release has no sha256 checksums.txt for the tarball (only .sig files).
+- name: "Download {{ vm_name }} {{ vm_version_effective }} binary (AvalancheGo release)"
   get_url:
-    url: "{{ vm_info.download_url }}/v{{ vm_version }}/{{ avalanchego_vm_binary_filename }}"
-    dest: "{{ avalanchego_vms_dir }}/{{ vm_name }}/releases/{{ avalanchego_vm_binary_filename }}"
-    checksum: "sha256:{{ vm_info.download_url }}/v{{ vm_version }}/{{ avalanchego_vm_checksum_filename }}"
+    url: "https://github.com/{{ avalanchego_gh_repo }}/releases/download/v{{ avalanchego_version }}/{{ vm_release_tarball }}"
+    dest: "{{ avalanchego_vms_dir }}/{{ vm_name }}/releases/{{ vm_release_tarball }}"
     owner: "{{ avalanchego_user }}"
     group: "{{ avalanchego_group }}"
-  when: vm_info.download_url is defined and vm_info.path is not defined
+  when:
+    - vm_info.download_url is defined
+    - vm_info.path is not defined
+    - subnet_evm_bundled_in_avalanchego_release
 
-- name: "Upload {{ vm_name }} {{ vm_version }} binary"
+- name: "Download {{ vm_name }} {{ vm_version_effective }} binary (VM release)"
+  get_url:
+    url: "{{ vm_info.download_url }}/v{{ vm_version_effective }}/{{ vm_release_tarball }}"
+    dest: "{{ avalanchego_vms_dir }}/{{ vm_name }}/releases/{{ vm_release_tarball }}"
+    checksum: "sha256:{{ vm_info.download_url }}/v{{ vm_version_effective }}/{{ vm_info.binary_filename }}_{{ vm_version_effective }}_checksums.txt"
+    owner: "{{ avalanchego_user }}"
+    group: "{{ avalanchego_group }}"
+  when:
+    - vm_info.download_url is defined
+    - vm_info.path is not defined
+    - not subnet_evm_bundled_in_avalanchego_release
+
+- name: "Upload {{ vm_name }} {{ vm_version_effective }} binary"
   copy:
-    src: "{{ vm_info.path }}/{{ avalanchego_vm_binary_filename }}"
-    dest: "{{ avalanchego_vms_dir }}/{{ vm_name }}/releases/{{ avalanchego_vm_binary_filename }}"
+    src: "{{ vm_info.path }}/{{ vm_release_tarball }}"
+    dest: "{{ avalanchego_vms_dir }}/{{ vm_name }}/releases/{{ vm_release_tarball }}"
     owner: "{{ avalanchego_user }}"
     group: "{{ avalanchego_group }}"
   when: vm_info.download_url is not defined and vm_info.path is defined
 
-- name: "Create {{ vm_name }}-v{{ vm_version }} directory"
+- name: "Create {{ vm_name }}-v{{ vm_version_effective }} directory"
   file:
-    path: "{{ avalanchego_vms_dir }}/{{ vm_name }}/{{ vm_name }}-v{{ vm_version }}"
+    path: "{{ avalanchego_vms_dir }}/{{ vm_name }}/{{ vm_name }}-v{{ vm_version_effective }}"
     state: directory
     owner: "{{ avalanchego_user }}"
     group: "{{ avalanchego_group }}"
 
+# Bundled subnet-evm archives use subnet-evm-vX.Y.Z/subnet-evm; legacy subnet-evm repo archives have subnet-evm at root.
 - name: "Unpack {{ vm_name }} binary"
   unarchive:
-    src: "{{ avalanchego_vms_dir }}/{{ vm_name }}/releases/{{ avalanchego_vm_binary_filename }}"
-    dest: "{{ avalanchego_vms_dir }}/{{ vm_name }}/{{ vm_name }}-v{{ vm_version }}"
+    src: "{{ avalanchego_vms_dir }}/{{ vm_name }}/releases/{{ vm_release_tarball }}"
+    dest: "{{ avalanchego_vms_dir }}/{{ vm_name }}/{{ vm_name }}-v{{ vm_version_effective }}"
     remote_src: true
     owner: "{{ avalanchego_user }}"
     group: "{{ avalanchego_group }}"
-    creates: "{{ avalanchego_vms_dir }}/{{ vm_name}}/{{ vm_name }}-v{{ vm_version }}/{{ vm_info.binary_filename }}"
+    extra_opts: "{{ ['--strip-components=1'] if subnet_evm_bundled_in_avalanchego_release else [] }}"
+    creates: "{{ avalanchego_vms_dir }}/{{ vm_name}}/{{ vm_name }}-v{{ vm_version_effective }}/{{ vm_info.binary_filename }}"
 
 - name: "Create the symlink to {{ vm_name }} binary in plugins dir"
   file:
-    src: "{{ avalanchego_vms_dir }}/{{ vm_name }}/{{ vm_name }}-v{{ vm_version }}/{{ vm_info.binary_filename }}"
+    src: "{{ avalanchego_vms_dir }}/{{ vm_name }}/{{ vm_name }}-v{{ vm_version_effective }}/{{ vm_info.binary_filename }}"
     dest: "{{ avalanchego_plugins_dir }}/{{ vm_info.id }}"
     state: link
     owner: "{{ avalanchego_user }}"

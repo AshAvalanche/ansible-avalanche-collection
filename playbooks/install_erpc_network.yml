@@ -14,9 +14,17 @@
 - name: Build eRPC Configuration based on your network
   hosts: erpc
   tasks:
-    - name: List enpoints from ansible
+    # Build one URL per avalanche_node using its own protocol and HTTP port.
+    # Handles LXD nodes (different ports per container) and HTTPS.
+    - name: List endpoints from ansible
       set_fact:
-        erpc_endpoint_list: "{{ groups['avalanche_nodes'] | map('extract', hostvars, ['ansible_host']) | map('regex_replace', '^(.*)$', 'http://\\1:9650') | list }}"
+        erpc_endpoint_list: "{{ erpc_endpoint_list | default([]) + [url] }}"
+      vars:
+        _scheme: "{{ 'https' if (hostvars[item].avalanchego_https_enabled | default(false) | bool) else 'http' }}"
+        _host: "{{ hostvars[item].ansible_host }}"
+        _port: "{{ hostvars[item].avalanchego_http_port | default(9650) }}"
+        url: "{{ _scheme }}://{{ _host }}:{{ _port }}"
+      loop: "{{ groups['avalanche_nodes'] }}"
 
     # Limitation: Only the first endpoint is used which may not be tracking all the chains
     - name: Build eRPC chains configuration
@@ -24,6 +32,7 @@
         rpc_url: "{{ erpc_endpoint_list[0] }}"
         chains: "{{ hostvars[groups['bootstrap_nodes'][0]].subnet_list.output | ash.avalanche.subnets_to_blockchains }}"
         include_c_chain: "{{ erpc_include_c_chain }}"
+        tls_verify: "{{ not (erpc_tls_backend_insecure_skip_verify | default(false) | bool) }}"
       register: erpc_chains
 
     - name: Set chains configuration

@@ -1,0 +1,92 @@
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (c) 2022-2024, E36 Knots
+---
+# Generates HTTPS certificates for all avalanche_nodes with the correct IP SAN.
+#
+# Uses avalanchego_public_ip as the IP SAN so that external clients (eRPC, curl, etc.)
+# can connect without SAN mismatch. For LXD nodes, avalanchego_public_ip is the LXD
+# host's public IP, not the container's internal IP.
+#
+# Certs are written to avalanchego_https_local_certs_dir (from inventory group_vars).
+# After running this playbook, re-run provision_nodes.yml to upload the new certs.
+#
+# Usage:
+#   ansible-playbook ash.avalanche.generate_https_certs -i inventories/lxd
+
+- name: Generate HTTPS certificates for Avalanche nodes
+  hosts: localhost
+  connection: local
+  become: false
+  vars:
+    https_certs_dir: "{{ hostvars[groups['avalanche_nodes'][0]].avalanchego_https_local_certs_dir }}"
+    cert_days: 3650
+
+  tasks:
+    - name: Ensure HTTPS certs directory exists
+      file:
+        path: "{{ https_certs_dir }}"
+        state: directory
+        mode: "0700"
+
+    - name: Generate CA private key
+      command: openssl ecparam -name P-256 -genkey -noout -out "{{ https_certs_dir }}/ca.key"
+
+    - name: Generate CA self-signed certificate
+      command: >
+        openssl req -new -x509
+        -key "{{ https_certs_dir }}/ca.key"
+        -out "{{ https_certs_dir }}/ca.crt"
+        -days {{ cert_days }}
+        -subj "/CN=Avalanche-CA"
+
+    - name: Generate node private key
+      command: >
+        openssl ecparam -name P-256 -genkey -noout
+        -out "{{ https_certs_dir }}/{{ item }}.key"
+      loop: "{{ groups['avalanche_nodes'] }}"
+
+    - name: Write SAN extension file
+      copy:
+        # avalanchego_public_ip is a lazy Jinja2 template that cannot be resolved
+        # from the localhost context. Resolve the IP directly:
+        # - LXD nodes: use the LXD host's ansible_host (lxd_host_name is set per node)
+        # - Standard nodes: fall back to the node's own ansible_host
+        content: "subjectAltName=IP:{{ _ip }}"
+        dest: "/tmp/san_{{ item }}.cnf"
+      vars:
+        _lxd_host: "{{ hostvars[item].get('lxd_host_name', '') }}"
+        _ip: "{{ hostvars[_lxd_host]['ansible_host'] if (_lxd_host and _lxd_host in hostvars) else hostvars[item]['ansible_host'] }}"
+      loop: "{{ groups['avalanche_nodes'] }}"
+
+    - name: Generate node CSR
+      command: >
+        openssl req -new
+        -key "{{ https_certs_dir }}/{{ item }}.key"
+        -subj "/CN={{ item }}"
+        -out "/tmp/{{ item }}.csr"
+      loop: "{{ groups['avalanche_nodes'] }}"
+
+    - name: Sign node certificate with CA (SAN = avalanchego_public_ip)
+      command: >
+        openssl x509 -req
+        -in "/tmp/{{ item }}.csr"
+        -CA "{{ https_certs_dir }}/ca.crt"
+        -CAkey "{{ https_certs_dir }}/ca.key"
+        -CAcreateserial
+        -out "{{ https_certs_dir }}/{{ item }}.crt"
+        -days {{ cert_days }}
+        -extfile "/tmp/san_{{ item }}.cnf"
+      loop: "{{ groups['avalanche_nodes'] }}"
+
+    - name: Remove temporary CSR and SAN files
+      file:
+        path: "{{ item }}"
+        state: absent
+      loop: >-
+        {{ groups['avalanche_nodes'] | map('regex_replace', '^(.*)$', '/tmp/\1.csr') | list
+           + groups['avalanche_nodes'] | map('regex_replace', '^(.*)$', '/tmp/san_\1.cnf') | list }}
+
+    - name: Show generated certificates
+      debug:
+        msg: "{{ item }}.crt — SAN IP:{{ hostvars[hostvars[item].get('lxd_host_name', '')]['ansible_host'] if hostvars[item].get('lxd_host_name', '') in hostvars else hostvars[item]['ansible_host'] }}"
+      loop: "{{ groups['avalanche_nodes'] }}"

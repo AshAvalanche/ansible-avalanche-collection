@@ -11,7 +11,7 @@ import requests
 __metaclass__ = type
 
 
-def get_eth_chain_id(rpc_url):
+def get_eth_chain_id(rpc_url, verify=True):
     """Performs a JSON-RPC eth_chainId request."""
     payload = {
         "jsonrpc": "2.0",
@@ -23,7 +23,7 @@ def get_eth_chain_id(rpc_url):
     headers = {"Content-Type": "application/json"}
 
     try:
-        response = requests.post(rpc_url, json=payload, headers=headers, timeout=10)
+        response = requests.post(rpc_url, json=payload, headers=headers, timeout=(5, 10), verify=verify)
         response.raise_for_status()
         return response.json().get("result", None)
     except requests.exceptions.RequestException as e:
@@ -35,18 +35,28 @@ def main():
         rpc_url=dict(type="str", required=True),
         chains=dict(type="list", required=True),
         include_c_chain=dict(type="bool", required=False, default=True),
+        tls_verify=dict(type="bool", required=False, default=True),
     )
 
     results = []
 
     module = AnsibleModule(argument_spec=module_args, supports_check_mode=True)
 
+    if not module.params["tls_verify"]:
+        module.warn("tls_verify is disabled: TLS certificate verification is skipped for all RPC requests.")
+
     try:
         for chain in module.params["chains"]:
-            fetched_chain_id = get_eth_chain_id(module.params["rpc_url"]+f"/ext/bc/{chain['chain_id']}/rpc")
+            fetched_chain_id = get_eth_chain_id(
+                module.params["rpc_url"] + f"/ext/bc/{chain['chain_id']}/rpc",
+                verify=module.params["tls_verify"]
+            )
 
-            if fetched_chain_id is None:
-                module.fail_json(msg="No response from the RPC.")
+            # None = no 'result' field in a valid response (unexpected).
+            # A non-hex string = request error (e.g. 404 chain not tracked) — skip with warning.
+            if fetched_chain_id is None or not str(fetched_chain_id).startswith('0x'):
+                module.warn(f"Skipping chain {chain.get('chain_id', '?')} ({chain.get('name', '?')}): {fetched_chain_id}")
+                continue
 
             results.append({'evm_id': int(fetched_chain_id, 16), **chain})
 

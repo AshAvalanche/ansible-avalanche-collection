@@ -16,12 +16,25 @@ erpc_custom_dir: "{{ erpc_conf_dir }}/custom"
 erpc_include_c_chain: true
 
 # eRPC fast configuration (install_erpc_docker)
-erpc_endpoint_list:
-  - "http://{{ hostvars['validator01'].ansible_host }}:9650"
-  - "http://{{ hostvars['validator02'].ansible_host }}:9650"
-  - "http://{{ hostvars['validator03'].ansible_host }}:9650"
-  - "http://{{ hostvars['validator04'].ansible_host }}:9650"
-  - "http://{{ hostvars['validator05'].ansible_host }}:9650"
+# Dynamically built from avalanche_nodes: uses per-node protocol and HTTP port.
+# Handles LXD deployments (each container has its own port) and HTTPS.
+erpc_endpoint_list: >-
+  {%- set _urls = [] -%}
+  {%- for h in groups.get('avalanche_nodes', []) -%}
+  {%- set _s = 'https' if (hostvars[h].avalanchego_https_enabled | default(false) | bool) else 'http' -%}
+  {%- set _ = _urls.append(_s ~ '://' ~ hostvars[h].ansible_host ~ ':' ~ (hostvars[h].avalanchego_http_port | default(9650) | string)) -%}
+  {%- endfor -%}
+  {{ _urls }}
+
+# Set to true when AvalancheGo backends use HTTPS with self-signed certs or
+# when the cert CN/SAN does not match the connection IP (e.g. LXD behind NAT).
+erpc_tls_backend_insecure_skip_verify: false
+
+# Path to the CA certificate on the Ansible controller (local path).
+# When set, the file is uploaded to the eRPC host and mounted into the Docker
+# container as SSL_CERT_FILE so Go trusts the custom CA.
+# Example: "{{ inventory_dir }}/../../files/https/ca.crt"
+erpc_https_backend_ca_file: ""
 
 erpc_chains:
   - name: C

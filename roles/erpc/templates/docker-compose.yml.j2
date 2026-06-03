@@ -9,4 +9,11 @@ services:
       - "4001:4001"
     volumes:
       - {{ erpc_conf_dir }}/erpc.yaml:/root/erpc.yaml
+{% if erpc_https_backend_ca_file %}
+      - {{ erpc_conf_dir }}/ca.crt:/etc/erpc/ca.crt:ro
+{% endif %}
+{% if erpc_https_backend_ca_file %}
+    environment:
+      SSL_CERT_FILE: /etc/erpc/ca.crt
+{% endif %}
     restart: unless-stopped

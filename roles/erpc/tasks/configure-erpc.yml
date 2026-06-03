@@ -12,6 +12,16 @@
     - "{{ erpc_custom_dir }}"
   tags: assets-sync
 
+- name: Upload custom CA certificate for HTTPS backend verification
+  copy:
+    src: "{{ erpc_https_backend_ca_file }}"
+    dest: "{{ erpc_conf_dir }}/ca.crt"
+    owner: "{{ erpc_user }}"
+    group: "{{ erpc_user }}"
+    mode: "0644"
+  when: erpc_https_backend_ca_file | length > 0
+  notify: Restart erpc
+
 - name: Template docker-compose.yml
   template:
     src: docker-compose.yml.j2

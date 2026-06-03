@@ -5,7 +5,8 @@
   set_fact:
     bootstrap_ips: |
       {{ (bootstrap_ips | default([]))
-         + [hostvars[item]['ansible_host'] + ':' + (avalanchego_staking_port | string)] }}
+         + [(hostvars[item]['avalanchego_public_ip'] | default(hostvars[item]['ansible_host']))
+           + ':' + (hostvars[item]['avalanchego_staking_port'] | default(avalanchego_staking_port) | string)] }}
   when: avalanchego_network_id not in ['mainnet', 'testnet', 'fuji']
   loop: "{{ groups['bootstrap_nodes'] }}"
 
@@ -77,6 +78,88 @@
     group: "{{ avalanchego_group }}"
   when: avalanchego_custom_genesis
 
+# LXD nodes only: check and auto-fetch staking keys so the user never needs a
+# manual fetch step. For standard nodes the original strict behavior is preserved
+# (task fails if use_local_certs=true but files are missing).
+- name: Check if local staking certificate exists on controller
+  delegate_to: localhost
+  become: false
+  stat:
+    path: "{{ avalanchego_staking_local_certs_dir }}/{{ inventory_hostname }}.crt"
+  register: _local_staking_crt
+  when: inventory_hostname in groups.get('lxd_nodes', [])
+
+- name: Check if local BLS key exists on controller
+  delegate_to: localhost
+  become: false
+  stat:
+    path: "{{ avalanchego_staking_local_bls_keys_dir }}/{{ inventory_hostname }}.bls.key"
+  register: _local_staking_bls
+  when: inventory_hostname in groups.get('lxd_nodes', [])
+
+- name: Check if remote staking certificate exists (from a previous AvalancheGo run)
+  stat:
+    path: "{{ avalanchego_staking_dir }}/staker.crt"
+  register: _remote_staking_crt
+  when:
+    - inventory_hostname in groups.get('lxd_nodes', [])
+    - avalanchego_staking_use_local_certs
+    - not _local_staking_crt.stat.exists
+
+- name: Check if remote BLS key exists (from a previous AvalancheGo run)
+  stat:
+    path: "{{ avalanchego_staking_dir }}/signer.key"
+  register: _remote_staking_bls
+  when:
+    - inventory_hostname in groups.get('lxd_nodes', [])
+    - avalanchego_staking_use_local_bls_keys
+    - not _local_staking_bls.stat.exists
+
+- name: Ensure local staking directories exist on controller
+  delegate_to: localhost
+  become: false
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0700"
+  loop: "{{ [avalanchego_staking_local_certs_dir, avalanchego_staking_local_bls_keys_dir] | unique }}"
+  when:
+    - inventory_hostname in groups.get('lxd_nodes', [])
+    - >
+      (avalanchego_staking_use_local_certs and not _local_staking_crt.stat.exists
+       and _remote_staking_crt.stat is defined and _remote_staking_crt.stat.exists)
+      or
+      (avalanchego_staking_use_local_bls_keys and not _local_staking_bls.stat.exists
+       and _remote_staking_bls.stat is defined and _remote_staking_bls.stat.exists)
+
+- name: Fetch staking certificates from remote to controller
+  fetch:
+    src: "{{ avalanchego_staking_dir }}/staker.{{ item }}"
+    dest: "{{ avalanchego_staking_local_certs_dir }}/{{ inventory_hostname }}.{{ item }}"
+    flat: true
+  loop: ["crt", "key"]
+  when:
+    - inventory_hostname in groups.get('lxd_nodes', [])
+    - avalanchego_staking_use_local_certs
+    - not _local_staking_crt.stat.exists
+    - _remote_staking_crt.stat is defined
+    - _remote_staking_crt.stat.exists
+
+- name: Fetch BLS key from remote to controller
+  fetch:
+    src: "{{ avalanchego_staking_dir }}/signer.key"
+    dest: "{{ avalanchego_staking_local_bls_keys_dir }}/{{ inventory_hostname }}.bls.key"
+    flat: true
+  when:
+    - inventory_hostname in groups.get('lxd_nodes', [])
+    - avalanchego_staking_use_local_bls_keys
+    - not _local_staking_bls.stat.exists
+    - _remote_staking_bls.stat is defined
+    - _remote_staking_bls.stat.exists
+
+# For standard nodes: fails if use_local_certs=true but files are missing (original behavior).
+# For LXD nodes: skipped on first run (files not yet generated); AvalancheGo creates them
+# at startup, and fetch-staking-keys.yml saves them locally for subsequent runs.
 - name: Upload node staking certificates
   copy:
     src: "{{ avalanchego_staking_local_certs_dir }}/{{ inventory_hostname }}.{{ item }}"
@@ -87,7 +170,12 @@
   loop:
     - crt
     - key
-  when: avalanchego_staking_use_local_certs
+  when:
+    - avalanchego_staking_use_local_certs
+    - >
+      inventory_hostname not in groups.get('lxd_nodes', [])
+      or (_local_staking_crt.stat is defined and _local_staking_crt.stat.exists)
+      or (_remote_staking_crt.stat is defined and _remote_staking_crt.stat.exists)
   notify: Restart avalanchego
 
 - name: Upload node staking BLS keys
@@ -97,7 +185,12 @@
     owner: "{{ avalanchego_user }}"
     group: "{{ avalanchego_group }}"
     mode: 0400
-  when: avalanchego_staking_use_local_bls_keys
+  when:
+    - avalanchego_staking_use_local_bls_keys
+    - >
+      inventory_hostname not in groups.get('lxd_nodes', [])
+      or (_local_staking_bls.stat is defined and _local_staking_bls.stat.exists)
+      or (_remote_staking_bls.stat is defined and _remote_staking_bls.stat.exists)
   notify: Restart avalanchego
 
 # Handle TLS certificates for HTTPS

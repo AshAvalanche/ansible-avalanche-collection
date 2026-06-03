@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # Copyright (c) 2022-2025, E36 Knots
 ---
-erpc_version: 0.0.35
+erpc_version: 0.0.64
 
 erpc_auto_restart: true
 

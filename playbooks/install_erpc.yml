@@ -1,0 +1,42 @@
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (c) 2022-2025, E36 Knots
+#
+# Install eRPC and print the reachable endpoint(s) at the end. A single playbook
+# handles both modes, selected by `erpc_config_mode` (default: auto):
+#
+#   * auto -> the role generates a base erpc.yaml from erpc_upstreams/erpc_chains.
+#             If erpc_upstreams is empty, the pre_tasks below derive it from the
+#             `avalanche_nodes` inventory group.
+#   * raw  -> the role deploys a user-provided erpc.yaml (erpc_raw_config or
+#             erpc_raw_config_src) verbatim, only wiring up secrets and files:
+#               - secrets referenced as ${VAR}, values kept in an Ansible Vault
+#                 and injected via {{ erpc_conf_dir }}/erpc.env (mode 0600)
+#               - file paths declared in erpc_file_fields are copied to the host
+#                 (or verified) and rewritten in the deployed config; see the
+#                 role README "How files are handled"
+#
+# Set `erpc_config_mode: raw` (e.g. in group_vars) to deploy a raw config.
+---
+- name: Install eRPC
+  hosts: erpc
+  become: true
+  pre_tasks:
+    # auto mode only: build the backend upstreams from the avalanche_nodes group
+    # when the user did not provide erpc_upstreams explicitly.
+    - name: Derive upstreams from the avalanche_nodes group
+      ansible.builtin.set_fact:
+        erpc_upstreams: "{{ erpc_upstreams | default([]) + [node_url] }}"
+      vars:
+        node_scheme: "{{ 'https' if (hostvars[item].avalanchego_https_enabled | default(false) | bool) else 'http' }}"
+        node_host: "{{ hostvars[item].ansible_host | default(item) }}"
+        node_port: "{{ hostvars[item].avalanchego_http_port | default(9650) }}"
+        node_url: "{{ node_scheme }}://{{ node_host }}:{{ node_port }}"
+      loop: "{{ groups.get('avalanche_nodes', []) }}"
+      when:
+        - (erpc_config_mode | default('auto')) == 'auto'
+        - erpc_upstreams | default([]) | length == 0
+        - groups.get('avalanche_nodes', []) | length > 0
+  roles:
+    - role: geerlingguy.docker
+      tags: [install, configure, erpc]
+    - role: ash.avalanche.erpc

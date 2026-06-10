@@ -1,0 +1,25 @@
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (c) 2022-2025, E36 Knots
+---
+- name: Validate configuration mode
+  ansible.builtin.assert:
+    that:
+      - erpc_config_mode in ['auto', 'raw']
+    fail_msg: "erpc_config_mode must be 'auto' or 'raw' (got '{{ erpc_config_mode }}')."
+
+- name: Validate raw-mode inputs
+  ansible.builtin.assert:
+    that:
+      - (erpc_raw_config | length > 0) or (erpc_raw_config_src | length > 0)
+    fail_msg: >-
+      raw mode requires either erpc_raw_config (a YAML mapping) or
+      erpc_raw_config_src (path to an erpc.yaml on the controller).
+  when: erpc_config_mode == 'raw'
+
+- name: Validate auto-mode inputs
+  ansible.builtin.assert:
+    that:
+      - erpc_upstreams | length > 0
+      - erpc_chains | length > 0
+    fail_msg: "auto mode requires non-empty erpc_upstreams and erpc_chains."
+  when: erpc_config_mode == 'auto'

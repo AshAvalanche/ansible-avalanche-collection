@@ -1,9 +1,12 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # Copyright (c) 2022-2025, E36 Knots
 ---
+- name: Reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: true
 
 - name: Restart erpc
-  service:
+  ansible.builtin.service:
     name: erpc
     state: restarted
-  when: erpc_auto_restart
+  when: erpc_auto_restart | bool

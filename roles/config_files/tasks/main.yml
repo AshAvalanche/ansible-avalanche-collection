@@ -1,0 +1,78 @@
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (c) 2022-2025, E36 Knots
+#
+# Execute a file plan produced by the `config_file_plan` filter:
+#   * action == copy   -> push a controller file/directory to the host
+#   * action == verify -> assert a path already exists on the host
+#
+# Reusable by any role: build the plan with ash.avalanche.config_file_plan and
+# include this role passing `config_files_operations` (and optionally
+# config_files_owner / config_files_group / config_files_notify).
+---
+- name: "Create parent directories for files to copy"
+  ansible.builtin.file:
+    path: "{{ item.dest if item.type == 'dir' else (item.dest | dirname) }}"
+    state: directory
+    owner: "{{ config_files_owner | default(omit, true) }}"
+    group: "{{ config_files_group | default(omit, true) }}"
+    mode: "0755"
+  loop: "{{ config_files_operations | selectattr('action', 'equalto', 'copy') | list }}"
+  loop_control:
+    label: "{{ item.dest }}"
+
+- name: "Copy controller files/directories to the host"
+  ansible.builtin.copy:
+    # A trailing slash makes `copy` push the directory CONTENTS into dest.
+    src: "{{ (item.src ~ '/') if item.type == 'dir' else item.src }}"
+    dest: "{{ (item.dest ~ '/') if item.type == 'dir' else item.dest }}"
+    owner: "{{ config_files_owner | default(omit, true) }}"
+    group: "{{ config_files_group | default(omit, true) }}"
+    mode: "{{ item.mode | default('0644') }}"
+  loop: "{{ config_files_operations | selectattr('action', 'equalto', 'copy') | list }}"
+  loop_control:
+    label: "{{ item.src }} -> {{ item.dest }}"
+  notify: "{{ config_files_notify }}"
+
+- name: "Stat paths that must already exist on the host"
+  ansible.builtin.stat:
+    path: "{{ item.dest }}"
+  loop: "{{ config_files_operations | selectattr('action', 'equalto', 'verify') | list }}"
+  loop_control:
+    label: "{{ item.dest }}"
+  register: config_files_verify_stat
+
+- name: "Fail when a required path is missing or has the wrong type"
+  ansible.builtin.assert:
+    that:
+      - item.stat.exists
+      - (item.item.type == 'file') | ternary(item.stat.isreg | default(false),
+                                             item.stat.isdir | default(false))
+    fail_msg: >-
+      {{ item.item.addr }}: required {{ item.item.type }}
+      '{{ item.item.dest }}' is missing or is not a {{ item.item.type }}
+      on the host.
+  loop: "{{ config_files_verify_stat.results | default([]) }}"
+  loop_control:
+    label: "{{ item.item.dest }}"
+
+- name: "Check required directories are not empty (complete)"
+  ansible.builtin.find:
+    paths: "{{ item.dest }}"
+    recurse: true
+    hidden: true
+    file_type: any
+  loop: >-
+    {{ config_files_operations | selectattr('action', 'equalto', 'verify')
+       | selectattr('type', 'equalto', 'dir') | list }}
+  loop_control:
+    label: "{{ item.dest }}"
+  register: config_files_verify_dir
+
+- name: "Fail when a required directory is empty"
+  ansible.builtin.assert:
+    that:
+      - item.matched | default(0) | int > 0
+    fail_msg: "{{ item.item.addr }}: directory '{{ item.item.dest }}' is empty (incomplete)."
+  loop: "{{ config_files_verify_dir.results | default([]) }}"
+  loop_control:
+    label: "{{ item.item.dest }}"

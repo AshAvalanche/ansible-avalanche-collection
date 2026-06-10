@@ -1,44 +1,22 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # Copyright (c) 2022-2025, E36 Knots
 ---
-- name: Install and configure eRPC
-  import_tasks: configure-erpc.yml
-  tags: 
-  - erpc
-  - configure
-  - install
+- name: Validate eRPC inputs
+  ansible.builtin.import_tasks: preflight.yml
+  tags: [erpc, configure]
 
-- name: Check if the container is present
-  command: docker ps -a
-  register: erpc_container_status
-  ignore_errors: true
-  changed_when: erpc_container_status.stdout.find('erpc') == -1
-  notify: Restart erpc
+- name: Build the eRPC configuration ({{ erpc_config_mode }} mode)
+  ansible.builtin.include_tasks: "config-{{ erpc_config_mode }}.yml"
+  tags: [erpc, configure]
 
-- name: Re/start eRPC Docker if needed
-  meta: flush_handlers
+- name: Deploy eRPC (files, secrets, compose, service)
+  ansible.builtin.import_tasks: deploy.yml
+  tags: [erpc, configure, install]
 
-- name: Start eRPC Docker
-  include_tasks: start-erpc.yml
-  tags:
-    - erpc
-    - start
+- name: Start eRPC
+  ansible.builtin.import_tasks: start.yml
+  tags: [erpc, start]
 
-- name: Check point
-  block:
-    - name: Wait 4sec for eRPC to start
-      wait_for:
-        port: 4000
-        delay: 1
-        timeout: 4
-      register: ping_status
-  always:
-    - name: Retrieves logs from the container
-      command: docker logs --tail 20 conf-erpc-1
-      register: erpc_logs
-      failed_when: erpc_logs.stderr
-      when: ping_status is failed
-  tags:
-    - erpc
-    - start
-    - wait 
+- name: Show reachable endpoint(s)
+  ansible.builtin.import_tasks: endpoint.yml
+  tags: [erpc, start, endpoint]

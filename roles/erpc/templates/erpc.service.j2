@@ -1,3 +1,5 @@
+{# SPDX-License-Identifier: BSD-3-Clause #}
+{# Copyright (c) 2022-2025, E36 Knots #}
 [Unit]
 Description=eRPC
 Requires=docker.service
@@ -6,8 +8,8 @@ After=docker.service
 [Service]
 Type=oneshot
 WorkingDirectory={{ erpc_conf_dir }}
-ExecStart=/usr/bin/env docker compose -f ./docker-compose.yml up -d
-ExecStop=/usr/bin/env docker compose -f ./docker-compose.yml stop
+ExecStart=/usr/bin/env docker compose up -d
+ExecStop=/usr/bin/env docker compose down
 RemainAfterExit=yes
 
 [Install]

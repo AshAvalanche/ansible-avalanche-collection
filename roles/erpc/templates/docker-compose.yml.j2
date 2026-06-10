@@ -1,12 +1,26 @@
-version: '3.9'
+{# SPDX-License-Identifier: BSD-3-Clause #}
+{# Copyright (c) 2022-2025, E36 Knots #}
+version: "3.9"
 
 services:
   erpc:
     container_name: erpc
     image: ghcr.io/erpc/erpc:{{ erpc_version }}
+    restart: {{ erpc_restart_policy }}
     ports:
-      - "4000:4000"
-      - "4001:4001"
+      - "{{ erpc_http_port }}:4000"
+{% if erpc_metrics_enabled %}
+      - "{{ erpc_metrics_port }}:4001"
+{% endif %}
+    env_file:
+      - ./erpc.env
     volumes:
-      - {{ erpc_conf_dir }}/erpc.yaml:/root/erpc.yaml
-    restart: unless-stopped
+      - ./erpc.yaml:/root/erpc.yaml:ro
+{% for path in erpc_mounted_files %}
+      - {{ path }}:{{ path }}:ro
+{% endfor %}
+{% if erpc_backend_ca_file | length > 0 %}
+      - {{ erpc_conf_dir }}/backend-ca.crt:/etc/erpc/backend-ca.crt:ro
+    environment:
+      SSL_CERT_FILE: /etc/erpc/backend-ca.crt
+{% endif %}

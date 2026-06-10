@@ -1,0 +1,30 @@
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (c) 2022-2025, E36 Knots
+---
+- name: Apply pending configuration changes
+  ansible.builtin.meta: flush_handlers
+
+- name: Enable and start erpc.service
+  ansible.builtin.service:
+    name: erpc
+    state: started
+    enabled: true
+
+- name: Wait for the eRPC HTTP port to accept connections
+  ansible.builtin.wait_for:
+    port: "{{ erpc_http_port }}"
+    delay: 2
+    timeout: 30
+  register: erpc_port_wait
+  ignore_errors: true
+
+- name: Collect container logs when eRPC did not come up
+  ansible.builtin.command: docker logs --tail 30 erpc
+  register: erpc_logs
+  changed_when: false
+  when: erpc_port_wait is failed
+
+- name: Fail with container logs
+  ansible.builtin.fail:
+    msg: "eRPC did not start in time. Recent logs:\n{{ erpc_logs.stdout | default('') }}\n{{ erpc_logs.stderr | default('') }}"
+  when: erpc_port_wait is failed

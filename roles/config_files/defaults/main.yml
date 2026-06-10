@@ -1,0 +1,15 @@
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (c) 2022-2025, E36 Knots
+---
+# Operations produced by the `config_file_plan` filter. Each entry is one of:
+#   { action: copy,   addr, type: file|dir, src, dest, mode }
+#   { action: verify, addr, type: file|dir, dest }
+config_files_operations: []
+
+# Ownership applied to created directories and copied files (omitted if empty).
+config_files_owner: ""
+config_files_group: ""
+
+# Handler(s) to notify when a copy changed something (e.g. a service restart).
+# Leave empty to notify nothing.
+config_files_notify: []

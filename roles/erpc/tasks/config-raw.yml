@@ -1,0 +1,27 @@
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (c) 2022-2025, E36 Knots
+---
+- name: Load raw eRPC config from controller file
+  ansible.builtin.set_fact:
+    _erpc_cfg: "{{ lookup('file', erpc_raw_config_src) | from_yaml }}"
+  when:
+    - erpc_raw_config | length == 0
+    - erpc_raw_config_src | length > 0
+
+- name: Use inline raw eRPC config mapping
+  ansible.builtin.set_fact:
+    _erpc_cfg: "{{ erpc_raw_config }}"
+  when: erpc_raw_config | length > 0
+
+# Resolve the file paths referenced in the config: plain strings are copied from
+# the controller to their default host path, {src,dst} overrides the destination,
+# {path} verifies an existing host path. The config is rewritten accordingly.
+- name: Plan file handling for the referenced config keys
+  ansible.builtin.set_fact:
+    _erpc_plan: "{{ _erpc_cfg | ash.avalanche.config_file_plan(erpc_file_fields) }}"
+
+- name: Render erpc.yaml content, copy plan and mount list
+  ansible.builtin.set_fact:
+    erpc_rendered_config: "{{ _erpc_plan.config | to_nice_yaml(indent=2, sort_keys=false) }}"
+    erpc_file_operations: "{{ _erpc_plan.operations }}"
+    erpc_mounted_files: "{{ _erpc_plan.operations | map(attribute='dest') | unique | list }}"

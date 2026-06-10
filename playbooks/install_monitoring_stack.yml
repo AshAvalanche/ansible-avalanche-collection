@@ -18,6 +18,8 @@
   become: true
   roles:
     - role: grafana.grafana.grafana
+      vars:
+        grafana_dashboards_dir: "{{ (playbook_dir ~ '/../files/dashboards') | realpath }}"
 
 - name: Import templated Grafana dashboard
   hosts: grafana

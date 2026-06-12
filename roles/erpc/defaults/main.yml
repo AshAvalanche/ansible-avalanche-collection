@@ -4,7 +4,7 @@
 # ===========================================================================
 # Common
 # ===========================================================================
-erpc_version: "0.0.64"
+erpc_version: "0.1.0"
 
 # "auto" -> the role generates a base erpc.yaml from erpc_upstreams/erpc_chains
 # "raw"  -> the role deploys a user-provided erpc.yaml (mapping) verbatim

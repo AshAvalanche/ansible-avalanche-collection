@@ -1,9 +1,17 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # Copyright (c) 2022-2025, E36 Knots
 ---
+# https when the deployed config enables TLS on the server, http otherwise.
+- name: Determine the public scheme from the deployed config
+  ansible.builtin.set_fact:
+    erpc_public_scheme: >-
+      {{ 'https'
+         if ((erpc_rendered_config | from_yaml).get('server', {}).get('tls', {}).get('enabled', false) | bool)
+         else 'http' }}
+
 - name: Compute eRPC base URL
   ansible.builtin.set_fact:
-    erpc_base_url: "http://{{ erpc_public_host }}:{{ erpc_http_port }}"
+    erpc_base_url: "{{ erpc_public_scheme }}://{{ erpc_public_host }}:{{ erpc_http_port }}"
 
 # We query each backend for its eth_chainId so the summary lists the real
 # numeric chainIds (and the routes that go with them) in BOTH modes.

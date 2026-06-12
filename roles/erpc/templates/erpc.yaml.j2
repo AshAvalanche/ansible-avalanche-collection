@@ -5,7 +5,7 @@ logLevel: {{ erpc_log_level }}
 server:
   listenV4: true
   httpHostV4: "{{ erpc_listen_address }}"
-  httpPort: 4000
+  httpPortV4: 4000
 {% if erpc_aliasing_enabled %}
   aliasing:
     rules:

@@ -1,78 +1,49 @@
-logLevel: warn
+{# SPDX-License-Identifier: BSD-3-Clause #}
+{# Copyright (c) 2022-2025, E36 Knots #}
+logLevel: {{ erpc_log_level }}
 
 server:
   listenV4: true
-  httpHostV4: "0.0.0.0"
-  listenV6: false
-  httpPort: 4000
+  httpHostV4: "{{ erpc_listen_address }}"
+  httpPortV4: 4000
+{% if erpc_aliasing_enabled %}
   aliasing:
     rules:
-{% if has_erpc_aliasing_rules %}
-      {{ erpc_aliasing_rules }}
-{% elif has_erpc_chains %}
       - matchDomain: "*"
+        serveProject: "{{ erpc_project_id }}"
         serveArchitecture: "evm"
-        serveProject: "main"
+{% endif %}
+{% if erpc_metrics_enabled %}
+
+metrics:
+  enabled: true
+  hostV4: "0.0.0.0"
+  port: 4001
 {% endif %}
 
 projects:
-{% if has_erpc_projects %}
-  {{ erpc_projects }}
-{% elif has_erpc_chains %}
-  - id: main
-    networkDefaults:
-      failsafe:
-        timeout:
-          duration: "30s"
-        hedge:
-          quantile: 0.99
-          maxCount: 2
-        retry:
-          maxAttempts: 3
-          delay: "100ms"
-          jitter: "0ms"
-          backoffMaxDelay: "1s"
-          backoffFactor: 1.5
+  - id: {{ erpc_project_id }}
     upstreamDefaults:
-      rateLimitBudget: {{ chain.limiter | default('default', true) }}
-      type: evm
+      rateLimitBudget: default
       failsafe:
         timeout:
-          duration: "15s"
+          duration: 15s
         retry:
           maxAttempts: 3
-          delay: "300ms"
-          jitter: "100ms"
-          backoffMaxDelay: "5s"
+          delay: 300ms
+          backoffMaxDelay: 5s
           backoffFactor: 1.5
-        circuitBreaker:
-          failureThresholdCount: 160
-          failureThresholdCapacity: 200
-          halfOpenAfter: "5m"
-          successThresholdCount: 3
-          successThresholdCapacity: 3
     upstreams:
+{% for node in erpc_upstreams %}
 {% for chain in erpc_chains %}
-{% for node in erpc_endpoint_list %}
-      - endpoint: "{{ node }}{{'/ext/bc/'+chain.chain_id+'/rpc' if chain.chain_id is defined else '' }}"
-        evm:
-          chainId: {{ chain.evm_id }}
-{% if chain.get('ignoreMethods') %}
-        ignoreMethods:
-{% for method in chain.ignoreMethods %}
-          - "{{ method }}"
-{% endfor %}
-{% endif %}
+      - endpoint: "{{ node }}/ext/bc/{{ chain }}/rpc"
 {% endfor %}
 {% endfor %}
-{% endif %}
+
 rateLimiters:
   budgets:
     - id: default
       rules:
-        - method: '*'
-          maxCount: 1000
-          period: 1s
-{% if has_erpc_limiters_budgets %}
-    {{ erpc_limiters_budgets }}
-{% endif %}
+        - method: "*"
+          maxCount: {{ erpc_default_budget_max_count }}
+          period: {{ erpc_default_budget_period }}

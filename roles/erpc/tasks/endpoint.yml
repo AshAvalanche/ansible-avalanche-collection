@@ -1,0 +1,108 @@
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (c) 2022-2025, E36 Knots
+---
+# https when the deployed config enables TLS on the server, http otherwise.
+- name: Determine the public scheme from the deployed config
+  ansible.builtin.set_fact:
+    erpc_public_scheme: >-
+      {{ 'https'
+         if ((erpc_rendered_config | from_yaml).get('server', {}).get('tls', {}).get('enabled', false) | bool)
+         else 'http' }}
+
+- name: Compute eRPC base URL
+  ansible.builtin.set_fact:
+    erpc_base_url: "{{ erpc_public_scheme }}://{{ erpc_public_host }}:{{ erpc_http_port }}"
+
+# We query each backend for its eth_chainId so the summary lists the real
+# numeric chainIds (and the routes that go with them) in BOTH modes.
+#
+# We use curl (not the uri module) on purpose: Python/OpenSSL refuses to trust a
+# CA that lacks the keyCertSign keyUsage and offers no flag to relax it, whereas
+# curl (and eRPC/Go) accept such internal CAs. --cacert keeps verification on.
+- name: Build curl TLS options for backend chainId resolution
+  ansible.builtin.set_fact:
+    erpc_curl_tls_opts: >-
+      {{ ('--cacert ' ~ erpc_conf_dir ~ '/backend-ca.crt')
+         if (erpc_backend_validate_certs | bool and erpc_backend_ca_file | length > 0)
+         else ('' if (erpc_backend_validate_certs | bool) else '-k') }}
+
+# Build the backend RPC endpoints to query, each paired with how eRPC exposes
+# the resolved chain (root alias vs canonical project route).
+- name: Build backend query targets (auto mode)
+  ansible.builtin.set_fact:
+    erpc_query_targets: >-
+      {{ erpc_query_targets | default([])
+         + [{'endpoint': item.0 ~ '/ext/bc/' ~ item.1 ~ '/rpc',
+             'project': erpc_project_id,
+             'alias': erpc_aliasing_enabled | bool}] }}
+  loop: "{{ erpc_upstreams | product(erpc_chains) | list }}"
+  loop_control:
+    label: "{{ item.0 }}/ext/bc/{{ item.1 }}/rpc"
+  when: erpc_config_mode == 'auto'
+
+- name: Build backend query targets (raw mode)
+  ansible.builtin.set_fact:
+    erpc_query_targets: "{{ (erpc_rendered_config | from_yaml) | ash.avalanche.erpc_backends }}"
+  when: erpc_config_mode == 'raw'
+
+- name: Query each backend for its EVM chainId
+  ansible.builtin.command:
+    cmd: >-
+      curl -sS {{ erpc_curl_tls_opts }}
+      -X POST -H 'Content-Type: application/json'
+      --data '{"jsonrpc":"2.0","id":1,"method":"eth_chainId","params":[]}'
+      {{ item.endpoint }}
+  loop: "{{ erpc_query_targets | default([]) }}"
+  loop_control:
+    label: "{{ item.endpoint }}"
+  register: erpc_chainid_queries
+  changed_when: false
+  failed_when: false
+
+# Each resolved chainId becomes a route. Duplicates (several nodes serving the
+# same chain) collapse via `unique`.
+- name: Build the list of exposed endpoints from resolved chainIds
+  ansible.builtin.set_fact:
+    erpc_exposed_endpoints: >-
+      {{ (erpc_exposed_endpoints | default([])
+          + [{'chainId': cid,
+              'url': (erpc_base_url ~ '/' ~ cid) if (item.item.alias | bool)
+                     else (erpc_base_url ~ '/' ~ item.item.project ~ '/evm/' ~ cid)}])
+         | unique }}
+  vars:
+    cid: "{{ (item.stdout | regex_search('0x[0-9a-fA-F]+')) | int(0, 16) }}"
+  loop: "{{ erpc_chainid_queries.results | default([]) }}"
+  loop_control:
+    label: "{{ item.item.endpoint }}"
+  when:
+    - item.rc == 0
+    - item.stdout is search('0x[0-9a-fA-F]+')
+
+- name: Warn about backends that could not be resolved
+  ansible.builtin.debug:
+    msg: >-
+      Backend '{{ item.item.endpoint }}' could not be queried for its chainId
+      (rc={{ item.rc }}): {{ item.stderr | default('') }}{{ item.stdout | default('') }}.
+      If it uses a self-signed cert, set erpc_backend_validate_certs: false or
+      point erpc_backend_ca_file at the signing CA.
+  loop: "{{ erpc_chainid_queries.results | default([]) }}"
+  loop_control:
+    label: "{{ item.item.endpoint }}"
+  when: not (item.rc == 0 and (item.stdout is search('0x[0-9a-fA-F]+')))
+
+- name: Compose the summary
+  ansible.builtin.set_fact:
+    erpc_summary_lines: >-
+      {{ ['eRPC is up (' ~ erpc_config_mode ~ ' mode).',
+          'Healthcheck: ' ~ erpc_base_url ~ '/healthcheck']
+         + (['Metrics: http://' ~ erpc_public_host ~ ':' ~ erpc_metrics_port ~ '/metrics']
+            if erpc_metrics_enabled else [])
+         + ['Available chainIds: '
+            ~ (erpc_exposed_endpoints | default([]) | map(attribute='chainId')
+               | unique | map('string') | join(', '))]
+         + (erpc_exposed_endpoints | default([]) | map(attribute='url')
+            | map('regex_replace', '^(.*)$', 'Endpoint: \1') | list) }}
+
+- name: eRPC is ready
+  ansible.builtin.debug:
+    msg: "{{ erpc_summary_lines }}"

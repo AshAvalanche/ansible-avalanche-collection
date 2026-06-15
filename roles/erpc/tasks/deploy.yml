@@ -1,0 +1,68 @@
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (c) 2022-2025, E36 Knots
+---
+- name: Create eRPC configuration directory
+  ansible.builtin.file:
+    path: "{{ erpc_conf_dir }}"
+    state: directory
+    owner: "{{ erpc_user }}"
+    group: "{{ erpc_user }}"
+    mode: "0755"
+
+- name: Resolve the files referenced in the config (copy / verify)
+  ansible.builtin.include_role:
+    name: ash.avalanche.config_files
+  vars:
+    config_files_operations: "{{ erpc_file_operations | default([]) }}"
+    config_files_owner: "{{ erpc_user }}"
+    config_files_group: "{{ erpc_user }}"
+    config_files_notify: Restart erpc
+
+- name: Upload backend CA certificate
+  ansible.builtin.copy:
+    src: "{{ erpc_backend_ca_file }}"
+    dest: "{{ erpc_conf_dir }}/backend-ca.crt"
+    owner: "{{ erpc_user }}"
+    group: "{{ erpc_user }}"
+    mode: "0644"
+  when: erpc_backend_ca_file | length > 0
+  notify: Restart erpc
+
+- name: Render secret environment file
+  ansible.builtin.template:
+    src: erpc.env.j2
+    dest: "{{ erpc_conf_dir }}/erpc.env"
+    owner: "{{ erpc_user }}"
+    group: "{{ erpc_user }}"
+    mode: "0600"
+  no_log: true
+  notify: Restart erpc
+
+- name: Write erpc.yaml
+  ansible.builtin.copy:
+    content: "{{ erpc_rendered_config }}"
+    dest: "{{ erpc_conf_dir }}/erpc.yaml"
+    owner: "{{ erpc_user }}"
+    group: "{{ erpc_user }}"
+    mode: "0644"
+  notify: Restart erpc
+
+- name: Template docker-compose.yml
+  ansible.builtin.template:
+    src: docker-compose.yml.j2
+    dest: "{{ erpc_conf_dir }}/docker-compose.yml"
+    owner: "{{ erpc_user }}"
+    group: "{{ erpc_user }}"
+    mode: "0644"
+  notify: Restart erpc
+
+- name: Install erpc.service unit
+  ansible.builtin.template:
+    src: erpc.service.j2
+    dest: /etc/systemd/system/erpc.service
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Reload systemd
+    - Restart erpc

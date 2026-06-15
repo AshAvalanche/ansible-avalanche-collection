@@ -1,33 +1,130 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # Copyright (c) 2022-2025, E36 Knots
 ---
-erpc_version: 0.0.35
+# ===========================================================================
+# Common
+# ===========================================================================
+erpc_version: "0.1.0"
 
+# "auto" -> the role generates a base erpc.yaml from erpc_upstreams/erpc_chains
+# "raw"  -> the role deploys a user-provided erpc.yaml (mapping) verbatim
+erpc_config_mode: auto
+
+erpc_user: root
+erpc_conf_dir: /etc/erpc
+
+# Container behaviour
+erpc_restart_policy: unless-stopped
 erpc_auto_restart: true
 
-# VM/Docker configuration
-erpc_user: root
+# Network / ports (host side; the container always listens on 4000/4001)
+erpc_listen_address: "0.0.0.0"
+erpc_http_port: 4000
+erpc_metrics_enabled: true
+erpc_metrics_port: 4001
+erpc_log_level: warn
 
-# Internal directories
-erpc_conf_dir: /etc/erpc/conf
-erpc_custom_dir: "{{ erpc_conf_dir }}/custom"
+# Host/IP advertised in the endpoint summary printed at the end of the run.
+erpc_public_host: "{{ ansible_host | default(inventory_hostname) }}"
 
-# eRPC autoconfiguration (install_erpc_network)
-erpc_include_c_chain: true
+# ---------------------------------------------------------------------------
+# Secrets  ->  Ansible Vault  ->  ${VAR} interpolation
+# ---------------------------------------------------------------------------
+# Names of environment variables injected into the container. eRPC interpolates
+# any ${VAR} found in erpc.yaml from this environment, so secrets NEVER appear
+# in the rendered config. Keep the VALUES in an Ansible Vault; on the remote
+# host they only ever land in {{ erpc_conf_dir }}/erpc.env (mode 0600) and the
+# tasks handling them run with no_log.
+#
+#   erpc_secret_env:
+#     ALCHEMY_API_KEY: "..."   # value comes from a vaulted var
+#     REDIS_PASSWORD: "..."
+erpc_secret_env: {}
 
-# eRPC fast configuration (install_erpc_docker)
-erpc_endpoint_list:
-  - "http://{{ hostvars['validator01'].ansible_host }}:9650"
-  - "http://{{ hostvars['validator02'].ansible_host }}:9650"
-  - "http://{{ hostvars['validator03'].ansible_host }}:9650"
-  - "http://{{ hostvars['validator04'].ansible_host }}:9650"
-  - "http://{{ hostvars['validator05'].ansible_host }}:9650"
+# ---------------------------------------------------------------------------
+# Files referenced by the config (cannot pass through env vars)
+# ---------------------------------------------------------------------------
+# The keys below are known to hold file/directory paths. For each one PRESENT in
+# the config, the value decides what the role does (and the value is rewritten so
+# the deployed erpc.yaml is valid on the host). The file is then mounted into the
+# container at its final host path.
+#
+#   * plain string  -> a path ON THE CONTROLLER, copied to the default `dest`
+#                      declared here; the value becomes `dest`.
+#   * { src, dst }  -> copy `src` (controller) to `dst` (overrides the default);
+#                      the value becomes `dst`. `src` is required with `dst`.
+#   * { path }      -> nothing is copied; `path` must already exist on the host
+#                      (file present, directory non-empty); the value becomes `path`.
+#   * anything else -> the run fails.
+#
+# This is powered by the generic `config_file_plan` filter + the `config_files`
+# role, both reusable by other roles (declare your own erpc_file_fields-like list).
+erpc_file_fields:
+  - path: "server.tls.certFile"
+    dest: "{{ erpc_conf_dir }}/tls/server.crt"
+    type: file
+    mode: "0644"
+  - path: "server.tls.keyFile"
+    dest: "{{ erpc_conf_dir }}/tls/server.key"
+    type: file
+    mode: "0600"
+  - path: "server.tls.caFile"
+    dest: "{{ erpc_conf_dir }}/tls/ca.crt"
+    type: file
+    mode: "0644"
+  - path: "database.evmJsonRpcCache.connectors[].redis.tls.certFile"
+    dest: "{{ erpc_conf_dir }}/redis-tls/redis.crt"
+    type: file
+    mode: "0644"
+  - path: "database.evmJsonRpcCache.connectors[].redis.tls.keyFile"
+    dest: "{{ erpc_conf_dir }}/redis-tls/redis.key"
+    type: file
+    mode: "0600"
+  - path: "database.evmJsonRpcCache.connectors[].redis.tls.caFile"
+    dest: "{{ erpc_conf_dir }}/redis-tls/ca.crt"
+    type: file
+    mode: "0644"
+  - path: "database.evmJsonRpcCache.connectors[].dynamodb.auth.credentialsFile"
+    dest: "{{ erpc_conf_dir }}/aws/credentials"
+    type: file
+    mode: "0600"
 
+# ===========================================================================
+# raw mode
+# ===========================================================================
+# Provide ONE of the following:
+#   erpc_raw_config      -> native YAML mapping (preferred, cleaner in group_vars)
+#   erpc_raw_config_src  -> path on the controller to an erpc.yaml file
+erpc_raw_config: {}
+erpc_raw_config_src: ""
+
+# ===========================================================================
+# auto mode
+# ===========================================================================
+erpc_project_id: ash
+
+# Expose every chain at the URL root (http://host:4000/<chainId>) in addition
+# to the canonical http://host:4000/<project>/evm/<chainId> route.
+erpc_aliasing_enabled: true
+
+# Backend RPC endpoints (one base URL per node). Usually populated by the
+# install_erpc.yml playbook from the avalanche_nodes group.
+erpc_upstreams: []
+
+# AvalancheGo blockchain IDs/aliases to expose. Each one becomes an upstream at
+# <node>/ext/bc/<chain>/rpc; eRPC auto-detects its EVM chainId at runtime.
 erpc_chains:
-  - name: C
-    evm_id: 43113
-    chain_id: C
-# eRPC full configuration
-erpc_projects: []
-erpc_aliasing_rules: []
-erpc_limiters_budgets: []
+  - C
+
+# Local (controller) path to a CA cert. When set it is uploaded to the host and
+# exposed to the container as SSL_CERT_FILE so Go trusts self-signed backends.
+erpc_backend_ca_file: ""
+
+# Verify backend TLS certs when the role queries the nodes (auto mode) to
+# resolve numeric EVM chainIds. If erpc_backend_ca_file is set it is used as the
+# CA bundle for that verification.
+erpc_backend_validate_certs: true
+
+# Default rate-limit budget applied to generated upstreams.
+erpc_default_budget_max_count: 1000
+erpc_default_budget_period: 1s
